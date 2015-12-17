@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PermissionsTest</string>
+    <string name="rationale_camera">This app needs access to your camera so you can take pictures.</string>
+</resources>
