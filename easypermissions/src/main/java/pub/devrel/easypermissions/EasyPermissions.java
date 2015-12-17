@@ -1,4 +1,19 @@
-package com.google.example.permissionstest;
+/*
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package pub.devrel.easypermissions;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +29,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility to request and check System permissions for apps targeting Android M (API >= 23).
+ */
 public class EasyPermissions {
 
     private static final String TAG = "EasyPermissions";
@@ -157,10 +175,14 @@ public class EasyPermissions {
         Class clazz = activity.getClass();
         for (Method method : clazz.getMethods()) {
             if (method.isAnnotationPresent(AfterPermissionGranted.class)) {
-                // Found an annotated method, run it if all of the specified permissions are in the
-                // provided list.
+                // Check for annotated methods with matching request code.
                 AfterPermissionGranted ann = method.getAnnotation(AfterPermissionGranted.class);
                 if (ann.value() == requestCode) {
+                    // Method must be void so that we can invoke it
+                    if (method.getParameterTypes().length > 0) {
+                        throw new RuntimeException("Cannot execute non-void method " + method.getName());
+                    }
+
                     try {
                         method.invoke(activity);
                     } catch (IllegalAccessException e) {

@@ -1,15 +1,16 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+apply from: 'maven.gradle'
+apply from: 'bintray.gradle'
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "pub.devrel.easypermissions.sample"
         minSdkVersion 9
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "$mavenVersion"
     }
     buildTypes {
         release {
@@ -21,6 +22,4 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
-
-    compile project(':easypermissions')
 }
