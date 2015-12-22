@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
-apply from: 'maven.gradle'
-apply from: 'bintray.gradle'
+apply from: 'constants.gradle'
 
 android {
     compileSdkVersion 23
@@ -23,3 +22,7 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
 }
+
+apply from: 'maven.gradle'
+apply from: 'bintray.gradle'
+
