@@ -173,7 +173,7 @@ public class EasyPermissions {
 
     private static void runAnnotatedMethods(Activity activity, int requestCode) {
         Class clazz = activity.getClass();
-        for (Method method : clazz.getMethods()) {
+        for (Method method : clazz.getDeclaredMethods()) {
             if (method.isAnnotationPresent(AfterPermissionGranted.class)) {
                 // Check for annotated methods with matching request code.
                 AfterPermissionGranted ann = method.getAnnotation(AfterPermissionGranted.class);
@@ -184,6 +184,10 @@ public class EasyPermissions {
                     }
 
                     try {
+                        // Make method accessible if private
+                        if (!method.isAccessible()) {
+                            method.setAccessible(true);
+                        }
                         method.invoke(activity);
                     } catch (IllegalAccessException e) {
                         Log.e(TAG, "runDefaultMethod:IllegalAccessException", e);
