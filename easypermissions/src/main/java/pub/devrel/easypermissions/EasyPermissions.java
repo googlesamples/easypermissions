@@ -19,7 +19,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -36,7 +38,9 @@ public class EasyPermissions {
 
     private static final String TAG = "EasyPermissions";
 
-    public interface PermissionCallbacks extends ActivityCompat.OnRequestPermissionsResultCallback {
+    public interface PermissionCallbacks extends
+            ActivityCompat.OnRequestPermissionsResultCallback,
+            FragmentCompat.OnRequestPermissionsResultCallback {
 
         void onPermissionsGranted(List<String> perms);
 
@@ -67,33 +71,32 @@ public class EasyPermissions {
     /**
      * Request a set of permissions, showing rationale if the system requests it.
      *
-     * @param activity Activity requesting permissions. Should implement
+     * @param object Activity or Fragment requesting permissions. Should implement
      *                {@link android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback}
+     *                or
+     *                {@link android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
      * @param rationale a message explaining why the application needs this set of permissions, will
      *                  be displayed if the user rejects the request the first time.
      * @param requestCode request code to track this request, must be < 256.
      * @param perms a set of permissions to be requested.
      */
-    public static void requestPermissions(final Activity activity, String rationale,
+    public static void requestPermissions(final Object object, String rationale,
                                           final int requestCode, final String... perms) {
-        // Check if all permissions were already granted.
-        if (hasPermissions(activity.getApplicationContext(), perms)) {
-            return;
-        }
+
+        checkCallingObjectSuitability(object);
 
         boolean shouldShowRationale = false;
         for (String perm : perms) {
-            shouldShowRationale = shouldShowRationale ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(activity, perm);
+            shouldShowRationale = shouldShowRationale || shouldShowRequestPermissionRationale(object, perm);
         }
 
         if (shouldShowRationale) {
-            AlertDialog dialog = new AlertDialog.Builder(activity)
+            AlertDialog dialog = new AlertDialog.Builder(getActivity(object))
                     .setMessage(rationale)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            executePermissionsRequest(activity, perms, requestCode);
+                            executePermissionsRequest(object, perms, requestCode);
                         }
                     })
                     .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -104,7 +107,7 @@ public class EasyPermissions {
                     }).create();
             dialog.show();
         } else {
-            executePermissionsRequest(activity, perms, requestCode);
+            executePermissionsRequest(object, perms, requestCode);
         }
     }
 
@@ -120,19 +123,16 @@ public class EasyPermissions {
      * @param requestCode requestCode argument to permission result callback.
      * @param permissions permissions argument to permission result callback.
      * @param grantResults grantResults argument to permission result callback.
-     * @param activity the calling Activity.
+     * @param object the calling Activity or Fragment.
      *
      * @throws IllegalArgumentException if the calling Activity does not implement
      *         {@link PermissionCallbacks}.
      */
     public static void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                                  int[] grantResults, Activity activity) {
+                                                  int[] grantResults, Object object) {
 
-        // Make sure Activity implements callbacks
-        if (!(activity instanceof PermissionCallbacks)) {
-            throw new IllegalArgumentException("Activity must implement PermissionCallbacks.");
-        }
-        PermissionCallbacks callbacks = (PermissionCallbacks) activity;
+        checkCallingObjectSuitability(object);
+        PermissionCallbacks callbacks = (PermissionCallbacks) object;
 
         // Make a collection of granted and denied permissions from the request.
         ArrayList<String> granted = new ArrayList<>();
@@ -159,20 +159,42 @@ public class EasyPermissions {
 
         // If 100% successful, call annotated methods
         if (!granted.isEmpty() && denied.isEmpty()) {
-            runAnnotatedMethods(activity, requestCode);
+            runAnnotatedMethods(object, requestCode);
         }
     }
 
-    private static void executePermissionsRequest(Activity activity, String[] perms, int requestCode) {
-        if (!(activity instanceof PermissionCallbacks)) {
-            throw new IllegalArgumentException("Activity must implement PermissionCallbacks.");
+    private static boolean shouldShowRequestPermissionRationale(Object object, String perm) {
+        if (object instanceof Activity) {
+            return ActivityCompat.shouldShowRequestPermissionRationale((Activity) object, perm);
+        } else if (object instanceof Fragment) {
+            return ((Fragment) object).shouldShowRequestPermissionRationale(perm);
+        } else {
+            return false;
         }
-
-        ActivityCompat.requestPermissions(activity, perms, requestCode);
     }
 
-    private static void runAnnotatedMethods(Activity activity, int requestCode) {
-        Class clazz = activity.getClass();
+    private static void executePermissionsRequest(Object object, String[] perms, int requestCode) {
+        checkCallingObjectSuitability(object);
+
+        if (object instanceof Activity) {
+            ActivityCompat.requestPermissions((Activity) object, perms, requestCode);
+        } else if (object instanceof Fragment) {
+            ((Fragment) object).requestPermissions(perms, requestCode);
+        }
+    }
+
+    private static Activity getActivity(Object object) {
+        if (object instanceof Activity) {
+            return ((Activity) object);
+        } else if (object instanceof Fragment) {
+            return ((Fragment) object).getActivity();
+        } else {
+            return null;
+        }
+    }
+
+    private static void runAnnotatedMethods(Object object, int requestCode) {
+        Class clazz = object.getClass();
         for (Method method : clazz.getDeclaredMethods()) {
             if (method.isAnnotationPresent(AfterPermissionGranted.class)) {
                 // Check for annotated methods with matching request code.
@@ -188,7 +210,7 @@ public class EasyPermissions {
                         if (!method.isAccessible()) {
                             method.setAccessible(true);
                         }
-                        method.invoke(activity);
+                        method.invoke(object);
                     } catch (IllegalAccessException e) {
                         Log.e(TAG, "runDefaultMethod:IllegalAccessException", e);
                     } catch (InvocationTargetException e) {
@@ -196,6 +218,18 @@ public class EasyPermissions {
                     }
                 }
             }
+        }
+    }
+
+    private static void checkCallingObjectSuitability(Object object) {
+        // Make sure Object is an Activity or Fragment
+        if (!((object instanceof Fragment) || (object instanceof Activity))) {
+            throw new IllegalArgumentException("Caller must be an Activity or a Fragment.");
+        }
+
+        // Make sure Object implements callbacks
+        if (!(object instanceof PermissionCallbacks)) {
+            throw new IllegalArgumentException("Caller must implement PermissionCallbacks.");
         }
     }
 }

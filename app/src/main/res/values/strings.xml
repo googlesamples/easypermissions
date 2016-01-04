@@ -2,4 +2,5 @@
     <string name="app_name">PermissionsTest</string>
     <string name="rationale_camera">This app needs access to your camera so you can take pictures.</string>
     <string name="rationale_location_contacts">This app needs access to your location and contacts to know where and who you are.</string>
+    <string name="rationale_sms">This app needs access to your sms to read all your great messages.</string>
 </resources>

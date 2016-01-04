@@ -9,7 +9,7 @@ EasyPermissions is installed by adding the following dependency to your `build.g
 
 ```
 dependencies {
-  compile 'pub.devrel:easypermissions:0.1.0'
+  compile 'pub.devrel:easypermissions:0.1.1'
 }
 ```
 
@@ -17,7 +17,7 @@ dependencies {
 
 ### Basic
 
-To begin using EasyPermissions, have your Activity implement the 
+To begin using EasyPermissions, have your Activity (or Fragment) implement the 
 `EasyPermissions.PermissionCallbacks` and override the following methods:
 
 ```java
@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
