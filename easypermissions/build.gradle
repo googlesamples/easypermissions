@@ -6,7 +6,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        minSdkVersion 13
+        minSdkVersion 9
         targetSdkVersion 23
         versionCode 1
         versionName "$mavenVersion"
@@ -21,7 +21,6 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:support-v13:23.1.1'
 }
 
 apply from: 'maven.gradle'
