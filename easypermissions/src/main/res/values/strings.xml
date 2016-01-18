@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">EasyPermissions</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

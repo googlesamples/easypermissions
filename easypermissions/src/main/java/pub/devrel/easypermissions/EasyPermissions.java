@@ -25,6 +25,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import com.google.example.easypermissions.R;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -91,13 +93,13 @@ public class EasyPermissions {
         if (shouldShowRationale) {
             AlertDialog dialog = new AlertDialog.Builder(getActivity(object))
                     .setMessage(rationale)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             executePermissionsRequest(object, perms, requestCode);
                         }
                     })
-                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // Do nothing, user does not want to request
