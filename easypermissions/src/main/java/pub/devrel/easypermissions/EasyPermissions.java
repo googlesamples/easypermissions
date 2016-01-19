@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -50,9 +51,9 @@ public class EasyPermissions {
      * Check if the calling context has a set of permissions.
      *
      * @param context the calling context.
-     * @param perms one ore more permissions, such as {@code android.Manifest.permission.CAMERA}.
+     * @param perms   one ore more permissions, such as {@code android.Manifest.permission.CAMERA}.
      * @return true if all permissions are already granted, false if at least one permission
-     *         is not yet granted.
+     * is not yet granted.
      */
     public static boolean hasPermissions(Context context, String... perms) {
         for (String perm : perms) {
@@ -65,20 +66,43 @@ public class EasyPermissions {
         return true;
     }
 
+    /**
+     * Request a set of permissions, showing rationale if the system requests it.
+     *
+     * @param object      Activity or Fragment requesting permissions. Should implement
+     *                    {@link android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback}
+     *                    or
+     *                    {@link android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
+     * @param rationale   a message explaining why the application needs this set of permissions, will
+     *                    be displayed if the user rejects the request the first time.
+     * @param requestCode request code to track this request, must be < 256.
+     * @param perms       a set of permissions to be requested.
+     */
+    public static void requestPermissions(final Object object, String rationale,
+                                          final int requestCode, final String... perms) {
+        requestPermissions(object, rationale,
+                android.R.string.ok,
+                android.R.string.cancel,
+                requestCode, perms);
+    }
 
     /**
      * Request a set of permissions, showing rationale if the system requests it.
      *
-     * @param object Activity or Fragment requesting permissions. Should implement
-     *                {@link android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback}
-     *                or
-     *                {@link android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
-     * @param rationale a message explaining why the application needs this set of permissions, will
-     *                  be displayed if the user rejects the request the first time.
-     * @param requestCode request code to track this request, must be < 256.
-     * @param perms a set of permissions to be requested.
+     * @param object         Activity or Fragment requesting permissions. Should implement
+     *                       {@link android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback}
+     *                       or
+     *                       {@link android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
+     * @param rationale      a message explaining why the application needs this set of permissions, will
+     *                       be displayed if the user rejects the request the first time.
+     * @param positiveButton custom text for positive button
+     * @param negativeButton custom text for negative button
+     * @param requestCode    request code to track this request, must be < 256.
+     * @param perms          a set of permissions to be requested.
      */
     public static void requestPermissions(final Object object, String rationale,
+                                          @StringRes int positiveButton,
+                                          @StringRes int negativeButton,
                                           final int requestCode, final String... perms) {
 
         checkCallingObjectSuitability(object);
@@ -91,13 +115,13 @@ public class EasyPermissions {
         if (shouldShowRationale) {
             AlertDialog dialog = new AlertDialog.Builder(getActivity(object))
                     .setMessage(rationale)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             executePermissionsRequest(object, perms, requestCode);
                         }
                     })
-                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    .setNegativeButton(negativeButton, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // Do nothing, user does not want to request
@@ -113,18 +137,17 @@ public class EasyPermissions {
      * Handle the result of a permission request, should be called from the calling Activity's
      * {@link android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult(int, String[], int[])}
      * method.
-     *
+     * <p/>
      * If any permissions were granted or denied, the Activity will receive the appropriate
      * callbacks through {@link PermissionCallbacks} and methods annotated with
      * {@link AfterPermissionGranted} will be run if appropriate.
      *
-     * @param requestCode requestCode argument to permission result callback.
-     * @param permissions permissions argument to permission result callback.
+     * @param requestCode  requestCode argument to permission result callback.
+     * @param permissions  permissions argument to permission result callback.
      * @param grantResults grantResults argument to permission result callback.
-     * @param object the calling Activity or Fragment.
-     *
+     * @param object       the calling Activity or Fragment.
      * @throws IllegalArgumentException if the calling Activity does not implement
-     *         {@link PermissionCallbacks}.
+     *                                  {@link PermissionCallbacks}.
      */
     public static void onRequestPermissionsResult(int requestCode, String[] permissions,
                                                   int[] grantResults, Object object) {
