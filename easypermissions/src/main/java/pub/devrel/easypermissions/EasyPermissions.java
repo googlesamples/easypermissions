@@ -29,6 +29,7 @@ import android.util.Log;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -106,6 +107,7 @@ public class EasyPermissions {
                                           final int requestCode, final String... perms) {
 
         checkCallingObjectSuitability(object);
+        final PermissionCallbacks callbacks = (PermissionCallbacks) object;
 
         boolean shouldShowRationale = false;
         for (String perm : perms) {
@@ -124,7 +126,8 @@ public class EasyPermissions {
                     .setNegativeButton(negativeButton, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // Do nothing, user does not want to request
+                            // act as if the permissions were denied
+                            callbacks.onPermissionsDenied(Arrays.asList(perms));
                         }
                     }).create();
             dialog.show();
