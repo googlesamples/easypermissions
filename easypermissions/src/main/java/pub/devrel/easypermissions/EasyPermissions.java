@@ -42,9 +42,9 @@ public class EasyPermissions {
     public interface PermissionCallbacks extends
             ActivityCompat.OnRequestPermissionsResultCallback {
 
-        void onPermissionsGranted(List<String> perms);
+        void onPermissionsGranted(int requestCode, List<String> perms);
 
-        void onPermissionsDenied(List<String> perms);
+        void onPermissionsDenied(int requestCode, List<String> perms);
 
     }
 
@@ -127,7 +127,7 @@ public class EasyPermissions {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // act as if the permissions were denied
-                            callbacks.onPermissionsDenied(Arrays.asList(perms));
+                            callbacks.onPermissionsDenied(requestCode, Arrays.asList(perms));
                         }
                     }).create();
             dialog.show();
@@ -173,12 +173,12 @@ public class EasyPermissions {
         // Report granted permissions, if any.
         if (!granted.isEmpty()) {
             // Notify callbacks
-            callbacks.onPermissionsGranted(granted);
+            callbacks.onPermissionsGranted(requestCode, granted);
         }
 
         // Report denied permissions, if any.
         if (!denied.isEmpty()) {
-            callbacks.onPermissionsDenied(denied);
+            callbacks.onPermissionsDenied(requestCode, denied);
         }
 
         // If 100% successful, call annotated methods
