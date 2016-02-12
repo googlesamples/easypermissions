@@ -9,7 +9,7 @@ EasyPermissions is installed by adding the following dependency to your `build.g
 
 ```
 dependencies {
-  compile 'pub.devrel:easypermissions:0.1.4'
+  compile 'pub.devrel:easypermissions:0.1.5'
 }
 ```
 
@@ -39,13 +39,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPermissionsGranted(List<String> list) {
+    public void onPermissionsGranted(int requestCode, List<String> list) {
         // Some permissions have been granted
         // ...
     }
 
     @Override
-    public void onPermissionsDenied(List<String> list) {
+    public void onPermissionsDenied(int requestCode, List<String> list) {
         // Some permissions have been denied
         // ...
     }
