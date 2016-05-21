@@ -15,6 +15,7 @@
  */
 package pub.devrel.easypermissions;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -187,16 +188,20 @@ public class EasyPermissions {
         }
     }
 
+    @TargetApi(23)
     private static boolean shouldShowRequestPermissionRationale(Object object, String perm) {
         if (object instanceof Activity) {
             return ActivityCompat.shouldShowRequestPermissionRationale((Activity) object, perm);
         } else if (object instanceof Fragment) {
             return ((Fragment) object).shouldShowRequestPermissionRationale(perm);
+        } else if (object instanceof android.app.Fragment) {
+            return ((android.app.Fragment) object).shouldShowRequestPermissionRationale(perm);
         } else {
             return false;
         }
     }
 
+    @TargetApi(23)
     private static void executePermissionsRequest(Object object, String[] perms, int requestCode) {
         checkCallingObjectSuitability(object);
 
@@ -204,14 +209,19 @@ public class EasyPermissions {
             ActivityCompat.requestPermissions((Activity) object, perms, requestCode);
         } else if (object instanceof Fragment) {
             ((Fragment) object).requestPermissions(perms, requestCode);
+        } else if (object instanceof android.app.Fragment) {
+            ((android.app.Fragment) object).requestPermissions(perms, requestCode);
         }
     }
 
+    @TargetApi(11)
     private static Activity getActivity(Object object) {
         if (object instanceof Activity) {
             return ((Activity) object);
         } else if (object instanceof Fragment) {
             return ((Fragment) object).getActivity();
+        } else if (object instanceof android.app.Fragment) {
+            return ((android.app.Fragment) object).getActivity();
         } else {
             return null;
         }
@@ -247,8 +257,18 @@ public class EasyPermissions {
 
     private static void checkCallingObjectSuitability(Object object) {
         // Make sure Object is an Activity or Fragment
-        if (!((object instanceof Fragment) || (object instanceof Activity))) {
-            throw new IllegalArgumentException("Caller must be an Activity or a Fragment.");
+        boolean isActivity = object instanceof Activity;
+        boolean isSupportFragment = object instanceof Fragment;
+        boolean isAppFragment = object instanceof android.app.Fragment;
+
+        if (!(isSupportFragment || isActivity ||
+                (isAppFragment && android.os.Build.VERSION.SDK_INT >= 23))) {
+            if (isAppFragment) {
+                throw new IllegalArgumentException(
+                        "Target SDK needs to be greater than 23 if caller is android.app.Fragment");
+            } else {
+                throw new IllegalArgumentException("Caller must be an Activity or a Fragment.");
+            }
         }
 
         // Make sure Object implements callbacks
