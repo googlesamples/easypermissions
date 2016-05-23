@@ -59,7 +59,7 @@ public class EasyPermissions {
      * is not yet granted.
      */
     public static boolean hasPermissions(Context context, String... perms) {
-        // Always return true for SDK < M, let the system deal with the permissions
+        // Always return true for SDK < M, let the system deal with the permissions 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             Log.w(TAG, "hasPermissions: API version < M, returning true by default");
             return true;
