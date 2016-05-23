@@ -15,10 +15,12 @@
  */
 package pub.devrel.easypermissions;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -40,7 +42,7 @@ public class EasyPermissions {
     private static final String TAG = "EasyPermissions";
 
     public interface PermissionCallbacks extends
-            ActivityCompat.OnRequestPermissionsResultCallback {
+                                         ActivityCompat.OnRequestPermissionsResultCallback {
 
         void onPermissionsGranted(int requestCode, List<String> perms);
 
@@ -57,8 +59,15 @@ public class EasyPermissions {
      * is not yet granted.
      */
     public static boolean hasPermissions(Context context, String... perms) {
+        // Always return true for SDK < M, let the system deal with the permissions 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            Log.w(TAG, "hasPermissions: API version < M, returning true by default");
+            return true;
+        }
+
         for (String perm : perms) {
-            boolean hasPerm = (ContextCompat.checkSelfPermission(context, perm) == PackageManager.PERMISSION_GRANTED);
+            boolean hasPerm = (ContextCompat.checkSelfPermission(context, perm) ==
+                    PackageManager.PERMISSION_GRANTED);
             if (!hasPerm) {
                 return false;
             }
@@ -82,9 +91,9 @@ public class EasyPermissions {
     public static void requestPermissions(final Object object, String rationale,
                                           final int requestCode, final String... perms) {
         requestPermissions(object, rationale,
-                android.R.string.ok,
-                android.R.string.cancel,
-                requestCode, perms);
+                           android.R.string.ok,
+                           android.R.string.cancel,
+                           requestCode, perms);
     }
 
     /**
@@ -111,7 +120,8 @@ public class EasyPermissions {
 
         boolean shouldShowRationale = false;
         for (String perm : perms) {
-            shouldShowRationale = shouldShowRationale || shouldShowRequestPermissionRationale(object, perm);
+            shouldShowRationale =
+                    shouldShowRationale || shouldShowRequestPermissionRationale(object, perm);
         }
 
         if (shouldShowRationale) {
@@ -140,7 +150,7 @@ public class EasyPermissions {
      * Handle the result of a permission request, should be called from the calling Activity's
      * {@link android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult(int, String[], int[])}
      * method.
-     * <p/>
+     * <p>
      * If any permissions were granted or denied, the Activity will receive the appropriate
      * callbacks through {@link PermissionCallbacks} and methods annotated with
      * {@link AfterPermissionGranted} will be run if appropriate.
@@ -187,16 +197,20 @@ public class EasyPermissions {
         }
     }
 
+    @TargetApi(23)
     private static boolean shouldShowRequestPermissionRationale(Object object, String perm) {
         if (object instanceof Activity) {
             return ActivityCompat.shouldShowRequestPermissionRationale((Activity) object, perm);
         } else if (object instanceof Fragment) {
             return ((Fragment) object).shouldShowRequestPermissionRationale(perm);
+        } else if (object instanceof android.app.Fragment) {
+            return ((android.app.Fragment) object).shouldShowRequestPermissionRationale(perm);
         } else {
             return false;
         }
     }
 
+    @TargetApi(23)
     private static void executePermissionsRequest(Object object, String[] perms, int requestCode) {
         checkCallingObjectSuitability(object);
 
@@ -204,14 +218,19 @@ public class EasyPermissions {
             ActivityCompat.requestPermissions((Activity) object, perms, requestCode);
         } else if (object instanceof Fragment) {
             ((Fragment) object).requestPermissions(perms, requestCode);
+        } else if (object instanceof android.app.Fragment) {
+            ((android.app.Fragment) object).requestPermissions(perms, requestCode);
         }
     }
 
+    @TargetApi(11)
     private static Activity getActivity(Object object) {
         if (object instanceof Activity) {
             return ((Activity) object);
         } else if (object instanceof Fragment) {
             return ((Fragment) object).getActivity();
+        } else if (object instanceof android.app.Fragment) {
+            return ((android.app.Fragment) object).getActivity();
         } else {
             return null;
         }
@@ -226,7 +245,8 @@ public class EasyPermissions {
                 if (ann.value() == requestCode) {
                     // Method must be void so that we can invoke it
                     if (method.getParameterTypes().length > 0) {
-                        throw new RuntimeException("Cannot execute non-void method " + method.getName());
+                        throw new RuntimeException(
+                                "Cannot execute non-void method " + method.getName());
                     }
 
                     try {
@@ -247,8 +267,18 @@ public class EasyPermissions {
 
     private static void checkCallingObjectSuitability(Object object) {
         // Make sure Object is an Activity or Fragment
-        if (!((object instanceof Fragment) || (object instanceof Activity))) {
-            throw new IllegalArgumentException("Caller must be an Activity or a Fragment.");
+        boolean isActivity = object instanceof Activity;
+        boolean isSupportFragment = object instanceof Fragment;
+        boolean isAppFragment = object instanceof android.app.Fragment;
+        boolean isMinSdkM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+
+        if (!(isSupportFragment || isActivity || (isAppFragment && isMinSdkM))) {
+            if (isAppFragment) {
+                throw new IllegalArgumentException(
+                        "Target SDK needs to be greater than 23 if caller is android.app.Fragment");
+            } else {
+                throw new IllegalArgumentException("Caller must be an Activity or a Fragment.");
+            }
         }
 
         // Make sure Object implements callbacks
