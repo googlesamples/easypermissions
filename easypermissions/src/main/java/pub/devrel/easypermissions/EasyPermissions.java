@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -58,6 +59,12 @@ public class EasyPermissions {
      * is not yet granted.
      */
     public static boolean hasPermissions(Context context, String... perms) {
+        // Always return true for SDK < M, let the system deal with the permissions
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            Log.w(TAG, "hasPermissions: API version < M, returning true by default");
+            return true;
+        }
+
         for (String perm : perms) {
             boolean hasPerm = (ContextCompat.checkSelfPermission(context, perm) ==
                     PackageManager.PERMISSION_GRANTED);
@@ -263,7 +270,7 @@ public class EasyPermissions {
         boolean isActivity = object instanceof Activity;
         boolean isSupportFragment = object instanceof Fragment;
         boolean isAppFragment = object instanceof android.app.Fragment;
-        boolean isMinSdkM = android.os.Build.VERSION.SDK_INT >= 23;
+        boolean isMinSdkM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
 
         if (!(isSupportFragment || isActivity || (isAppFragment && isMinSdkM))) {
             if (isAppFragment) {
