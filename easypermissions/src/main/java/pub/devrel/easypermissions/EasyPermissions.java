@@ -19,8 +19,11 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -125,7 +128,12 @@ public class EasyPermissions {
         }
 
         if (shouldShowRationale) {
-            AlertDialog dialog = new AlertDialog.Builder(getActivity(object))
+            Activity activity = getActivity(object);
+            if (null == activity) {
+                return;
+            }
+
+            AlertDialog dialog = new AlertDialog.Builder(activity)
                     .setMessage(rationale)
                     .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
                         @Override
@@ -194,6 +202,47 @@ public class EasyPermissions {
         // If 100% successful, call annotated methods
         if (!granted.isEmpty() && denied.isEmpty()) {
             runAnnotatedMethods(object, requestCode);
+        }
+    }
+
+    /**
+     * If user denied permissions with flagging NEVER ASK AGAIN,
+     * then open another dialog explaining the permissions again and directing to the app setting.
+     * NOTE: use this method in callback method {@link PermissionCallbacks#onPermissionsDenied(int, List)}
+     *
+     * @param object      the calling Activity or Fragment.
+     * @param deniedPerms a set of permissions to be denied.
+     */
+    public static void checkDeniedPermissionsNeverAskAgain(Object object, String rationale,
+                                                           @StringRes int positiveButton,
+                                                           @StringRes int negativeButton,
+                                                           List<String> deniedPerms) {
+        boolean shouldShowRationale;
+        for (String perm : deniedPerms) {
+            shouldShowRationale = shouldShowRequestPermissionRationale(object, perm);
+            if (!shouldShowRationale) {
+                final Activity activity = getActivity(object);
+                if (null == activity) {
+                    return;
+                }
+
+                AlertDialog dialog = new AlertDialog.Builder(activity)
+                        .setMessage(rationale)
+                        .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
+                                intent.setData(uri);
+                                activity.startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton(negativeButton, null)
+                        .create();
+                dialog.show();
+
+                return;
+            }
         }
     }
 

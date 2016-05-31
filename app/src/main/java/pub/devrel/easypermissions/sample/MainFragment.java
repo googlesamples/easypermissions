@@ -67,5 +67,8 @@ public class MainFragment extends Fragment implements
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
+
+        EasyPermissions.checkDeniedPermissionsNeverAskAgain(this, getString(R.string.rationale_ask_again),
+                R.string.setting, R.string.cancel, perms);
     }
 }
