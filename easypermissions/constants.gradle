@@ -6,7 +6,7 @@ ext {
 
     mavenGroup = 'pub.devrel'
     mavenArtifactId = 'easypermissions'
-    mavenVersion = '0.1.6'
+    mavenVersion = '0.1.7'
 
     bintrayOrg = 'easygoogle'
 }

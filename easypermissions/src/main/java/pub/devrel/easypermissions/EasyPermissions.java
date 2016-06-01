@@ -206,14 +206,15 @@ public class EasyPermissions {
     }
 
     /**
-     * If user denied permissions with flagging NEVER ASK AGAIN,
-     * then open another dialog explaining the permissions again and directing to the app setting.
-     * NOTE: use this method in callback method {@link PermissionCallbacks#onPermissionsDenied(int, List)},
-     * this is optional.
+     * If user denied permissions with the flag NEVER ASK AGAIN, open a dialog explaining the
+     * permissions rationale again and directing the user to the app settings.
+     *
+     * NOTE: use of this method is optional, should be called from
+     * {@link PermissionCallbacks#onPermissionsDenied(int, List)}
      *
      * @param object      the calling Activity or Fragment.
-     * @param deniedPerms a set of permissions to be denied.
-     * @return Whether the user denied permissions with flagging NEVER ASK AGAIN last time.
+     * @param deniedPerms the set of denied permissions.
+     * @return {@code true} if user denied at least one permission with the flag NEVER ASK AGAIN.
      */
     public static boolean checkDeniedPermissionsNeverAskAgain(Object object, String rationale,
                                                            @StringRes int positiveButton,

@@ -100,8 +100,10 @@ public class MainActivity extends AppCompatActivity implements
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
 
-        // Check whether the user denied permissions with flagging NEVER ASK AGAIN last time and this is optional.
-        EasyPermissions.checkDeniedPermissionsNeverAskAgain(this, getString(R.string.rationale_ask_again),
+        // (Optional) Check whether the user denied permissions and checked NEVER ASK AGAIN.
+        // This will display a dialog directing them to enable the permission in app settings.
+        EasyPermissions.checkDeniedPermissionsNeverAskAgain(this,
+                getString(R.string.rationale_ask_again),
                 R.string.setting, R.string.cancel, perms);
     }
 }

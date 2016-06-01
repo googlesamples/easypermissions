@@ -9,7 +9,7 @@ EasyPermissions is installed by adding the following dependency to your `build.g
 
 ```
 dependencies {
-  compile 'pub.devrel:easypermissions:0.1.6'
+  compile 'pub.devrel:easypermissions:0.1.7'
 }
 ```
 
@@ -20,7 +20,7 @@ dependencies {
 To begin using EasyPermissions, have your Activity (or Fragment) implement the 
 `EasyPermissions.PermissionCallbacks` and override the following methods:
 
-```java
+```
 public class MainActivity extends AppCompatActivity
     implements EasyPermissions.PermissionCallbacks {
 
@@ -67,10 +67,10 @@ The example below shows how to request permissions for a method that requires bo
   * Use of the `AfterPermissionGranted` annotation. This is optional, but provided for
     convenience. If all of the permissions in a given request are granted, any methods
     annotated with the proper request code will be executed. This is to simplify the common
-    flow of needing to run the requesting method after all of its permissions have been granted.
+    flow of needing to run the requesting method after all of its permissions have been granted.    
     This can also be achieved by adding logic on the `onPermissionsGranted` callback.
 
-```java
+```
     @AfterPermissionGranted(RC_CAMERA_AND_WIFI)
     private void methodRequiresTwoPermission() {
         String[] perms = {Manifest.permission.CAMERA, Manifest.permission.CHANGE_WIFI_STATE};
@@ -82,5 +82,26 @@ The example below shows how to request permissions for a method that requires bo
             EasyPermissions.requestPermissions(this, getString(R.string.camera_and_wifi_rationale),
                     RC_CAMERA_AND_WIFI, perms);
         }
+    }
+```
+
+### Required Permissions
+
+In some cases your app will not function properly without certain permissions. If the user
+denies these permissions with the "Never Ask Again" option, you will be unable to request
+these permissions from the user and they must be changed in app settings. You can use the
+method `EasyPermissions.checkDeniedPermissionsNeverAskAgain()` to display a dialog to the
+user in this situation and direct them to the system setting screen for your app:
+
+```
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
+
+        // (Optional) Check whether the user denied permissions and checked NEVER ASK AGAIN.
+        // This will display a dialog directing them to enable the permission in app settings.
+        EasyPermissions.checkDeniedPermissionsNeverAskAgain(this,
+         		getString(R.string.rationale_ask_again),
+                R.string.setting, R.string.cancel, perms);
     }
 ```
