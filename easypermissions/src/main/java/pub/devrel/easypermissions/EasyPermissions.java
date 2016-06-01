@@ -208,12 +208,14 @@ public class EasyPermissions {
     /**
      * If user denied permissions with flagging NEVER ASK AGAIN,
      * then open another dialog explaining the permissions again and directing to the app setting.
-     * NOTE: use this method in callback method {@link PermissionCallbacks#onPermissionsDenied(int, List)}
+     * NOTE: use this method in callback method {@link PermissionCallbacks#onPermissionsDenied(int, List)},
+     * this is optional.
      *
      * @param object      the calling Activity or Fragment.
      * @param deniedPerms a set of permissions to be denied.
+     * @return Whether the user denied permissions with flagging NEVER ASK AGAIN last time.
      */
-    public static void checkDeniedPermissionsNeverAskAgain(Object object, String rationale,
+    public static boolean checkDeniedPermissionsNeverAskAgain(Object object, String rationale,
                                                            @StringRes int positiveButton,
                                                            @StringRes int negativeButton,
                                                            List<String> deniedPerms) {
@@ -223,7 +225,7 @@ public class EasyPermissions {
             if (!shouldShowRationale) {
                 final Activity activity = getActivity(object);
                 if (null == activity) {
-                    return;
+                    return true;
                 }
 
                 AlertDialog dialog = new AlertDialog.Builder(activity)
@@ -241,9 +243,11 @@ public class EasyPermissions {
                         .create();
                 dialog.show();
 
-                return;
+                return true;
             }
         }
+
+        return false;
     }
 
     @TargetApi(23)
