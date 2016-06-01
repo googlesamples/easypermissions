@@ -67,5 +67,9 @@ public class MainFragment extends Fragment implements
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
+
+        // Check whether the user denied permissions with flagging NEVER ASK AGAIN last time and this is optional.
+        EasyPermissions.checkDeniedPermissionsNeverAskAgain(this, getString(R.string.rationale_ask_again),
+                R.string.setting, R.string.cancel, perms);
     }
 }
