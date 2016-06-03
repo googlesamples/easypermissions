@@ -7,7 +7,7 @@ Android M or higher.
 
 EasyPermissions is installed by adding the following dependency to your `build.gradle` file:
 
-```
+```java
 dependencies {
   compile 'pub.devrel:easypermissions:0.1.7'
 }
@@ -20,7 +20,7 @@ dependencies {
 To begin using EasyPermissions, have your Activity (or Fragment) implement the 
 `EasyPermissions.PermissionCallbacks` and override the following methods:
 
-```
+```java
 public class MainActivity extends AppCompatActivity
     implements EasyPermissions.PermissionCallbacks {
 
@@ -70,7 +70,7 @@ The example below shows how to request permissions for a method that requires bo
     flow of needing to run the requesting method after all of its permissions have been granted.    
     This can also be achieved by adding logic on the `onPermissionsGranted` callback.
 
-```
+```java
     @AfterPermissionGranted(RC_CAMERA_AND_WIFI)
     private void methodRequiresTwoPermission() {
         String[] perms = {Manifest.permission.CAMERA, Manifest.permission.CHANGE_WIFI_STATE};
@@ -93,7 +93,7 @@ these permissions from the user and they must be changed in app settings. You ca
 method `EasyPermissions.checkDeniedPermissionsNeverAskAgain()` to display a dialog to the
 user in this situation and direct them to the system setting screen for your app:
 
-```
+```java
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
