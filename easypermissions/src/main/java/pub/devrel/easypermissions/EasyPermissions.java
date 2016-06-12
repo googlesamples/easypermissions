@@ -292,6 +292,9 @@ public class EasyPermissions {
 
     private static void runAnnotatedMethods(Object object, int requestCode) {
         Class clazz = object.getClass();
+        if (clazz.getSimpleName().endsWith("_")) {
+            clazz = clazz.getSuperclass();
+        }
         for (Method method : clazz.getDeclaredMethods()) {
             if (method.isAnnotationPresent(AfterPermissionGranted.class)) {
                 // Check for annotated methods with matching request code.
