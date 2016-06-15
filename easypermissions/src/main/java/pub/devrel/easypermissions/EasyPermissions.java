@@ -31,6 +31,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import org.androidannotations.api.view.HasViews;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -292,7 +294,7 @@ public class EasyPermissions {
 
     private static void runAnnotatedMethods(Object object, int requestCode) {
         Class clazz = object.getClass();
-        if (clazz.getSimpleName().endsWith("_")) {
+        if (isUsingAndroidAnnotations(clazz)) {
             clazz = clazz.getSuperclass();
         }
         for (Method method : clazz.getDeclaredMethods()) {
@@ -342,5 +344,9 @@ public class EasyPermissions {
         if (!(object instanceof PermissionCallbacks)) {
             throw new IllegalArgumentException("Caller must implement PermissionCallbacks.");
         }
+    }
+
+    private static boolean isUsingAndroidAnnotations(Class clazz) {
+        return clazz.getSimpleName().endsWith("_") && HasViews.class.isAssignableFrom(clazz);
     }
 }

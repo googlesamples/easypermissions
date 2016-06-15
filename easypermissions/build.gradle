@@ -21,6 +21,7 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:23.4.0'
+    provided 'org.androidannotations:androidannotations-api:4.0.0'
 }
 
 apply from: 'maven.gradle'
