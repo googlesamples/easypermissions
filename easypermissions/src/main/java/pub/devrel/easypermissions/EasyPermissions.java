@@ -42,6 +42,8 @@ import java.util.List;
  */
 public class EasyPermissions {
 
+    public static final int SETTINGS_REQ_CODE = 7;
+
     private static final String TAG = "EasyPermissions";
 
     public interface PermissionCallbacks extends
@@ -207,7 +209,11 @@ public class EasyPermissions {
 
     /**
      * If user denied permissions with the flag NEVER ASK AGAIN, open a dialog explaining the
-     * permissions rationale again and directing the user to the app settings.
+     * permissions rationale again and directing the user to the app settings. After the user
+     * returned to the app, {@link Activity#onActivityResult(int, int, Intent)} or
+     * {@link Fragment#onActivityResult(int, int, Intent)} or
+     * {@link android.app.Fragment#onActivityResult(int, int, Intent)} will be called with
+     * {@value #SETTINGS_REQ_CODE} as requestCode
      *
      * NOTE: use of this method is optional, should be called from
      * {@link PermissionCallbacks#onPermissionsDenied(int, List)}
@@ -217,11 +223,12 @@ public class EasyPermissions {
      * @param negativeButtonOnClickListener negative button on click listener, can be null
      * @return {@code true} if user denied at least one permission with the flag NEVER ASK AGAIN.
      */
-    public static boolean checkDeniedPermissionsNeverAskAgain(Object object, String rationale,
-                                                           @StringRes int positiveButton,
-                                                           @StringRes int negativeButton,
-                                                           DialogInterface.OnClickListener negativeButtonOnClickListener,
-                                                           List<String> deniedPerms) {
+    public static boolean checkDeniedPermissionsNeverAskAgain(final Object object,
+                                                              String rationale,
+                                                              @StringRes int positiveButton,
+                                                              @StringRes int negativeButton,
+                                                              DialogInterface.OnClickListener negativeButtonOnClickListener,
+                                                              List<String> deniedPerms) {
         boolean shouldShowRationale;
         for (String perm : deniedPerms) {
             shouldShowRationale = shouldShowRequestPermissionRationale(object, perm);
@@ -239,7 +246,7 @@ public class EasyPermissions {
                                 Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                                 Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
                                 intent.setData(uri);
-                                activity.startActivity(intent);
+                                startAppSettingsScreen(object, intent);
                             }
                         })
                         .setNegativeButton(negativeButton, negativeButtonOnClickListener)
@@ -289,6 +296,18 @@ public class EasyPermissions {
             return ((android.app.Fragment) object).getActivity();
         } else {
             return null;
+        }
+    }
+
+    @TargetApi(11)
+    private static void startAppSettingsScreen(Object object,
+                                               Intent intent) {
+        if (object instanceof Activity) {
+            ((Activity) object).startActivityForResult(intent, SETTINGS_REQ_CODE);
+        } else if (object instanceof Fragment) {
+            ((Fragment) object).startActivityForResult(intent, SETTINGS_REQ_CODE);
+        } else if (object instanceof android.app.Fragment) {
+            ((android.app.Fragment) object).startActivityForResult(intent, SETTINGS_REQ_CODE);
         }
     }
 
