@@ -7,4 +7,6 @@
     <string name="setting">Settings</string>
     <string name="cancel">Cancel</string>
     <string name="settings_dialog_canceled">Settings dialog canceled</string>
+    <string name="returned_from_app_settings_to_fragment">Returned from app settings to MainFragment</string>
+    <string name="returned_from_app_settings_to_activity">Returned from app settings to MainActivity</string>
 </resources>

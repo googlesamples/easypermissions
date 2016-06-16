@@ -16,6 +16,7 @@
 package pub.devrel.easypermissions.sample;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +57,18 @@ public class MainActivity extends AppCompatActivity implements
                 locationAndContactsTask();
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == EasyPermissions.SETTINGS_REQ_CODE) {
+            // Do something after user returned from app settings screen
+            // Let's show Toast for example
+            Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 
     @AfterPermissionGranted(RC_CAMERA_PERM)
