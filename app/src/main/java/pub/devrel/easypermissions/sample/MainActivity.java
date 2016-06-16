@@ -104,6 +104,6 @@ public class MainActivity extends AppCompatActivity implements
         // This will display a dialog directing them to enable the permission in app settings.
         EasyPermissions.checkDeniedPermissionsNeverAskAgain(this,
                 getString(R.string.rationale_ask_again),
-                R.string.setting, R.string.cancel, perms);
+                R.string.setting, R.string.cancel, null, perms);
     }
 }

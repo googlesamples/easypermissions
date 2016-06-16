@@ -1,6 +1,7 @@
 package pub.devrel.easypermissions.sample;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -68,10 +69,20 @@ public class MainFragment extends Fragment implements
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
 
+        // Handle negative button on click listener
+        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Let's show a toast
+                Toast.makeText(getContext(), R.string.settings_dialog_canceled, Toast.LENGTH_SHORT)
+                        .show();
+            }
+        };
+
         // (Optional) Check whether the user denied permissions and checked NEVER ASK AGAIN.
         // This will display a dialog directing them to enable the permission in app settings.
         EasyPermissions.checkDeniedPermissionsNeverAskAgain(this,
                 getString(R.string.rationale_ask_again),
-                R.string.setting, R.string.cancel, perms);
+                R.string.setting, R.string.cancel, onClickListener, perms);
     }
 }
