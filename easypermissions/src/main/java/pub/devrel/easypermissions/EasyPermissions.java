@@ -212,13 +212,15 @@ public class EasyPermissions {
      * NOTE: use of this method is optional, should be called from
      * {@link PermissionCallbacks#onPermissionsDenied(int, List)}
      *
-     * @param object      the calling Activity or Fragment.
-     * @param deniedPerms the set of denied permissions.
+     * @param object                        the calling Activity or Fragment.
+     * @param deniedPerms                   the set of denied permissions.
+     * @param negativeButtonOnClickListener negative button on click listener, can be null
      * @return {@code true} if user denied at least one permission with the flag NEVER ASK AGAIN.
      */
     public static boolean checkDeniedPermissionsNeverAskAgain(Object object, String rationale,
                                                            @StringRes int positiveButton,
                                                            @StringRes int negativeButton,
+                                                           DialogInterface.OnClickListener negativeButtonOnClickListener,
                                                            List<String> deniedPerms) {
         boolean shouldShowRationale;
         for (String perm : deniedPerms) {
@@ -240,7 +242,7 @@ public class EasyPermissions {
                                 activity.startActivity(intent);
                             }
                         })
-                        .setNegativeButton(negativeButton, null)
+                        .setNegativeButton(negativeButton, negativeButtonOnClickListener)
                         .create();
                 dialog.show();
 
