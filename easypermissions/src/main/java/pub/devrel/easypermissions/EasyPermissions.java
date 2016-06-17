@@ -31,8 +31,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
-import org.androidannotations.api.view.HasViews;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -294,7 +292,7 @@ public class EasyPermissions {
 
     private static void runAnnotatedMethods(Object object, int requestCode) {
         Class clazz = object.getClass();
-        if (isUsingAndroidAnnotations(clazz)) {
+        if (isUsingAndroidAnnotations(object)) {
             clazz = clazz.getSuperclass();
         }
         for (Method method : clazz.getDeclaredMethods()) {
@@ -346,7 +344,16 @@ public class EasyPermissions {
         }
     }
 
-    private static boolean isUsingAndroidAnnotations(Class clazz) {
-        return clazz.getSimpleName().endsWith("_") && HasViews.class.isAssignableFrom(clazz);
+    private static boolean isUsingAndroidAnnotations(Object object) {
+        if (!object.getClass().getSimpleName().endsWith("_")) {
+            return false;
+        }
+
+        try {
+            Class clazz = Class.forName("org.androidannotations.api.view.HasViews");
+            return clazz.isInstance(object);
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 }
