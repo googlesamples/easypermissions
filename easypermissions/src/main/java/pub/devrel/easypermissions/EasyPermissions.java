@@ -292,6 +292,9 @@ public class EasyPermissions {
 
     private static void runAnnotatedMethods(Object object, int requestCode) {
         Class clazz = object.getClass();
+        if (isUsingAndroidAnnotations(object)) {
+            clazz = clazz.getSuperclass();
+        }
         for (Method method : clazz.getDeclaredMethods()) {
             if (method.isAnnotationPresent(AfterPermissionGranted.class)) {
                 // Check for annotated methods with matching request code.
@@ -338,6 +341,19 @@ public class EasyPermissions {
         // Make sure Object implements callbacks
         if (!(object instanceof PermissionCallbacks)) {
             throw new IllegalArgumentException("Caller must implement PermissionCallbacks.");
+        }
+    }
+
+    private static boolean isUsingAndroidAnnotations(Object object) {
+        if (!object.getClass().getSimpleName().endsWith("_")) {
+            return false;
+        }
+
+        try {
+            Class clazz = Class.forName("org.androidannotations.api.view.HasViews");
+            return clazz.isInstance(object);
+        } catch (ClassNotFoundException e) {
+            return false;
         }
     }
 }
