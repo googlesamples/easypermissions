@@ -45,7 +45,7 @@ public class EasyPermissions {
     private static final String TAG = "EasyPermissions";
 
     public interface PermissionCallbacks extends
-                                         ActivityCompat.OnRequestPermissionsResultCallback {
+            ActivityCompat.OnRequestPermissionsResultCallback {
 
         void onPermissionsGranted(int requestCode, List<String> perms);
 
@@ -94,9 +94,9 @@ public class EasyPermissions {
     public static void requestPermissions(final Object object, String rationale,
                                           final int requestCode, final String... perms) {
         requestPermissions(object, rationale,
-                           android.R.string.ok,
-                           android.R.string.cancel,
-                           requestCode, perms);
+                android.R.string.ok,
+                android.R.string.cancel,
+                requestCode, perms);
     }
 
     /**
@@ -158,7 +158,7 @@ public class EasyPermissions {
      * Handle the result of a permission request, should be called from the calling Activity's
      * {@link android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult(int, String[], int[])}
      * method.
-     * <p>
+     * <p/>
      * If any permissions were granted or denied, the Activity will receive the appropriate
      * callbacks through {@link PermissionCallbacks} and methods annotated with
      * {@link AfterPermissionGranted} will be run if appropriate.
@@ -208,7 +208,7 @@ public class EasyPermissions {
     /**
      * If user denied permissions with the flag NEVER ASK AGAIN, open a dialog explaining the
      * permissions rationale again and directing the user to the app settings.
-     *
+     * <p/>
      * NOTE: use of this method is optional, should be called from
      * {@link PermissionCallbacks#onPermissionsDenied(int, List)}
      *
@@ -217,9 +217,9 @@ public class EasyPermissions {
      * @return {@code true} if user denied at least one permission with the flag NEVER ASK AGAIN.
      */
     public static boolean checkDeniedPermissionsNeverAskAgain(Object object, String rationale,
-                                                           @StringRes int positiveButton,
-                                                           @StringRes int negativeButton,
-                                                           List<String> deniedPerms) {
+                                                              @StringRes int positiveButton,
+                                                              @StringRes int negativeButton,
+                                                              List<String> deniedPerms) {
         boolean shouldShowRationale;
         for (String perm : deniedPerms) {
             shouldShowRationale = shouldShowRequestPermissionRationale(object, perm);
@@ -244,6 +244,31 @@ public class EasyPermissions {
                         .create();
                 dialog.show();
 
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if user denied permissions with the flag NEVER ASK AGAIN.
+     * <p/>
+     * NOTE: use of this method is optional, should be called from
+     * {@link PermissionCallbacks#onPermissionsDenied(int, List)}
+     *
+     * @param object      the calling Activity or Fragment.
+     * @param deniedPerms the set of denied permissions.
+     * @return {@code true} if user denied at least one permission with the flag NEVER ASK AGAIN.
+     */
+    public static boolean checkDeniedPermissionsNeverAskAgainWithoutDialog(Object object, String rationale,
+                                                                           @StringRes int positiveButton,
+                                                                           @StringRes int negativeButton,
+                                                                           List<String> deniedPerms) {
+        boolean shouldShowRationale;
+        for (String perm : deniedPerms) {
+            shouldShowRationale = shouldShowRequestPermissionRationale(object, perm);
+            if (!shouldShowRationale) {
                 return true;
             }
         }
