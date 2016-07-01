@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class EasyPermissions {
 
-    public static final int SETTINGS_REQ_CODE = 7;
+    public static final int SETTINGS_REQ_CODE = 16061;
 
     private static final String TAG = "EasyPermissions";
 
