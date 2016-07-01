@@ -63,12 +63,33 @@ public class MainActivity extends AppCompatActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // Do something after user returned from app settings screen. User may be
+        // changed/updated the permissions. In this sample, we could check whether the user has
+        // changed/updated permission for camera, access fine location, or read contacts.
         if (requestCode == EasyPermissions.SETTINGS_REQ_CODE) {
-            // Do something after user returned from app settings screen
-            // Let's show Toast for example
-            Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT)
+            // Check the changed/updated permissions manually. Let's show toast.
+            Toast.makeText(this, getUpdatedPermissionsText(), Toast.LENGTH_SHORT)
                     .show();
         }
+    }
+
+    private String getUpdatedPermissionsText() {
+        boolean hasCameraPermission = EasyPermissions.hasPermissions(
+                this, Manifest.permission.CAMERA
+        );
+        boolean hasAccessFineLocationPermission = EasyPermissions.hasPermissions(
+                this, Manifest.permission.ACCESS_FINE_LOCATION
+        );
+        boolean hasReadContactsPermission = EasyPermissions.hasPermissions(
+                this, Manifest.permission.READ_CONTACTS
+        );
+
+        return String.format(
+                getString(R.string.has_some_permissions),
+                hasCameraPermission,
+                hasAccessFineLocationPermission,
+                hasReadContactsPermission
+        );
     }
 
     @AfterPermissionGranted(RC_CAMERA_PERM)

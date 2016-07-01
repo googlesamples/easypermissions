@@ -45,10 +45,18 @@ public class MainFragment extends Fragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // Do something after user returned from app settings screen. User may be
+        // changed/updated the permissions. Let's check whether the user has changed sms
+        // permission or not after returned from settings screen
         if (requestCode == EasyPermissions.SETTINGS_REQ_CODE) {
-            // Do something after user returned from app settings screen
-            // Let's show Toast for example
-            Toast.makeText(getContext(), R.string.returned_from_app_settings_to_fragment, Toast.LENGTH_SHORT)
+            boolean hasReadSmsPermission = EasyPermissions.hasPermissions(
+                    getContext(), Manifest.permission.READ_SMS
+            );
+            String hasReadSmsPermissionText = String.format(
+                    getString(R.string.has_read_sms_permission), hasReadSmsPermission
+            );
+
+            Toast.makeText(getContext(), hasReadSmsPermissionText, Toast.LENGTH_SHORT)
                     .show();
         }
     }
