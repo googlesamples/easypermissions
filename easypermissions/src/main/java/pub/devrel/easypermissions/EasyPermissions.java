@@ -220,7 +220,9 @@ public class EasyPermissions {
      *
      * @param object                        the calling Activity or Fragment.
      * @param deniedPerms                   the set of denied permissions.
-     * @param negativeButtonOnClickListener negative button on click listener, can be null
+     * @param negativeButtonOnClickListener negative button on click listener. If the
+     *                                      user click the negative button, then this listener will
+     *                                      be called. Pass null if you don't want to handle it.
      * @return {@code true} if user denied at least one permission with the flag NEVER ASK AGAIN.
      */
     public static boolean checkDeniedPermissionsNeverAskAgain(final Object object,
