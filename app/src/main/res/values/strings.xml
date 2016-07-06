@@ -7,7 +7,6 @@
     <string name="setting">Settings</string>
     <string name="cancel">Cancel</string>
     <string name="settings_dialog_canceled">Settings dialog canceled</string>
+    <string name="returned_from_app_settings_to_activity">Returned from app settings to MainActivity</string>
     <string name="has_read_sms_permission">Has read sms permission: %b</string>
-    <string name="has_some_permissions">Has camera permission: %1$b\nHas access fine location permission: %2$b\nHas read contacts permission: %3$b
-    </string>
 </resources>
