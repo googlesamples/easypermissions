@@ -98,10 +98,41 @@ user in this situation and direct them to the system setting screen for your app
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
 
+        // Handle negative button on click listener. Pass null if you don't want to handle it.
+        DialogInterface.OnClickListener cancelButtonListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Let's show a toast
+                Toast.makeText(getContext(), R.string.settings_dialog_canceled, Toast.LENGTH_SHORT)
+                        .show();
+            }
+        };
+
         // (Optional) Check whether the user denied permissions and checked NEVER ASK AGAIN.
         // This will display a dialog directing them to enable the permission in app settings.
-        EasyPermissions.checkDeniedPermissionsNeverAskAgain(this,
+        EasyPermissions.checkDeniedPermissionsNeverAskAgain(
+                this,
          		getString(R.string.rationale_ask_again),
-                R.string.setting, R.string.cancel, perms);
+                R.string.setting,
+                R.string.cancel,
+                cancelButtonListener,
+                perms
+        );
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Do something after user returned from app settings screen. User may be
+        // changed/updated the permissions. Let's check whether the user has some permissions or not
+        // after returned from settings screen
+        if (requestCode == EasyPermissions.SETTINGS_REQ_CODE) {
+            boolean hasSomePermissions = EasyPermissions.hasPermissions(
+                    getContext(), somePermissions
+            );
+
+            // Do something with the updated permissions
+        }
     }
 ```
