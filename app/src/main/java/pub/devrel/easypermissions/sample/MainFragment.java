@@ -52,8 +52,8 @@ public class MainFragment extends Fragment implements
             boolean hasReadSmsPermission = EasyPermissions.hasPermissions(
                     getContext(), Manifest.permission.READ_SMS
             );
-            String hasReadSmsPermissionText = String.format(
-                    getString(R.string.has_read_sms_permission), hasReadSmsPermission
+            String hasReadSmsPermissionText = getString(
+                    R.string.has_read_sms_permission, hasReadSmsPermission
             );
 
             Toast.makeText(getContext(), hasReadSmsPermissionText, Toast.LENGTH_SHORT)
