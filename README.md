@@ -9,7 +9,7 @@ EasyPermissions is installed by adding the following dependency to your `build.g
 
 ```java
 dependencies {
-  compile 'pub.devrel:easypermissions:0.1.7'
+  compile 'pub.devrel:easypermissions:0.1.8'
 }
 ```
 
@@ -112,12 +112,11 @@ user in this situation and direct them to the system setting screen for your app
         // This will display a dialog directing them to enable the permission in app settings.
         EasyPermissions.checkDeniedPermissionsNeverAskAgain(
                 this,
-         		getString(R.string.rationale_ask_again),
+                getString(R.string.rationale_ask_again),
                 R.string.setting,
                 R.string.cancel,
                 cancelButtonListener,
-                perms
-        );
+                perms);
     }
 
     @Override

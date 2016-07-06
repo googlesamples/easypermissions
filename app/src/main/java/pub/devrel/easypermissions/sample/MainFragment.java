@@ -49,15 +49,12 @@ public class MainFragment extends Fragment implements
         // changed/updated the permissions. Let's check whether the user has changed sms
         // permission or not after returned from settings screen
         if (requestCode == EasyPermissions.SETTINGS_REQ_CODE) {
-            boolean hasReadSmsPermission = EasyPermissions.hasPermissions(
-                    getContext(), Manifest.permission.READ_SMS
-            );
-            String hasReadSmsPermissionText = getString(
-                    R.string.has_read_sms_permission, hasReadSmsPermission
-            );
+            boolean hasReadSmsPermission = EasyPermissions.hasPermissions(getContext(),
+                    Manifest.permission.READ_SMS);
+            String hasReadSmsPermissionText = getString(R.string.has_read_sms_permission,
+                    hasReadSmsPermission);
 
-            Toast.makeText(getContext(), hasReadSmsPermissionText, Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(getContext(), hasReadSmsPermissionText, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -94,9 +91,8 @@ public class MainFragment extends Fragment implements
         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Let's show a toast
-                Toast.makeText(getContext(), R.string.settings_dialog_canceled, Toast.LENGTH_SHORT)
-                        .show();
+            // Let's show a toast
+            Toast.makeText(getContext(), R.string.settings_dialog_canceled, Toast.LENGTH_SHORT).show();
             }
         };
 
