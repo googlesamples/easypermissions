@@ -9,7 +9,7 @@ EasyPermissions is installed by adding the following dependency to your `build.g
 
 ```java
 dependencies {
-  compile 'pub.devrel:easypermissions:0.1.8'
+  compile 'pub.devrel:easypermissions:0.1.9'
 }
 ```
 
@@ -54,7 +54,7 @@ The example below shows how to request permissions for a method that requires bo
   * Use of the `AfterPermissionGranted` annotation. This is optional, but provided for
     convenience. If all of the permissions in a given request are granted, any methods
     annotated with the proper request code will be executed. This is to simplify the common
-    flow of needing to run the requesting method after all of its permissions have been granted.    
+    flow of needing to run the requesting method after all of its permissions have been granted.
     This can also be achieved by adding logic on the `onPermissionsGranted` callback.
 
 ```java
