@@ -65,7 +65,7 @@ public class EasyPermissions {
      * is not yet granted.
      */
     public static boolean hasPermissions(Context context, String... perms) {
-        // Always return true for SDK < M, let the system deal with the permissions 
+        // Always return true for SDK < M, let the system deal with the permissions
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             Log.w(TAG, "hasPermissions: API version < M, returning true by default");
             return true;
@@ -122,7 +122,6 @@ public class EasyPermissions {
                                           final int requestCode, final String... perms) {
 
         checkCallingObjectSuitability(object);
-        final PermissionCallbacks callbacks = (PermissionCallbacks) object;
 
         boolean shouldShowRationale = false;
         for (String perm : perms) {
@@ -148,7 +147,9 @@ public class EasyPermissions {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // act as if the permissions were denied
-                            callbacks.onPermissionsDenied(requestCode, Arrays.asList(perms));
+                            if (object instanceof PermissionCallbacks) {
+                                ((PermissionCallbacks) object).onPermissionsDenied(requestCode, Arrays.asList(perms));
+                            }
                         }
                     }).create();
             dialog.show();
@@ -177,7 +178,6 @@ public class EasyPermissions {
                                                   int[] grantResults, Object object) {
 
         checkCallingObjectSuitability(object);
-        PermissionCallbacks callbacks = (PermissionCallbacks) object;
 
         // Make a collection of granted and denied permissions from the request.
         ArrayList<String> granted = new ArrayList<>();
@@ -194,12 +194,16 @@ public class EasyPermissions {
         // Report granted permissions, if any.
         if (!granted.isEmpty()) {
             // Notify callbacks
-            callbacks.onPermissionsGranted(requestCode, granted);
+            if (object instanceof PermissionCallbacks) {
+                ((PermissionCallbacks) object).onPermissionsGranted(requestCode, granted);
+            }
         }
 
         // Report denied permissions, if any.
         if (!denied.isEmpty()) {
-            callbacks.onPermissionsDenied(requestCode, denied);
+            if (object instanceof PermissionCallbacks) {
+                ((PermissionCallbacks) object).onPermissionsDenied(requestCode, denied);
+            }
         }
 
         // If 100% successful, call annotated methods
@@ -373,11 +377,6 @@ public class EasyPermissions {
             } else {
                 throw new IllegalArgumentException("Caller must be an Activity or a Fragment.");
             }
-        }
-
-        // Make sure Object implements callbacks
-        if (!(object instanceof PermissionCallbacks)) {
-            throw new IllegalArgumentException("Caller must implement PermissionCallbacks.");
         }
     }
 
