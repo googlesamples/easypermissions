@@ -17,12 +17,10 @@ dependencies {
 
 ### Basic
 
-To begin using EasyPermissions, have your Activity (or Fragment) implement the 
-`EasyPermissions.PermissionCallbacks` and override the following methods:
+To begin using EasyPermissions, have your `Activity` (or `Fragment`) override the `onRequestPermissionsResult` method:
 
 ```java
-public class MainActivity extends AppCompatActivity
-    implements EasyPermissions.PermissionCallbacks {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,22 +31,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    
+
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-    @Override
-    public void onPermissionsGranted(int requestCode, List<String> list) {
-        // Some permissions have been granted
-        // ...
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, List<String> list) {
-        // Some permissions have been denied
-        // ...
-    }
 }
 ```
 
@@ -83,6 +70,41 @@ The example below shows how to request permissions for a method that requires bo
                     RC_CAMERA_AND_WIFI, perms);
         }
     }
+```
+
+Optionally, for a finer control, you can have your `Activity` / `Framgment` implement
+the `PermissionCallbacks` interface.
+
+```java
+public class MainActivity extends AppCompatActivity
+    implements EasyPermissions.PermissionCallbacks {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> list) {
+        // Some permissions have been granted
+        // ...
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> list) {
+        // Some permissions have been denied
+        // ...
+    }
+}
 ```
 
 ### Required Permissions
