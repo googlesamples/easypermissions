@@ -79,3 +79,6 @@ public class MainFragment extends Fragment implements EasyPermission.PermissionC
 
 ```
 
+## 博客文章
+[Android 6.0权限管理及其封装](http://blog.csdn.net/u014099894/article/details/51896832)
+
