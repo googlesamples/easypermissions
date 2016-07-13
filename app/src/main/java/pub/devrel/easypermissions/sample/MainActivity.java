@@ -20,50 +20,41 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import java.util.List;
+import pub.devrel.easypermissions.EasyPermission;
 
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
-
-public class MainActivity extends AppCompatActivity implements
-        EasyPermissions.PermissionCallbacks {
+public class MainActivity extends AppCompatActivity implements EasyPermission.PermissionCallback {
 
     private static final String TAG = "MainActivity";
 
     private static final int RC_CAMERA_PERM = 123;
     private static final int RC_LOCATION_CONTACTS_PERM = 124;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // Button click listener that will request one permission.
         findViewById(R.id.button_camera).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 cameraTask();
             }
         });
 
         // Button click listener that will request two permissions.
         findViewById(R.id.button_location_and_wifi).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 locationAndContactsTask();
             }
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == EasyPermissions.SETTINGS_REQ_CODE) {
+        if (requestCode == EasyPermission.SETTINGS_REQ_CODE) {
             // Do something after user returned from app settings screen
             // Let's show Toast for example
             Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT)
@@ -71,52 +62,56 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    @AfterPermissionGranted(RC_CAMERA_PERM)
     public void cameraTask() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)) {
-            // Have permission, do the thing!
-            Toast.makeText(this, "TODO: Camera things", Toast.LENGTH_LONG).show();
-        } else {
-            // Ask for one permission
-            EasyPermissions.requestPermissions(this, getString(R.string.rationale_camera),
-                    RC_CAMERA_PERM, Manifest.permission.CAMERA);
+        EasyPermission.with(this)
+                .rationale(getString(R.string.rationale_camera))
+                .addRequestCode(RC_CAMERA_PERM)
+                .permissions(Manifest.permission.CAMERA)
+                .request();
+    }
+
+    @Override public void onPermissionGranted(int requestCode, List<String> perms) {
+        switch (requestCode) {
+            case RC_CAMERA_PERM:
+                Toast.makeText(this, "TODO: Camera Granted", Toast.LENGTH_LONG)
+                        .show();
+                break;
+            case RC_LOCATION_CONTACTS_PERM:
+                Toast.makeText(this, "TODO: LOCATION Granted", Toast.LENGTH_LONG)
+                        .show();
+                break;
         }
     }
 
-    @AfterPermissionGranted(RC_LOCATION_CONTACTS_PERM)
-    public void locationAndContactsTask() {
-        String[] perms = { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_CONTACTS };
-        if (EasyPermissions.hasPermissions(this, perms)) {
-            // Have permissions, do the thing!
-            Toast.makeText(this, "TODO: Location and Contacts things", Toast.LENGTH_LONG).show();
-        } else {
-            // Ask for both permissions
-            EasyPermissions.requestPermissions(this, getString(R.string.rationale_location_contacts),
-                    RC_LOCATION_CONTACTS_PERM, perms);
-        }
+    @Override public void onPermissionDenied(int requestCode, List<String> perms) {
+        //switch (requestCode) {
+        //    case RC_CAMERA_PERM:
+        //        break;
+        //    case RC_LOCATION_CONTACTS_PERM:
+        //        break;
+        //}
+        Toast.makeText(this, "onPermissionDenied:" + requestCode + ":" + perms.size(), Toast.LENGTH_SHORT)
+                .show();
+
+        //可选的,跳转到Settings界面
+        EasyPermission.checkDeniedPermissionsNeverAskAgain(this, getString(R.string.rationale_ask_again),
+                                                           R.string.setting, R.string.cancel, null, perms);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        // EasyPermissions handles the request result.
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+        EasyPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
-    @Override
-    public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
+
+    public void locationAndContactsTask() {
+        EasyPermission.with(this)
+                .permissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_CONTACTS)
+                .rationale(getString(R.string.rationale_location_contacts))
+                .addRequestCode(RC_LOCATION_CONTACTS_PERM)
+                .request();
     }
 
-    @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms) {
-        Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
-
-        // (Optional) Check whether the user denied permissions and checked NEVER ASK AGAIN.
-        // This will display a dialog directing them to enable the permission in app settings.
-        EasyPermissions.checkDeniedPermissionsNeverAskAgain(this,
-                getString(R.string.rationale_ask_again),
-                R.string.setting, R.string.cancel, null, perms);
-    }
 }
