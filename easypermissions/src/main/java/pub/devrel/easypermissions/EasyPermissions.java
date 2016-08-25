@@ -89,14 +89,15 @@ public class EasyPermissions {
      *                    {@link android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback}
      *                    or
      *                    {@link android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
+     * @param title       a title used to set to the dialog
      * @param rationale   a message explaining why the application needs this set of permissions, will
      *                    be displayed if the user rejects the request the first time.
      * @param requestCode request code to track this request, must be < 256.
      * @param perms       a set of permissions to be requested.
      */
-    public static void requestPermissions(final Object object, String rationale,
+    public static void requestPermissions(final Object object, String title, String rationale,
                                           final int requestCode, final String... perms) {
-        requestPermissions(object, rationale,
+        requestPermissions(object, title, rationale,
                 android.R.string.ok,
                 android.R.string.cancel,
                 requestCode, perms);
@@ -116,7 +117,7 @@ public class EasyPermissions {
      * @param requestCode    request code to track this request, must be < 256.
      * @param perms          a set of permissions to be requested.
      */
-    public static void requestPermissions(final Object object, String rationale,
+    public static void requestPermissions(final Object object, String title, String rationale,
                                           @StringRes int positiveButton,
                                           @StringRes int negativeButton,
                                           final int requestCode, final String... perms) {
@@ -136,6 +137,7 @@ public class EasyPermissions {
             }
 
             AlertDialog dialog = new AlertDialog.Builder(activity)
+                    .setTitle(title)
                     .setMessage(rationale)
                     .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
                         @Override
