@@ -24,11 +24,11 @@ public class MainFragment extends Fragment implements
     private static final int RC_SMS_PERM = 122;
 
     @Override
-    public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         // Create view
-        View v =  inflater.inflate(R.layout.fragment_main, container);
+        View v = inflater.inflate(R.layout.fragment_main, container);
 
         // Button click listener
         v.findViewById(R.id.button_sms).setOnClickListener(new View.OnClickListener() {
@@ -91,14 +91,14 @@ public class MainFragment extends Fragment implements
         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            // Let's show a toast
-            Toast.makeText(getContext(), R.string.settings_dialog_canceled, Toast.LENGTH_SHORT).show();
+                // Let's show a toast
+                Toast.makeText(getContext(), R.string.settings_dialog_canceled, Toast.LENGTH_SHORT).show();
             }
         };
 
         // (Optional) Check whether the user denied permissions and checked NEVER ASK AGAIN.
         // This will display a dialog directing them to enable the permission in app settings.
-        EasyPermissions.checkDeniedPermissionsNeverAskAgain(this,
+        EasyPermissions.checkDeniedPermissionsNeverAskAgain(this, "Help",
                 getString(R.string.rationale_ask_again),
                 R.string.setting, R.string.cancel, onClickListener, perms);
     }

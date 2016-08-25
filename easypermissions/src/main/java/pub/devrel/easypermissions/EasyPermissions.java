@@ -213,15 +213,16 @@ public class EasyPermissions {
     }
 
     /**
-     * Calls {@link #checkDeniedPermissionsNeverAskAgain(Object, String, int, int, DialogInterface.OnClickListener, List)}
+     * Calls {@link #checkDeniedPermissionsNeverAskAgain(Object, String, String, int, int, DialogInterface.OnClickListener, List)}
      * with a {@code null} argument for the negatieb buttonOnClickListener.
      */
     public static boolean checkDeniedPermissionsNeverAskAgain(final Object object,
+                                                              String title,
                                                               String rationale,
                                                               @StringRes int positiveButton,
                                                               @StringRes int negativeButton,
                                                               List<String> deniedPerms) {
-        return checkDeniedPermissionsNeverAskAgain(object, rationale,
+        return checkDeniedPermissionsNeverAskAgain(object, title, rationale,
                 positiveButton, negativeButton, null, deniedPerms);
     }
 
@@ -244,6 +245,7 @@ public class EasyPermissions {
      * @return {@code true} if user denied at least one permission with the flag NEVER ASK AGAIN.
      */
     public static boolean checkDeniedPermissionsNeverAskAgain(final Object object,
+                                                              String title,
                                                               String rationale,
                                                               @StringRes int positiveButton,
                                                               @StringRes int negativeButton,
@@ -259,6 +261,7 @@ public class EasyPermissions {
                 }
 
                 AlertDialog dialog = new AlertDialog.Builder(activity)
+                        .setTitle(title)
                         .setMessage(rationale)
                         .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
                             @Override
