@@ -163,21 +163,18 @@ public class EasyPermissions {
      * {@link android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult(int, String[], int[])}
      * method.
      * <p>
-     * If any permissions were granted or denied, the Activity will receive the appropriate
+     * If any permissions were granted or denied, the {@code object} will receive the appropriate
      * callbacks through {@link PermissionCallbacks} and methods annotated with
      * {@link AfterPermissionGranted} will be run if appropriate.
      *
      * @param requestCode  requestCode argument to permission result callback.
      * @param permissions  permissions argument to permission result callback.
      * @param grantResults grantResults argument to permission result callback.
-     * @param object       the calling Activity or Fragment.
-     * @throws IllegalArgumentException if the calling Activity does not implement
-     *                                  {@link PermissionCallbacks}.
+     * @param object       the object that has a method annotated with {@link AfterPermissionGranted}
+     *                     or implements {@link PermissionCallbacks}.
      */
     public static void onRequestPermissionsResult(int requestCode, String[] permissions,
                                                   int[] grantResults, Object object) {
-
-        checkCallingObjectSuitability(object);
 
         // Make a collection of granted and denied permissions from the request.
         ArrayList<String> granted = new ArrayList<>();
