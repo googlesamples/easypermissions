@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements
     private static final int RC_CAMERA_PERM = 123;
     private static final int RC_LOCATION_CONTACTS_PERM = 124;
 
+    // package local since it's being accessed from anonymous class
+    FeatureComponent featureComponent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +58,14 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 locationAndContactsTask();
+            }
+        });
+
+        featureComponent = new FeatureComponent(this);
+        findViewById(R.id.button_component).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                featureComponent.start();
             }
         });
     }
@@ -102,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements
 
         // EasyPermissions handles the request result.
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+        // Example when the {@code object} instance is not an Activity or Fragment.
+        // Consider making object a vararg parameter.
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, featureComponent);
     }
 
     @Override
