@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @AfterPermissionGranted(RC_LOCATION_CONTACTS_PERM)
     public void locationAndContactsTask() {
-        String[] perms = { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_CONTACTS };
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_CONTACTS};
         if (EasyPermissions.hasPermissions(this, perms)) {
             // Have permissions, do the thing!
             Toast.makeText(this, "TODO: Location and Contacts things", Toast.LENGTH_LONG).show();
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // (Optional) Check whether the user denied permissions and checked NEVER ASK AGAIN.
         // This will display a dialog directing them to enable the permission in app settings.
-        EasyPermissions.checkDeniedPermissionsNeverAskAgain(this,
+        EasyPermissions.checkDeniedPermissionsNeverAskAgain(this, null,
                 getString(R.string.rationale_ask_again),
                 R.string.setting, R.string.cancel, null, perms);
     }
