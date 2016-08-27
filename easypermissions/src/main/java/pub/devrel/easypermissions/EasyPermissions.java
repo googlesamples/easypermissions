@@ -214,7 +214,34 @@ public class EasyPermissions {
 
     /**
      * Calls {@link #checkDeniedPermissionsNeverAskAgain(Object, String, String, int, int, DialogInterface.OnClickListener, List)}
-     * with a {@code null} argument for the negatieb buttonOnClickListener.
+     * with {@code null} arguments for the title & negative buttonOnClickListener.
+     */
+    public static boolean checkDeniedPermissionsNeverAskAgain(final Object object,
+                                                              String rationale,
+                                                              @StringRes int positiveButton,
+                                                              @StringRes int negativeButton,
+                                                              List<String> deniedPerms) {
+        return checkDeniedPermissionsNeverAskAgain(object, null, rationale,
+                positiveButton, negativeButton, null, deniedPerms);
+    }
+
+    /**
+     * Calls {@link #checkDeniedPermissionsNeverAskAgain(Object, String, String, int, int, DialogInterface.OnClickListener, List)}
+     * with a {@code null} argument for the title.
+     */
+    public static boolean checkDeniedPermissionsNeverAskAgain(final Object object,
+                                                              String rationale,
+                                                              @StringRes int positiveButton,
+                                                              @StringRes int negativeButton,
+                                                              @Nullable DialogInterface.OnClickListener negativeButtonOnClickListener,
+                                                              List<String> deniedPerms) {
+        return checkDeniedPermissionsNeverAskAgain(object, null, rationale,
+                positiveButton, negativeButton, negativeButtonOnClickListener, deniedPerms);
+    }
+
+    /**
+     * Calls {@link #checkDeniedPermissionsNeverAskAgain(Object, String, String, int, int, DialogInterface.OnClickListener, List)}
+     * with a {@code null} argument for the negative buttonOnClickListener.
      */
     public static boolean checkDeniedPermissionsNeverAskAgain(final Object object,
                                                               String title,
