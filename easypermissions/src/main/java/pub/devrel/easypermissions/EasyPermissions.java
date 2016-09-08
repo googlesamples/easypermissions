@@ -170,11 +170,11 @@ public class EasyPermissions {
      * @param requestCode  requestCode argument to permission result callback.
      * @param permissions  permissions argument to permission result callback.
      * @param grantResults grantResults argument to permission result callback.
-     * @param object       the object that has a method annotated with {@link AfterPermissionGranted}
-     *                     or implements {@link PermissionCallbacks}.
+     * @param receivers    an array of objects that have a method annotated with {@link AfterPermissionGranted}
+     *                     or implement {@link PermissionCallbacks}.
      */
     public static void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                                  int[] grantResults, Object object) {
+                                                  int[] grantResults, Object... receivers) {
 
         // Make a collection of granted and denied permissions from the request.
         ArrayList<String> granted = new ArrayList<>();
@@ -188,25 +188,28 @@ public class EasyPermissions {
             }
         }
 
-        // Report granted permissions, if any.
-        if (!granted.isEmpty()) {
-            // Notify callbacks
-            if (object instanceof PermissionCallbacks) {
-                ((PermissionCallbacks) object).onPermissionsGranted(requestCode, granted);
+        // iterate through all receivers
+        for (Object object : receivers) {
+            // Report granted permissions, if any.
+            if (!granted.isEmpty()) {
+                if (object instanceof PermissionCallbacks) {
+                    ((PermissionCallbacks) object).onPermissionsGranted(requestCode, granted);
+                }
+            }
+
+            // Report denied permissions, if any.
+            if (!denied.isEmpty()) {
+                if (object instanceof PermissionCallbacks) {
+                    ((PermissionCallbacks) object).onPermissionsDenied(requestCode, denied);
+                }
+            }
+
+            // If 100% successful, call annotated methods
+            if (!granted.isEmpty() && denied.isEmpty()) {
+                runAnnotatedMethods(object, requestCode);
             }
         }
 
-        // Report denied permissions, if any.
-        if (!denied.isEmpty()) {
-            if (object instanceof PermissionCallbacks) {
-                ((PermissionCallbacks) object).onPermissionsDenied(requestCode, denied);
-            }
-        }
-
-        // If 100% successful, call annotated methods
-        if (!granted.isEmpty() && denied.isEmpty()) {
-            runAnnotatedMethods(object, requestCode);
-        }
     }
 
     /**

@@ -111,11 +111,9 @@ public class MainActivity extends AppCompatActivity implements
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        // EasyPermissions handles the request result.
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-        // Example when the {@code object} instance is not an Activity or Fragment.
-        // Consider making object a vararg parameter.
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, featureComponent);
+        // EasyPermissions handles the request result with an
+        // example when the {@code object} instance is not an Activity or Fragment.
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this, featureComponent);
     }
 
     @Override
