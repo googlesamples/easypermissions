@@ -119,12 +119,22 @@ public class AppSettingsDialog {
             mRationale = rationale;
         }
 
+        /**
+         * Create a new Builder for an {@link AppSettingsDialog}.
+         * @param fragment the Fragment in which to display the dialog.
+         * @param rationale text explaining why the user should launch the app settings screen.
+         */
         public Builder(@NonNull android.support.v4.app.Fragment fragment, @NonNull String rationale) {
             mActivityOrFragment = fragment;
             mContext = fragment.getContext();
             mRationale = rationale;
         }
 
+        /**
+         * Create a new Builder for an {@link AppSettingsDialog}.
+         * @param fragment the Fragment in which to display the dialog.
+         * @param rationale text explaining why the user should launch the app settings screen.
+         */
         @TargetApi(11)
         public Builder(@NonNull android.app.Fragment fragment, @NonNull String rationale) {
             mActivityOrFragment = fragment;
