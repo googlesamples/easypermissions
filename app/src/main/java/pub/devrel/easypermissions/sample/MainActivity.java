@@ -27,6 +27,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final int RC_CAMERA_PERM = 123;
     private static final int RC_LOCATION_CONTACTS_PERM = 124;
+    private static final int RC_SETTINGS_SCREEN = 125;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +65,8 @@ public class MainActivity extends AppCompatActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == EasyPermissions.SETTINGS_REQ_CODE) {
-            // Do something after user returned from app settings screen
-            // Let's show Toast for example
+        if (requestCode == RC_SETTINGS_SCREEN) {
+            // Do something after user returned from app settings screen, like showing a Toast.
             Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT)
                     .show();
         }
@@ -113,10 +114,16 @@ public class MainActivity extends AppCompatActivity implements
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
 
-        // (Optional) Check whether the user denied permissions and checked NEVER ASK AGAIN.
+        // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
         // This will display a dialog directing them to enable the permission in app settings.
-        EasyPermissions.checkDeniedPermissionsNeverAskAgain(this,
-                getString(R.string.rationale_ask_again),
-                R.string.setting, R.string.cancel, null, perms);
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this, getString(R.string.rationale_ask_again))
+                    .setTitle(getString(R.string.title_settings_dialog))
+                    .setPositiveButton(getString(R.string.setting))
+                    .setNegativeButton(getString(R.string.cancel), null /* click listener */)
+                    .setRequestCode(RC_SETTINGS_SCREEN)
+                    .build()
+                    .show();
+        }
     }
 }
