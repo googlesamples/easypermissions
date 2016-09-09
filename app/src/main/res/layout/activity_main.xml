@@ -28,10 +28,4 @@
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_main" />
 
-    <Button
-        android:id="@+id/button_component"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Write Storage from component"/>
-
 </LinearLayout>
