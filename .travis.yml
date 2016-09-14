@@ -1,0 +1,23 @@
+language: android
+
+jdk:
+  - oraclejdk8
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+android:
+  components:
+    - tools
+    - build-tools-24.0.2
+    - android-24
+    - platform-tools
+    - extra-android-m2repository
+
+script:
+  ./gradlew build
