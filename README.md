@@ -1,4 +1,4 @@
-# EasyPermissions
+# EasyPermissions [![Build Status][1]][2]
 
 EasyPermissions is a wrapper library to simplify basic system permissions logic when targeting
 Android M or higher.
@@ -9,7 +9,7 @@ EasyPermissions is installed by adding the following dependency to your `build.g
 
 ```java
 dependencies {
-  compile 'pub.devrel:easypermissions:0.2.0'
+    compile 'pub.devrel:easypermissions:0.2.0'
 }
 ```
 
@@ -21,7 +21,6 @@ To begin using EasyPermissions, have your `Activity` (or `Fragment`) override th
 
 ```java
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
-
 }
 ```
 
@@ -58,21 +56,21 @@ The example below shows how to request permissions for a method that requires bo
     This can also be achieved by adding logic on the `onPermissionsGranted` callback.
 
 ```java
-    @AfterPermissionGranted(RC_CAMERA_AND_WIFI)
-    private void methodRequiresTwoPermission() {
-        String[] perms = {Manifest.permission.CAMERA, Manifest.permission.CHANGE_WIFI_STATE};
-        if (EasyPermissions.hasPermissions(this, perms)) {
-            // Already have permission, do the thing
-            // ...
-        } else {
-            // Do not have permissions, request them now
-            EasyPermissions.requestPermissions(this, getString(R.string.camera_and_wifi_rationale),
-                    RC_CAMERA_AND_WIFI, perms);
-        }
+@AfterPermissionGranted(RC_CAMERA_AND_WIFI)
+private void methodRequiresTwoPermission() {
+    String[] perms = {Manifest.permission.CAMERA, Manifest.permission.CHANGE_WIFI_STATE};
+    if (EasyPermissions.hasPermissions(this, perms)) {
+        // Already have permission, do the thing
+        // ...
+    } else {
+        // Do not have permissions, request them now
+        EasyPermissions.requestPermissions(this, getString(R.string.camera_and_wifi_rationale),
+                RC_CAMERA_AND_WIFI, perms);
     }
+}
 ```
 
-Optionally, for a finer control, you can have your `Activity` / `Framgment` implement
+Optionally, for a finer control, you can have your `Activity` / `Fragment` implement
 the `PermissionCallbacks` interface.
 
 ```java
@@ -144,3 +142,6 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 }
 ```
+
+[1]: https://travis-ci.org/googlesamples/easypermissions.svg?branch=master
+[2]: https://travis-ci.org/googlesamples/easypermissions
