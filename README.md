@@ -1,4 +1,4 @@
-# EasyPermissions
+# EasyPermissions [![Build Status][1]][2]
 
 EasyPermissions is a wrapper library to simplify basic system permissions logic when targeting
 Android M or higher.
@@ -142,3 +142,6 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 }
 ```
+
+[1]: https://travis-ci.org/googlesamples/easypermissions.svg?branch=master
+[2]: https://travis-ci.org/googlesamples/easypermissions
