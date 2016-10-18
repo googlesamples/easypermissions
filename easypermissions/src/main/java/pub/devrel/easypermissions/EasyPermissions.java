@@ -40,7 +40,7 @@ import java.util.List;
 public class EasyPermissions {
 
     private static final String TAG = "EasyPermissions";
-    private static final String DIALG_TAG = "RationaleDialogFragment";
+    private static final String DIALOG_TAG = "RationaleDialogFragment";
 
     public interface PermissionCallbacks extends
             ActivityCompat.OnRequestPermissionsResultCallback {
@@ -159,7 +159,7 @@ public class EasyPermissions {
                                                       @NonNull String[] perms, @StringRes int positiveButton,
                                                       @StringRes int negativeButton, @NonNull String rationale) {
         RationaleDialogFragment.newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
-                .show(object.getChildFragmentManager(), DIALG_TAG);
+                .show(object.getChildFragmentManager(), DIALOG_TAG);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -167,21 +167,21 @@ public class EasyPermissions {
                                             @NonNull String[] perms, @StringRes int positiveButton,
                                             @StringRes int negativeButton, @NonNull String rationale) {
         RationaleDialogFragment.newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
-                .show(object.getFragmentManager(), DIALG_TAG);
+                .show(object.getFragmentManager(), DIALOG_TAG);
     }
 
     private static void showAppCompatRationaleDialogByFragment(@NonNull Fragment object, int requestCode,
                                                                @NonNull String[] perms, @StringRes int positiveButton,
                                                                @StringRes int negativeButton, @NonNull String rationale) {
         RationaleAppCompatDialogFragment.newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
-                .show(object.getChildFragmentManager(), DIALG_TAG);
+                .show(object.getChildFragmentManager(), DIALOG_TAG);
     }
 
     private static void showAppCompatRationaleDialog(@NonNull AppCompatActivity object, int requestCode,
                                                      @NonNull String[] perms, @StringRes int positiveButton,
                                                      @StringRes int negativeButton, @NonNull String rationale) {
         RationaleAppCompatDialogFragment.newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
-                .show(object.getSupportFragmentManager(), DIALG_TAG);
+                .show(object.getSupportFragmentManager(), DIALOG_TAG);
     }
 
 
