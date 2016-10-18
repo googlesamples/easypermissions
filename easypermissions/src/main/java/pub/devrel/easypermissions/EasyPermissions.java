@@ -294,7 +294,7 @@ public class EasyPermissions {
                     // Method must be void so that we can invoke it
                     if (method.getParameterTypes().length > 0) {
                         throw new RuntimeException(
-                                "Cannot execute non-void method " + method.getName());
+                                "Cannot execute method " + method.getName() + " because it is non-void method and/or has input parameters.");
                     }
 
                     try {
