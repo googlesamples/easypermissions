@@ -2,7 +2,6 @@ package pub.devrel.easypermissions;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,13 +10,14 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
 /**
  * Dialog to prompt the user to go to the app's settings screen and enable permissions. If the
  * user clicks 'OK' on the dialog, they are sent to the settings screen. The result is returned
  * to the Activity via {@link Activity#onActivityResult(int, int, Intent)}.
- *
+ * <p>
  * Use {@link Builder} to create and display a dialog.
  */
 public class AppSettingsDialog {
@@ -33,7 +33,8 @@ public class AppSettingsDialog {
                               @Nullable String positiveButton,
                               @Nullable String negativeButton,
                               @Nullable DialogInterface.OnClickListener negativeListener,
-                              int requestCode) {
+                              int requestCode,
+                              @Nullable DialogMixin dialogMixin) {
 
         // Create empty builder
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
@@ -74,6 +75,10 @@ public class AppSettingsDialog {
 
         // Build dialog
         mAlertDialog = dialogBuilder.create();
+
+        if (dialogMixin != null) {
+            dialogMixin.onDialog(mAlertDialog);
+        }
     }
 
     @TargetApi(11)
@@ -107,10 +112,12 @@ public class AppSettingsDialog {
         private String mNegativeButton;
         private DialogInterface.OnClickListener mNegativeListener;
         private int mRequestCode = -1;
+        private DialogMixin mDialogMixin;
 
         /**
          * Create a new Builder for an {@link AppSettingsDialog}.
-         * @param activity the Activity in which to display the dialog.
+         *
+         * @param activity  the Activity in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
          */
         public Builder(@NonNull Activity activity, @NonNull String rationale) {
@@ -121,7 +128,8 @@ public class AppSettingsDialog {
 
         /**
          * Create a new Builder for an {@link AppSettingsDialog}.
-         * @param fragment the Fragment in which to display the dialog.
+         *
+         * @param fragment  the Fragment in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
          */
         public Builder(@NonNull android.support.v4.app.Fragment fragment, @NonNull String rationale) {
@@ -132,7 +140,8 @@ public class AppSettingsDialog {
 
         /**
          * Create a new Builder for an {@link AppSettingsDialog}.
-         * @param fragment the Fragment in which to display the dialog.
+         *
+         * @param fragment  the Fragment in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
          */
         @TargetApi(11)
@@ -141,7 +150,6 @@ public class AppSettingsDialog {
             mContext = fragment.getActivity();
             mRationale = rationale;
         }
-
 
         /**
          * Set the title dialog. Default is no title.
@@ -181,12 +189,21 @@ public class AppSettingsDialog {
         }
 
         /**
+         * Set the dialog mixin for additional dialog processing and customization.
+         */
+        public Builder setDialogMixin(DialogMixin dialogMixin) {
+            mDialogMixin = dialogMixin;
+            return this;
+        }
+
+        /**
          * Build the {@link AppSettingsDialog} from the specified options. Generally followed by a
          * call to {@link AppSettingsDialog#show()}.
          */
         public AppSettingsDialog build() {
             return new AppSettingsDialog(mActivityOrFragment, mContext, mRationale, mTitle,
-                    mPositiveButton, mNegativeButton, mNegativeListener, mRequestCode);
+                    mPositiveButton, mNegativeButton, mNegativeListener, mRequestCode,
+                    mDialogMixin);
         }
 
     }

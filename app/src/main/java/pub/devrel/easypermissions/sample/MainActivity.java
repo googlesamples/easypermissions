@@ -19,6 +19,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.DialogMixin;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements
@@ -38,6 +40,14 @@ public class MainActivity extends AppCompatActivity implements
     private static final int RC_CAMERA_PERM = 123;
     private static final int RC_LOCATION_CONTACTS_PERM = 124;
     private static final int RC_SETTINGS_SCREEN = 125;
+
+    private DialogMixin mDialogMixin = new DialogMixin() {
+        @Override
+        public void onDialog(AlertDialog dialog) {
+            dialog.setCancelable(false);
+            dialog.setCanceledOnTouchOutside(false);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,14 +96,14 @@ public class MainActivity extends AppCompatActivity implements
 
     @AfterPermissionGranted(RC_LOCATION_CONTACTS_PERM)
     public void locationAndContactsTask() {
-        String[] perms = { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_CONTACTS };
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_CONTACTS};
         if (EasyPermissions.hasPermissions(this, perms)) {
             // Have permissions, do the thing!
             Toast.makeText(this, "TODO: Location and Contacts things", Toast.LENGTH_LONG).show();
         } else {
             // Ask for both permissions
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_location_contacts),
-                    RC_LOCATION_CONTACTS_PERM, perms);
+                    RC_LOCATION_CONTACTS_PERM, mDialogMixin, perms);
         }
     }
 
@@ -122,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements
                     .setPositiveButton(getString(R.string.setting))
                     .setNegativeButton(getString(R.string.cancel), null /* click listener */)
                     .setRequestCode(RC_SETTINGS_SCREEN)
+                    .setDialogMixin(mDialogMixin)
                     .build()
                     .show();
         }
