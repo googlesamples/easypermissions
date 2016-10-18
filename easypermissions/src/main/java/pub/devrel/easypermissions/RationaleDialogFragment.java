@@ -12,10 +12,12 @@ import android.support.v7.app.AlertDialog;
 
 import java.util.Arrays;
 
-import static pub.devrel.easypermissions.EasyPermissions.executePermissionsRequest;
-
 
 @TargetApi(17)
+
+/**
+ * RationaleDialogFragment that is being used where the calling Activity/Fragment is not from the support Library
+ */
 public class RationaleDialogFragment extends DialogFragment implements Dialog.OnClickListener {
 
     private EasyPermissions.PermissionCallbacks permissionCallbacks;
@@ -26,11 +28,11 @@ public class RationaleDialogFragment extends DialogFragment implements Dialog.On
     private String rationaleMsg;
     private String[] permissions;
 
-    public static RationaleDialogFragment newInstance(@StringRes int positiveButton,
-                                                      @StringRes int negativeButton,
-                                                      @NonNull String rationaleMsg,
-                                                      int requestCode,
-                                                      @NonNull String[] permissions) {
+    static RationaleDialogFragment newInstance(@StringRes int positiveButton,
+                                               @StringRes int negativeButton,
+                                               @NonNull String rationaleMsg,
+                                               int requestCode,
+                                               @NonNull String[] permissions) {
         RationaleDialogFragment dialogFragment = new RationaleDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("positiveButton", positiveButton);
@@ -42,13 +44,14 @@ public class RationaleDialogFragment extends DialogFragment implements Dialog.On
         return dialogFragment;
     }
 
-    public static RationaleDialogFragment newInstance(@NonNull String rationaleMsg,
-                                                      int requestCode,
-                                                      @NonNull String[] permissions) {
+    static RationaleDialogFragment newInstance(@NonNull String rationaleMsg,
+                                               int requestCode,
+                                               @NonNull String[] permissions) {
         return newInstance(android.R.string.ok, android.R.string.cancel, rationaleMsg, requestCode, permissions);
     }
 
-    @Override public void onAttach(Context context) {
+    @Override
+    public void onAttach(Context context) {
         super.onAttach(context);
         if (getParentFragment() != null && getParentFragment() instanceof EasyPermissions.PermissionCallbacks) {
             permissionCallbacks = (EasyPermissions.PermissionCallbacks) getParentFragment();
@@ -59,12 +62,14 @@ public class RationaleDialogFragment extends DialogFragment implements Dialog.On
         }
     }
 
-    @Override public void onDetach() {
+    @Override
+    public void onDetach() {
         super.onDetach();
         permissionCallbacks = null;
     }
 
-    @Override public void onSaveInstanceState(Bundle bundle) {
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putInt("positiveButton", positiveButton);
         bundle.putInt("negativeButton", negativeButton);
@@ -73,26 +78,30 @@ public class RationaleDialogFragment extends DialogFragment implements Dialog.On
         bundle.putString("rationaleMsg", rationaleMsg);
     }
 
-    @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         setupArguments(savedInstanceState);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setOnCancelListener(this);
-        builder.setPositiveButton(positiveButton, this);
-        builder.setNegativeButton(negativeButton, this);
-        builder.setMessage(rationaleMsg);
-        return builder.create();
+        return new AlertDialog.Builder(getActivity())
+                .setOnCancelListener(this)
+                .setPositiveButton(positiveButton, this)
+                .setNegativeButton(negativeButton, this)
+                .setMessage(rationaleMsg)
+                .create();
     }
 
-    @Override public void onCancel(DialogInterface dialog) {
+    @Override
+    public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
         if (permissionCallbacks != null) {
             permissionCallbacks.onPermissionsDenied(requestCode, Arrays.asList(permissions));
         }
     }
 
-    @Override public void onClick(DialogInterface dialog, int which) {
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
         if (which == Dialog.BUTTON_POSITIVE) {
-            executePermissionsRequest(this, permissions, requestCode);
+            EasyPermissions.executePermissionsRequest(this, permissions, requestCode);
         } else {
             permissionCallbacks.onPermissionsDenied(requestCode, Arrays.asList(permissions));
         }
