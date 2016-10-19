@@ -13,11 +13,10 @@ import android.support.v7.app.AlertDialog;
 import java.util.Arrays;
 
 
-@TargetApi(17)
-
 /**
  * RationaleDialogFragment that is being used where the calling Activity/Fragment is not from the support Library
  */
+@TargetApi(17)
 public class RationaleDialogFragment extends DialogFragment implements Dialog.OnClickListener {
 
     private EasyPermissions.PermissionCallbacks permissionCallbacks;
