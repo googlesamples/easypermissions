@@ -41,13 +41,6 @@ public class RationaleAppCompatDialogFragment extends DialogFragment implements 
         return dialogFragment;
     }
 
-    static RationaleAppCompatDialogFragment newInstance(@NonNull String rationaleMsg,
-                                                        int requestCode,
-                                                        @NonNull String[] permissions) {
-        return newInstance(android.R.string.ok, android.R.string.cancel, rationaleMsg,
-                requestCode, permissions);
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -66,20 +59,10 @@ public class RationaleAppCompatDialogFragment extends DialogFragment implements 
         permissionCallbacks = null;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle bundle) {
-        super.onSaveInstanceState(bundle);
-        bundle.putInt("positiveButton", positiveButton);
-        bundle.putInt("negativeButton", negativeButton);
-        bundle.putInt("requestCode", requestCode);
-        bundle.putStringArray("permissions", permissions);
-        bundle.putString("rationaleMsg", rationaleMsg);
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        setupArguments(savedInstanceState);
+        setupArguments();
         return new AlertDialog.Builder(getContext())
                 .setOnCancelListener(this)
                 .setPositiveButton(positiveButton, this)
@@ -106,13 +89,8 @@ public class RationaleAppCompatDialogFragment extends DialogFragment implements 
         dismiss();
     }
 
-    private void setupArguments(Bundle savedInstanceState) {
-        Bundle bundle;
-        if (savedInstanceState == null) {
-            bundle = getArguments();
-        } else {
-            bundle = savedInstanceState;
-        }
+    private void setupArguments() {
+        Bundle bundle = getArguments();
         positiveButton = bundle.getInt("positiveButton");
         negativeButton = bundle.getInt("negativeButton");
         rationaleMsg = bundle.getString("rationaleMsg");
