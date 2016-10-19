@@ -66,6 +66,7 @@ public class RationaleDialogFragment extends DialogFragment implements Dialog.On
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setupArguments();
         return new AlertDialog.Builder(getActivity())
+                .setCancelable(false)
                 .setOnCancelListener(this)
                 .setPositiveButton(positiveButton, this)
                 .setNegativeButton(negativeButton, this)

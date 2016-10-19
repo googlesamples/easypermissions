@@ -38,6 +38,7 @@ public class AppSettingsDialog {
         // Create empty builder
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
 
+        dialogBuilder.setCancelable(false);
         // Set rationale
         dialogBuilder.setMessage(rationale);
 

@@ -64,6 +64,7 @@ public class RationaleAppCompatDialogFragment extends DialogFragment implements 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setupArguments();
         return new AlertDialog.Builder(getContext())
+                .setCancelable(false)
                 .setOnCancelListener(this)
                 .setPositiveButton(positiveButton, this)
                 .setNegativeButton(negativeButton, this)
