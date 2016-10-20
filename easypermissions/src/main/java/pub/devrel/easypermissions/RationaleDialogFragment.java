@@ -5,8 +5,10 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 
@@ -70,11 +72,12 @@ public class RationaleDialogFragment extends DialogFragment implements Dialog.On
         bundle.putString("rationaleMsg", rationaleMsg);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setupArguments();
-        return new AlertDialog.Builder(getActivity())
+        return new AlertDialog.Builder(getContext())
                 .setCancelable(false)
                 .setOnCancelListener(this)
                 .setPositiveButton(positiveButton, this)
