@@ -62,16 +62,6 @@ public class RationaleDialogFragment extends DialogFragment implements Dialog.On
         permissionCallbacks = null;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle bundle) {
-        super.onSaveInstanceState(bundle);
-        bundle.putInt("positiveButton", positiveButton);
-        bundle.putInt("negativeButton", negativeButton);
-        bundle.putInt("requestCode", requestCode);
-        bundle.putStringArray("permissions", permissions);
-        bundle.putString("rationaleMsg", rationaleMsg);
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @NonNull
     @Override
