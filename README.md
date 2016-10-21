@@ -9,7 +9,7 @@ EasyPermissions is installed by adding the following dependency to your `build.g
 
 ```java
 dependencies {
-    compile 'pub.devrel:easypermissions:0.2.0'
+    compile 'pub.devrel:easypermissions:0.2.1'
 }
 ```
 
