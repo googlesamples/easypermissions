@@ -15,23 +15,28 @@
  */
 package pub.devrel.easypermissions;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,7 +45,7 @@ import java.util.List;
 public class EasyPermissions {
 
     private static final String TAG = "EasyPermissions";
-    private static final String DIALOG_TAG = "RationaleDialogFragment";
+    private static final String DIALOG_TAG = "RationaleDialogFragmentCompat";
 
 
     public interface PermissionCallbacks extends
@@ -85,7 +90,7 @@ public class EasyPermissions {
      * @param object
      *         Activity or Fragment requesting permissions. Should implement
      *         {@link android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback}
-     *         or {@link android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
+     *         or {@code android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
      * @param rationale
      *         a message explaining why the application needs this set of permissions, will be displayed if the user rejects the request the first
      *         time.
@@ -108,7 +113,7 @@ public class EasyPermissions {
      * @param object
      *         Activity or Fragment requesting permissions. Should implement
      *         {@link android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback}
-     *         or {@link android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
+     *         or {@code android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
      * @param rationale
      *         a message explaining why the application needs this set of permissions, will be displayed if the user rejects the request the first
      *         time.
@@ -121,12 +126,15 @@ public class EasyPermissions {
      * @param perms
      *         a set of permissions to be requested.
      */
+    @SuppressLint("NewApi")
     public static void requestPermissions(@NonNull final Object object, @NonNull String rationale,
                                           @StringRes int positiveButton, @StringRes int negativeButton,
                                           final int requestCode, @NonNull final String... perms) {
 
         checkCallingObjectSuitability(object);
 
+        // Determine if rationale should be shown (generally when the user has previously
+        // denied the request);
         boolean shouldShowRationale = false;
         for (String perm : perms) {
             shouldShowRationale =
@@ -134,57 +142,88 @@ public class EasyPermissions {
         }
 
         if (shouldShowRationale) {
-            if (object instanceof AppCompatActivity) {
-                showAppCompatRationaleDialog((AppCompatActivity) object, requestCode,
-                        perms, positiveButton, negativeButton, rationale);
-            } else if (object instanceof Activity) {
-                showRationaleDialog((Activity) object, requestCode, perms,
-                        positiveButton, negativeButton, rationale);
-            } else if (object instanceof Fragment) {
-                showAppCompatRationaleDialogByFragment((Fragment) object, requestCode, perms,
-                        positiveButton, negativeButton, rationale);
-            } else if (object instanceof android.app.Fragment) {
-                showRationaleDialogByFragment((android.app.Fragment) object, requestCode, perms,
-                        positiveButton, negativeButton, rationale);
+            // If we can get a FragmentManager, show a RationaleDialogFragmentCompat. Otherwise, show
+            // an AlertDialog. The Fragment has the advantage of surviving rotations.
+            if (getSupportFragmentManager(object) != null) {
+                // Show AppCompatDialogFragment
+                showRationaleDialogFragmentCompat(getSupportFragmentManager(object),
+                        rationale, positiveButton, negativeButton, requestCode, perms);
+            } else if (getFragmentManager(object) != null) {
+                // Show DialogFragment
+                showRationaleDialogFragment(getFragmentManager(object),
+                        rationale, positiveButton, negativeButton, requestCode, perms);
             } else {
-                throw new RuntimeException("Object is not assigned to either an Activity or Fragment.");
+                // Revert to AlertDialog
+                showRationaleAlertDialog(object, rationale, positiveButton, negativeButton,
+                        requestCode, perms);
             }
         } else {
             executePermissionsRequest(object, perms, requestCode);
         }
     }
 
+    /**
+     * Show a {@link RationaleDialogFragmentCompat} explaining permission request rationale.
+     */
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
+    private static void showRationaleDialogFragmentCompat(
+            @NonNull final android.support.v4.app.FragmentManager fragmentManager,
+            @NonNull String rationale, @StringRes int positiveButton, @StringRes int negativeButton,
+            final int requestCode, @NonNull final String... perms) {
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private static void showRationaleDialogByFragment(@NonNull android.app.Fragment object, int requestCode,
-                                                      @NonNull String[] perms, @StringRes int positiveButton,
-                                                      @StringRes int negativeButton, @NonNull String rationale) {
-        RationaleDialogFragment.newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
-                .show(object.getChildFragmentManager(), DIALOG_TAG);
+        RationaleDialogFragmentCompat fragment = RationaleDialogFragmentCompat
+                .newInstance(positiveButton, negativeButton, rationale, requestCode, perms);
+        fragment.show(fragmentManager, DIALOG_TAG);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private static void showRationaleDialog(@NonNull Activity object, int requestCode,
-                                            @NonNull String[] perms, @StringRes int positiveButton,
-                                            @StringRes int negativeButton, @NonNull String rationale) {
-        RationaleDialogFragment.newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
-                .show(object.getFragmentManager(), DIALOG_TAG);
+    /**
+     * Show a {@link RationaleDialogFragment} explaining permission request rationale.
+     */
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
+    private static void showRationaleDialogFragment(
+            @NonNull final android.app.FragmentManager fragmentManager,
+            @NonNull String rationale, @StringRes int positiveButton, @StringRes int negativeButton,
+            final int requestCode, @NonNull final String... perms) {
+
+        RationaleDialogFragment fragment = RationaleDialogFragment
+                .newInstance(positiveButton, negativeButton, rationale, requestCode, perms);
+        fragment.show(fragmentManager, DIALOG_TAG);
     }
 
-    private static void showAppCompatRationaleDialogByFragment(@NonNull Fragment object, int requestCode,
-                                                               @NonNull String[] perms, @StringRes int positiveButton,
-                                                               @StringRes int negativeButton, @NonNull String rationale) {
-        RationaleAppCompatDialogFragment.newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
-                .show(object.getChildFragmentManager(), DIALOG_TAG);
-    }
+    /**
+     * Show an {@link AlertDialog} explaining permission request rationale.
+     */
+    private static void showRationaleAlertDialog(
+            @NonNull final Object object, @NonNull String rationale,
+            @StringRes int positiveButton, @StringRes int negativeButton,
+            final int requestCode, @NonNull final String... perms) {
 
-    private static void showAppCompatRationaleDialog(@NonNull AppCompatActivity object, int requestCode,
-                                                     @NonNull String[] perms, @StringRes int positiveButton,
-                                                     @StringRes int negativeButton, @NonNull String rationale) {
-        RationaleAppCompatDialogFragment.newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
-                .show(object.getSupportFragmentManager(), DIALOG_TAG);
-    }
+        Activity activity = getActivity(object);
+        if (activity == null) {
+            throw new IllegalStateException("Can't show rationale dialog for null Activity");
+        }
 
+        new AlertDialog.Builder(activity)
+                .setCancelable(false)
+                .setMessage(rationale)
+                .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        executePermissionsRequest(object, perms, requestCode);
+                    }
+                })
+                .setNegativeButton(negativeButton, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // act as if the permissions were denied
+                        if (object instanceof PermissionCallbacks) {
+                            ((PermissionCallbacks) object).onPermissionsDenied(requestCode, Arrays.asList(perms));
+                        }
+                    }
+                })
+                .create()
+                .show();
+    }
 
     /**
      * Check if at least one permission in the list of denied permissions has been permanently denied (user clicked "Never ask again").
@@ -295,10 +334,10 @@ public class EasyPermissions {
     @TargetApi(23)
     static void executePermissionsRequest(@NonNull Object object, @NonNull String[] perms, int requestCode) {
         checkCallingObjectSuitability(object);
-        if (object instanceof Activity) {
+        if (object instanceof android.app.Activity) {
             ActivityCompat.requestPermissions((Activity) object, perms, requestCode);
-        } else if (object instanceof Fragment) {
-            ((Fragment) object).requestPermissions(perms, requestCode);
+        } else if (object instanceof android.support.v4.app.Fragment) {
+            ((android.support.v4.app.Fragment) object).requestPermissions(perms, requestCode);
         } else if (object instanceof android.app.Fragment) {
             ((android.app.Fragment) object).requestPermissions(perms, requestCode);
         }
@@ -308,13 +347,52 @@ public class EasyPermissions {
     private static Activity getActivity(@NonNull Object object) {
         if (object instanceof Activity) {
             return ((Activity) object);
-        } else if (object instanceof Fragment) {
-            return ((Fragment) object).getActivity();
+        } else if (object instanceof android.support.v4.app.Fragment) {
+            return ((android.support.v4.app.Fragment) object).getActivity();
         } else if (object instanceof android.app.Fragment) {
             return ((android.app.Fragment) object).getActivity();
         } else {
             return null;
         }
+    }
+
+    @Nullable
+    @SuppressLint("NewApi")
+    private static android.support.v4.app.FragmentManager getSupportFragmentManager(
+            @NonNull Object object) {
+
+        if (object instanceof android.support.v4.app.FragmentActivity) {
+            // Support library FragmentActivity
+            return ((FragmentActivity) object).getSupportFragmentManager();
+        } else if (object instanceof android.support.v4.app.Fragment) {
+            // Support library Fragment
+            return ((Fragment) object).getChildFragmentManager();
+        }
+
+        return null;
+    }
+
+    @Nullable
+    private static android.app.FragmentManager getFragmentManager(@NonNull Object object) {
+        if (object instanceof Activity) {
+            // Framework Activity
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                // Above SDK 11, we can get Fragment manager
+                return ((Activity) object).getFragmentManager();
+            }
+        } else if (object instanceof android.app.Fragment) {
+            // Framework Fragment
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                // Above SDK 17, we can get a child Fragment manager
+                return ((android.app.Fragment) object).getChildFragmentManager();
+            } else {
+                // Otherwise, we just return the standard Fragment manager
+                return ((android.app.Fragment) object).getFragmentManager();
+            }
+        }
+
+        return null;
+
     }
 
     private static void runAnnotatedMethods(@NonNull Object object, int requestCode) {
@@ -354,8 +432,8 @@ public class EasyPermissions {
             throw new NullPointerException("Activity or Fragment should not be null");
         }
         // Make sure Object is an Activity or Fragment
-        boolean isActivity = object instanceof Activity;
-        boolean isSupportFragment = object instanceof Fragment;
+        boolean isActivity = object instanceof android.app.Activity;
+        boolean isSupportFragment = object instanceof android.support.v4.app.Fragment;
         boolean isAppFragment = object instanceof android.app.Fragment;
         boolean isMinSdkM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
         if (!(isSupportFragment || isActivity || (isAppFragment && isMinSdkM))) {

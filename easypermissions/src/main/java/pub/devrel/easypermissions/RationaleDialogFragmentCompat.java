@@ -1,32 +1,31 @@
 package pub.devrel.easypermissions;
 
-import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
+import android.support.v7.app.AppCompatDialogFragment;
 
 /**
- * {@link DialogFragment} to display rationale for permission requests when the request comes from
+ * {@link AppCompatDialogFragment} to display rationale for permission requests when the request comes from
  * a Fragment or Activity that can host a Fragment.
  */
-@RequiresApi(Build.VERSION_CODES.HONEYCOMB)
-public class RationaleDialogFragment extends DialogFragment {
-
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
+    
     private EasyPermissions.PermissionCallbacks permissionCallbacks;
     private RationaleDialogConfig config;
     private RationaleDialogClickListener clickListener;
 
-    static RationaleDialogFragment newInstance(
+    static RationaleDialogFragmentCompat newInstance(
             @StringRes int positiveButton, @StringRes int negativeButton,
             @NonNull String rationaleMsg, int requestCode, @NonNull String[] permissions) {
 
         // Create new Fragment
-        RationaleDialogFragment dialogFragment = new RationaleDialogFragment();
+        RationaleDialogFragmentCompat dialogFragment = new RationaleDialogFragmentCompat();
 
         // Initialize configuration as arguments
         RationaleDialogConfig config = new RationaleDialogConfig(
@@ -36,17 +35,10 @@ public class RationaleDialogFragment extends DialogFragment {
         return dialogFragment;
     }
 
-    @SuppressLint("NewApi")
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        // getParentFragment() requires API 17 or higher
-        boolean isAtLeastJellyBeanMR1 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
-
-        if (isAtLeastJellyBeanMR1
-                && getParentFragment() != null
-                && getParentFragment() instanceof EasyPermissions.PermissionCallbacks) {
+        if (getParentFragment() != null && getParentFragment() instanceof EasyPermissions.PermissionCallbacks) {
             permissionCallbacks = (EasyPermissions.PermissionCallbacks) getParentFragment();
         } else if (context instanceof EasyPermissions.PermissionCallbacks) {
             permissionCallbacks = (EasyPermissions.PermissionCallbacks) context;
@@ -70,7 +62,6 @@ public class RationaleDialogFragment extends DialogFragment {
         clickListener = new RationaleDialogClickListener(this, config, permissionCallbacks);
 
         // Create an AlertDialog
-        return config.createDialog(getActivity(), clickListener);
+        return config.createDialog(getContext(), clickListener);
     }
-
 }

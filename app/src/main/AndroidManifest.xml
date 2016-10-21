@@ -22,5 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- For testing only -->
+        <activity
+            android:name=".BasicActivity"
+            android:exported="true" />
     </application>
 </manifest>
