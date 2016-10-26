@@ -1,5 +1,4 @@
 apply plugin: 'com.jfrog.bintray'
-apply from: 'constants.gradle'
 
 group = mavenGroup
 version = mavenVersion
