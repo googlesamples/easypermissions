@@ -1,5 +1,4 @@
 apply plugin: 'com.github.dcendents.android-maven'
-apply from: 'constants.gradle'
 
 install {
     repositories.mavenInstaller {
