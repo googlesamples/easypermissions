@@ -1,11 +1,10 @@
-# EasyPermissions [![Build Status][1]][2]
+# EasyPermissions
 
-EasyPermissions is a wrapper library to simplify basic system permissions logic when targeting
-Android M or higher.
+EasyPermissions 是基于 Android M 以上系统的一个简化的权限处理库。
 
-## Installation
+## 安装
 
-EasyPermissions is installed by adding the following dependency to your `build.gradle` file:
+EasyPermissions 可以在 `build.gradle` 中被引用
 
 ```java
 dependencies {
@@ -13,11 +12,11 @@ dependencies {
 }
 ```
 
-## Usage
+## 用法
 
-### Basic
+### 基础
 
-To begin using EasyPermissions, have your `Activity` (or `Fragment`) override the `onRequestPermissionsResult` method:
+开始使用 EasyPermissions 前， 让你的 `Activity` (or `Fragment`) 重写 `onRequestPermissionsResult` 方法：
 
 ```java
 public class MainActivity extends AppCompatActivity {
@@ -37,23 +36,17 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 
-### Request Permissions
+### 请求权限
 
-The example below shows how to request permissions for a method that requires both
-`CAMERA` and `CHANGE_WIFI_STATE` permissions. There are a few things to note:
+下面的例子展示了一个同时请求 `CAMERA` 和 `CHANGE_WIFI_STATE` 2个权限， 以下是一些注意点：
 
-  * Using `EasyPermissions#hasPermissions(...)` to check if the app already has the
-    required permissions. This method can take any number of permissions as its final
-    argument.
-  * Requesting permissions with `EasyPermissions#requestPermissions`. This method
-    will request the system permissions and show the rationale string provided if
-    necessary. The request code provided should be unique to this request, and the method
-    can take any number of permissions as its final argument.
-  * Use of the `AfterPermissionGranted` annotation. This is optional, but provided for
-    convenience. If all of the permissions in a given request are granted, any methods
-    annotated with the proper request code will be executed. This is to simplify the common
-    flow of needing to run the requesting method after all of its permissions have been granted.
-    This can also be achieved by adding logic on the `onPermissionsGranted` callback.
+  * 使用 `EasyPermissions#hasPermissions(...)` 检查app使用已经有权限。 这个方法可以同时检查
+    多个权限。
+  * 使用 `EasyPermissions#requestPermissions` 请求权限。 这个方法将请求系统权限并且如果需要显示
+    权限申请的理由（在第一次拒绝权限后， 第二次再次申请时会弹出理由）
+    Request Code 在权限请求中要保持唯一。 可以同时请求多个权限。
+  * 使用 `AfterPermissionGranted` 注解。 这是可选的，但是非常方便。当所有权限都请求成功，被注解的方法将被执行。
+    也可以通过 `onPermissionsGranted` 回调获取结果。
 
 ```java
 @AfterPermissionGranted(RC_CAMERA_AND_WIFI)
@@ -70,8 +63,7 @@ private void methodRequiresTwoPermission() {
 }
 ```
 
-Optionally, for a finer control, you can have your `Activity` / `Fragment` implement
-the `PermissionCallbacks` interface.
+让你的 `Activity` / `Fragment` 继承 `PermissionCallbacks` 接口
 
 ```java
 public class MainActivity extends AppCompatActivity
@@ -92,26 +84,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPermissionsGranted(int requestCode, List<String> list) {
-        // Some permissions have been granted
+    public void onPermissionsGranted(int requestCode, List<String> allPerms) {
+        // All permissions have been granted
         // ...
     }
 
     @Override
-    public void onPermissionsDenied(int requestCode, List<String> list) {
+    public void onPermissionsDenied(int requestCode, List<String> deniedPerms, List<String> grantedPerms) {
         // Some permissions have been denied
         // ...
     }
 }
 ```
 
-### Required Permissions
+### 获取权限结果
 
-In some cases your app will not function properly without certain permissions. If the user
-denies these permissions with the "Never Ask Again" option, you will be unable to request
-these permissions from the user and they must be changed in app settings. You can use the
-method `EasyPermissions.somePermissionPermanentlyDenied(...)` to display a dialog to the
-user in this situation and direct them to the system setting screen for your app:
+某些情况下，如果用户拒绝了权限并且勾选了 "不再询问"， 你将在之后的每次请求权限都返回拒绝，并且不会弹出任何提示框，只有当用户去 "设置" 中改变权限。
+这很不友好。你可以使用 `EasyPermissions.somePermissionPermanentlyDenied(...)` 判断是否有权限已经被永久拒绝，
+如果有可以弹出提示框提示用户去设置里开启权限。
 
 ```java
 @Override
@@ -143,10 +133,9 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
-### Simpler Permission
+### 更简单的权限处理
 
-Want simpler code to handle permission? You can put most permission code in `BaseActivity/BaseFragment`,
-then invoke `performCodeWithPermission` like below:
+想要更简单的处理权限？ 你可以把大部分代码放到 `BaseActivity/BaseFragment` 中， 然后调用 `performCodeWithPermission` 方法：
 
 ```java
 String[] perms = {Manifest.permission.CAMERA};
@@ -165,7 +154,4 @@ performCodeWithPermission(getString(R.string.rationale_camera), RC_CAMERA_PERM, 
 });
 ```
 
-See more detail code in `BaseActivity` and `SimplPermActivity`.
-
-[1]: https://travis-ci.org/googlesamples/easypermissions.svg?branch=master
-[2]: https://travis-ci.org/googlesamples/easypermissions
+更详细的代码可以参见 `BaseActivity` 和 `SimplPermActivity`

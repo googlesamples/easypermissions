@@ -27,5 +27,7 @@
         <activity
             android:name=".BasicActivity"
             android:exported="true" />
+        <activity android:name=".SimplePermActivity" >
+        </activity>
     </application>
 </manifest>
