@@ -30,14 +30,12 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements
-        EasyPermissions.PermissionCallbacks {
+public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
     private static final String TAG = "MainActivity";
 
     private static final int RC_CAMERA_PERM = 123;
     private static final int RC_LOCATION_CONTACTS_PERM = 124;
-    private static final int RC_SETTINGS_SCREEN = 125;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,17 +57,6 @@ public class MainActivity extends AppCompatActivity implements
                 locationAndContactsTask();
             }
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SETTINGS_SCREEN) {
-            // Do something after user returned from app settings screen, like showing a Toast.
-            Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT)
-                    .show();
-        }
     }
 
     @AfterPermissionGranted(RC_CAMERA_PERM)
@@ -120,9 +107,19 @@ public class MainActivity extends AppCompatActivity implements
             new AppSettingsDialog.Builder(this, getString(R.string.rationale_ask_again))
                     .setTitle(getString(R.string.title_settings_dialog))
                     .setPositiveButton(getString(R.string.setting))
-                    .setNegativeButton(getString(R.string.cancel), null /* click listener */)
-                    .setRequestCode(RC_SETTINGS_SCREEN)
+                    .setNegativeButton(getString(R.string.cancel))
                     .build()
+                    .show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            // Do something after user returned from app settings screen, like showing a Toast.
+            Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT)
                     .show();
         }
     }

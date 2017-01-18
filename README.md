@@ -7,7 +7,7 @@ Android M or higher.
 
 EasyPermissions is installed by adding the following dependency to your `build.gradle` file:
 
-```java
+```groovy
 dependencies {
     compile 'pub.devrel:easypermissions:0.2.1'
 }
@@ -74,8 +74,7 @@ Optionally, for a finer control, you can have your `Activity` / `Fragment` imple
 the `PermissionCallbacks` interface.
 
 ```java
-public class MainActivity extends AppCompatActivity
-    implements EasyPermissions.PermissionCallbacks {
+public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +123,7 @@ public void onPermissionsDenied(int requestCode, List<String> perms) {
         new AppSettingsDialog.Builder(this, getString(R.string.rationale_ask_again))
                 .setTitle(getString(R.string.title_settings_dialog))
                 .setPositiveButton(getString(R.string.setting))
-                .setNegativeButton(getString(R.string.cancel), null /* click listener */)
+                .setNegativeButton(getString(R.string.cancel))
                 .setRequestCode(RC_SETTINGS_SCREEN)
                 .build()
                 .show();
