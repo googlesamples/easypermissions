@@ -33,7 +33,14 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
                                  RationaleDialogConfig config,
                                  EasyPermissions.PermissionCallbacks callbacks) {
 
-        mHost = dialogFragment.getActivity();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            mHost = dialogFragment.getParentFragment() != null ?
+                    dialogFragment.getParentFragment() :
+                    dialogFragment.getActivity();
+        } else {
+            mHost = dialogFragment.getActivity();
+        }
+
         mConfig = config;
         mCallbacks = callbacks;
     }

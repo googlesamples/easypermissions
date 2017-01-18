@@ -8,7 +8,7 @@ android {
         minSdkVersion 9
         targetSdkVersion targetSdk
         versionCode 1
-        versionName "$mavenVersion"
+        versionName mavenVersion
     }
 
     buildTypes {
@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$supportLibVersion"
+    compile "com.android.support:appcompat-v7:$support_library_version"
 }
 
 apply from: 'maven.gradle'

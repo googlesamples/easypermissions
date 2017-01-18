@@ -1,5 +1,3 @@
-apply from: 'constants.gradle'
-
 buildscript {
     repositories {
         jcenter()
@@ -21,4 +19,23 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    projectName = 'EasyPermissions'
+    projectDesc = 'A wrapper library for basic Android M system permissions logic'
+
+    githubUrl = 'https://github.com/googlesamples/easypermissions'
+
+    mavenGroup = 'pub.devrel'
+    mavenArtifactId = 'easypermissions'
+    mavenVersion = '0.2.1'
+
+    bintrayOrg = 'easygoogle'
+
+    support_library_version = '25.0.0'
+
+    buildTools = '25.0.0'
+    compileSdk = 25
+    targetSdk = 25
 }
