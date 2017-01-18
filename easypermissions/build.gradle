@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:${support_library_version}"
+    compile "com.android.support:appcompat-v7:$support_library_version"
 }
 
 apply from: 'maven.gradle'

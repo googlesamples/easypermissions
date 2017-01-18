@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -20,7 +21,7 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:${support_library_version}"
+    compile "com.android.support:appcompat-v7:$support_library_version"
 
     compile project(':easypermissions')
 }
