@@ -116,7 +116,7 @@ public class AppSettingsDialog {
          *
          * @param activity  the Activity in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
-         * @deprecated Use {@link #Builder(Activity)} with {@link #setRationale(String)}
+         * @deprecated Use {@link #Builder(Activity)} with {@link #setRationale(String)} or {@link #setRationale(int)}.
          */
         @Deprecated
         public Builder(@NonNull Activity activity, @NonNull String rationale) {
@@ -131,7 +131,7 @@ public class AppSettingsDialog {
          * @param fragment  the Fragment in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
          * @deprecated Use {@link #Builder(android.support.v4.app.Fragment)} with {@link
-         * #setRationale(String)}
+         * #setRationale(String)} or {@link #setRationale(int)}.
          */
         @Deprecated
         public Builder(@NonNull android.support.v4.app.Fragment fragment,
@@ -147,6 +147,7 @@ public class AppSettingsDialog {
          * @param fragment  the Fragment in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
          * @deprecated Use {@link #Builder(android.app.Fragment)} with {@link #setRationale(String)}
+         * or {@link #setRationale(int)}.
          */
         @TargetApi(11)
         @Deprecated
