@@ -372,6 +372,7 @@ public class EasyPermissions {
         return null;
     }
 
+    @SuppressLint("NewApi")
     @Nullable
     private static android.app.FragmentManager getFragmentManager(@NonNull Object object) {
         if (object instanceof Activity) {
