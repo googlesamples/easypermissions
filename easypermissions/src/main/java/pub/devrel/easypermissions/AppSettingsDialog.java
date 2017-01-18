@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
@@ -17,7 +18,7 @@ import android.text.TextUtils;
  * Dialog to prompt the user to go to the app's settings screen and enable permissions. If the
  * user clicks 'OK' on the dialog, they are sent to the settings screen. The result is returned
  * to the Activity via {@link Activity#onActivityResult(int, int, Intent)}.
- *
+ * <p>
  * Use {@link Builder} to create and display a dialog.
  */
 public class AppSettingsDialog {
@@ -28,7 +29,7 @@ public class AppSettingsDialog {
 
     private AppSettingsDialog(@NonNull final Object activityOrFragment,
                               @NonNull final Context context,
-                              @NonNull String rationale,
+                              @Nullable String rationale,
                               @Nullable String title,
                               @Nullable String positiveButton,
                               @Nullable String negativeButton,
@@ -39,14 +40,16 @@ public class AppSettingsDialog {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
 
         // Set rationale
-        dialogBuilder.setMessage(rationale);
+        dialogBuilder.setMessage(
+                TextUtils.isEmpty(rationale) ? context.getString(R.string.rationale_ask_again) : rationale);
 
         // Set title
-        dialogBuilder.setTitle(title);
+        dialogBuilder.setTitle(
+                TextUtils.isEmpty(title) ? context.getString(R.string.title_settings_dialog) : title);
 
         // Positive button text, or default
         String positiveButtonText = TextUtils.isEmpty(positiveButton) ?
-                context.getString(android.R.string.ok) : positiveButton;
+                context.getString(R.string.settings) : positiveButton;
 
         // Negative button text, or default
         String negativeButtonText = TextUtils.isEmpty(positiveButton) ?
@@ -110,9 +113,12 @@ public class AppSettingsDialog {
 
         /**
          * Create a new Builder for an {@link AppSettingsDialog}.
-         * @param activity the Activity in which to display the dialog.
+         *
+         * @param activity  the Activity in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
+         * @deprecated Use {@link #Builder(Activity)} with {@link #setRationale(String)}
          */
+        @Deprecated
         public Builder(@NonNull Activity activity, @NonNull String rationale) {
             mActivityOrFragment = activity;
             mContext = activity;
@@ -121,10 +127,15 @@ public class AppSettingsDialog {
 
         /**
          * Create a new Builder for an {@link AppSettingsDialog}.
-         * @param fragment the Fragment in which to display the dialog.
+         *
+         * @param fragment  the Fragment in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
+         * @deprecated Use {@link #Builder(android.support.v4.app.Fragment)} with {@link
+         * #setRationale(String)}
          */
-        public Builder(@NonNull android.support.v4.app.Fragment fragment, @NonNull String rationale) {
+        @Deprecated
+        public Builder(@NonNull android.support.v4.app.Fragment fragment,
+                       @NonNull String rationale) {
             mActivityOrFragment = fragment;
             mContext = fragment.getContext();
             mRationale = rationale;
@@ -132,19 +143,53 @@ public class AppSettingsDialog {
 
         /**
          * Create a new Builder for an {@link AppSettingsDialog}.
-         * @param fragment the Fragment in which to display the dialog.
+         *
+         * @param fragment  the Fragment in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
+         * @deprecated Use {@link #Builder(android.app.Fragment)} with {@link #setRationale(String)}
          */
         @TargetApi(11)
+        @Deprecated
         public Builder(@NonNull android.app.Fragment fragment, @NonNull String rationale) {
             mActivityOrFragment = fragment;
             mContext = fragment.getActivity();
             mRationale = rationale;
         }
 
+        /**
+         * Create a new Builder for an {@link AppSettingsDialog}.
+         *
+         * @param activity the Activity in which to display the dialog.
+         */
+        public Builder(@NonNull Activity activity) {
+            mActivityOrFragment = activity;
+            mContext = activity;
+        }
 
         /**
-         * Set the title dialog. Default is no title.
+         * Create a new Builder for an {@link AppSettingsDialog}.
+         *
+         * @param fragment the Fragment in which to display the dialog.
+         */
+        public Builder(@NonNull android.support.v4.app.Fragment fragment) {
+            mActivityOrFragment = fragment;
+            mContext = fragment.getContext();
+        }
+
+        /**
+         * Create a new Builder for an {@link AppSettingsDialog}.
+         *
+         * @param fragment the Fragment in which to display the dialog.
+         */
+        @TargetApi(11)
+        public Builder(@NonNull android.app.Fragment fragment) {
+            mActivityOrFragment = fragment;
+            mContext = fragment.getActivity();
+        }
+
+
+        /**
+         * Set the title dialog. Default is "Permissions Required".
          */
         public Builder setTitle(String title) {
             mTitle = title;
@@ -152,10 +197,46 @@ public class AppSettingsDialog {
         }
 
         /**
-         * Set the positive button text, default is {@code android.R.string.ok}.
+         * Set the title dialog. Default is "Permissions Required".
+         */
+        public Builder setTitle(@StringRes int title) {
+            mTitle = mContext.getString(title);
+            return this;
+        }
+
+        /**
+         * Set the rationale dialog. Default is
+         * "This app may not work correctly without the requested permissions.
+         * Open the app settings screen to modify app permissions.".
+         */
+        public Builder setRationale(String rationale) {
+            mRationale = rationale;
+            return this;
+        }
+
+        /**
+         * Set the rationale dialog. Default is
+         * "This app may not work correctly without the requested permissions.
+         * Open the app settings screen to modify app permissions.".
+         */
+        public Builder setRationale(@StringRes int rationale) {
+            mRationale = mContext.getString(rationale);
+            return this;
+        }
+
+        /**
+         * Set the positive button text, default is "Settings".
          */
         public Builder setPositiveButton(String positiveButton) {
             mPositiveButton = positiveButton;
+            return this;
+        }
+
+        /**
+         * Set the positive button text, default is "Settings".
+         */
+        public Builder setPositiveButton(@StringRes int positiveButton) {
+            mPositiveButton = mContext.getString(positiveButton);
             return this;
         }
 
@@ -166,6 +247,17 @@ public class AppSettingsDialog {
         public Builder setNegativeButton(String negativeButton,
                                          DialogInterface.OnClickListener negativeListener) {
             mNegativeButton = negativeButton;
+            mNegativeListener = negativeListener;
+            return this;
+        }
+
+        /**
+         * Set the negative button text and click listener, default text is
+         * {@code android.R.string.cancel}.
+         */
+        public Builder setNegativeButton(@StringRes int negativeButton,
+                                         DialogInterface.OnClickListener negativeListener) {
+            mNegativeButton = mContext.getString(negativeButton);
             mNegativeListener = negativeListener;
             return this;
         }
@@ -185,8 +277,15 @@ public class AppSettingsDialog {
          * call to {@link AppSettingsDialog#show()}.
          */
         public AppSettingsDialog build() {
-            return new AppSettingsDialog(mActivityOrFragment, mContext, mRationale, mTitle,
-                    mPositiveButton, mNegativeButton, mNegativeListener, mRequestCode);
+            return new AppSettingsDialog(
+                    mActivityOrFragment,
+                    mContext,
+                    mRationale,
+                    mTitle,
+                    mPositiveButton,
+                    mNegativeButton,
+                    mNegativeListener,
+                    mRequestCode);
         }
 
     }
