@@ -1,13 +1,13 @@
 # Gradle files
-.gradle/
-build/
+.gradle
+build
 
 # Local configuration file (sdk path, etc)
 local.properties
 
 # IntelliJ project files
-*.iml
-.idea/
+**.iml
+.idea
 
 # Android Studio captures folder
 captures/

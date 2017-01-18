@@ -9,4 +9,9 @@ ext {
     mavenVersion = '0.2.1'
 
     bintrayOrg = 'easygoogle'
+
+    compileSdk = 25
+    targetSdk = 25
+    buildTools = "25.0.2"
+    supportLibVersion = "25.1.0"
 }
