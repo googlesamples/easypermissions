@@ -124,7 +124,6 @@ public void onPermissionsDenied(int requestCode, List<String> perms) {
                 .setTitle(getString(R.string.title_settings_dialog))
                 .setPositiveButton(getString(R.string.setting))
                 .setNegativeButton(getString(R.string.cancel))
-                .setRequestCode(RC_SETTINGS_SCREEN)
                 .build()
                 .show();
     }
@@ -134,7 +133,7 @@ public void onPermissionsDenied(int requestCode, List<String> perms) {
 public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
-    if (requestCode == RC_SETTINGS_SCREEN) {
+    if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
         // Do something after user returned from app settings screen, like showing a Toast.
         Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT)
                 .show();
