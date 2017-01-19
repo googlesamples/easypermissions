@@ -352,7 +352,7 @@ public class EasyPermissions {
         } else if (object instanceof android.app.Fragment) {
             return ((android.app.Fragment) object).getActivity();
         } else {
-            throw new IllegalStateException("Context cannot be null.");
+            throw new IllegalArgumentException("Context cannot be null.");
         }
     }
 
