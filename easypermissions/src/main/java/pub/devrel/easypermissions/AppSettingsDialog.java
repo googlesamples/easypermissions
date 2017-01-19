@@ -76,15 +76,15 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
         mRequestCode = requestCode;
     }
 
-    public void setActivityOrFragment(Object activityOrFragment) {
+    void setActivityOrFragment(Object activityOrFragment) {
         mActivityOrFragment = activityOrFragment;
     }
 
-    public void setContext(Context context) {
+    void setContext(Context context) {
         mContext = context;
     }
 
-    public void setNegativeListener(DialogInterface.OnClickListener negativeListener) {
+    void setNegativeListener(DialogInterface.OnClickListener negativeListener) {
         mNegativeListener = negativeListener;
     }
 
