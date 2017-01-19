@@ -131,7 +131,9 @@ public class EasyPermissions {
     public static boolean requestPermissions(@NonNull final Object object, @NonNull String rationale,
                                           @StringRes int positiveButton, @StringRes int negativeButton,
                                           final int requestCode, @NonNull final String... perms) {
-        if (hasPermissions(getActivity(object))) return false;
+        if (hasPermissions(getActivity(object), perms)) {
+            return false;
+        }
 
         checkCallingObjectSuitability(object);
 
@@ -352,7 +354,7 @@ public class EasyPermissions {
         } else if (object instanceof android.app.Fragment) {
             return ((android.app.Fragment) object).getActivity();
         } else {
-            throw new IllegalArgumentException("Context cannot be null.");
+            throw new IllegalArgumentException("Object must an Activity or a Fragment.");
         }
     }
 
