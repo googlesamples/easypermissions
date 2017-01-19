@@ -49,7 +49,7 @@ public class AppSettingsDialog {
 
         // Positive button text, or default
         String positiveButtonText = TextUtils.isEmpty(positiveButton) ?
-                context.getString(R.string.settings) : positiveButton;
+                context.getString(android.R.string.ok) : positiveButton;
 
         // Negative button text, or default
         String negativeButtonText = TextUtils.isEmpty(positiveButton) ?
