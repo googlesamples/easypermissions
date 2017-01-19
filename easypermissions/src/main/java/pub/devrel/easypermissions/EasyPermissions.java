@@ -125,11 +125,13 @@ public class EasyPermissions {
      *         request code to track this request, must be < 256.
      * @param perms
      *         a set of permissions to be requested.
+     * @return true if a permissions request was started, false otherwise.
      */
     @SuppressLint("NewApi")
-    public static void requestPermissions(@NonNull final Object object, @NonNull String rationale,
+    public static boolean requestPermissions(@NonNull final Object object, @NonNull String rationale,
                                           @StringRes int positiveButton, @StringRes int negativeButton,
                                           final int requestCode, @NonNull final String... perms) {
+        if (hasPermissions(getActivity(object))) return false;
 
         checkCallingObjectSuitability(object);
 
@@ -160,6 +162,8 @@ public class EasyPermissions {
         } else {
             executePermissionsRequest(object, perms, requestCode);
         }
+
+        return true;
     }
 
     /**
@@ -198,12 +202,7 @@ public class EasyPermissions {
             @StringRes int positiveButton, @StringRes int negativeButton,
             final int requestCode, @NonNull final String... perms) {
 
-        Activity activity = getActivity(object);
-        if (activity == null) {
-            throw new IllegalStateException("Can't show rationale dialog for null Activity");
-        }
-
-        new AlertDialog.Builder(activity)
+        new AlertDialog.Builder(getActivity(object))
                 .setCancelable(false)
                 .setMessage(rationale)
                 .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
@@ -343,6 +342,7 @@ public class EasyPermissions {
         }
     }
 
+    @NonNull
     @TargetApi(11)
     private static Activity getActivity(@NonNull Object object) {
         if (object instanceof Activity) {
@@ -352,7 +352,7 @@ public class EasyPermissions {
         } else if (object instanceof android.app.Fragment) {
             return ((android.app.Fragment) object).getActivity();
         } else {
-            return null;
+            throw new IllegalStateException("Context cannot be null.");
         }
     }
 
