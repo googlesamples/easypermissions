@@ -1,24 +1,22 @@
 package pub.devrel.easypermissions;
 
-import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatDialogFragment;
 
 /**
- * {@link AppCompatDialogFragment} to display rationale for permission requests when the request comes from
- * a Fragment or Activity that can host a Fragment.
+ * {@link AppCompatDialogFragment} to display rationale for permission requests when the request
+ * comes from a Fragment or Activity that can host a Fragment.
  */
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+@RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
-    
-    private EasyPermissions.PermissionCallbacks permissionCallbacks;
-    private RationaleDialogConfig config;
-    private RationaleDialogClickListener clickListener;
+
+    private EasyPermissions.PermissionCallbacks mPermissionCallbacks;
 
     static RationaleDialogFragmentCompat newInstance(
             @StringRes int positiveButton, @StringRes int negativeButton,
@@ -39,16 +37,16 @@ public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (getParentFragment() != null && getParentFragment() instanceof EasyPermissions.PermissionCallbacks) {
-            permissionCallbacks = (EasyPermissions.PermissionCallbacks) getParentFragment();
+            mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) getParentFragment();
         } else if (context instanceof EasyPermissions.PermissionCallbacks) {
-            permissionCallbacks = (EasyPermissions.PermissionCallbacks) context;
+            mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) context;
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        permissionCallbacks = null;
+        mPermissionCallbacks = null;
     }
 
     @NonNull
@@ -58,8 +56,11 @@ public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
         setCancelable(false);
 
         // Get config from arguments, create click listener
-        config = new RationaleDialogConfig(getArguments());
-        clickListener = new RationaleDialogClickListener(this, config, permissionCallbacks);
+        RationaleDialogConfig config = new RationaleDialogConfig(getArguments());
+        RationaleDialogClickListener clickListener =
+                new RationaleDialogClickListener(this,
+                                                 config,
+                                                 mPermissionCallbacks);
 
         // Create an AlertDialog
         return config.createDialog(getContext(), clickListener);

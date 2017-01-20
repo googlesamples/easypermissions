@@ -17,9 +17,7 @@ import android.support.annotation.StringRes;
 @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
 public class RationaleDialogFragment extends DialogFragment {
 
-    private EasyPermissions.PermissionCallbacks permissionCallbacks;
-    private RationaleDialogConfig config;
-    private RationaleDialogClickListener clickListener;
+    private EasyPermissions.PermissionCallbacks mPermissionCallbacks;
 
     static RationaleDialogFragment newInstance(
             @StringRes int positiveButton, @StringRes int negativeButton,
@@ -47,16 +45,16 @@ public class RationaleDialogFragment extends DialogFragment {
         if (isAtLeastJellyBeanMR1
                 && getParentFragment() != null
                 && getParentFragment() instanceof EasyPermissions.PermissionCallbacks) {
-            permissionCallbacks = (EasyPermissions.PermissionCallbacks) getParentFragment();
+            mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) getParentFragment();
         } else if (context instanceof EasyPermissions.PermissionCallbacks) {
-            permissionCallbacks = (EasyPermissions.PermissionCallbacks) context;
+            mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) context;
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        permissionCallbacks = null;
+        mPermissionCallbacks = null;
     }
 
     @NonNull
@@ -66,8 +64,11 @@ public class RationaleDialogFragment extends DialogFragment {
         setCancelable(false);
 
         // Get config from arguments, create click listener
-        config = new RationaleDialogConfig(getArguments());
-        clickListener = new RationaleDialogClickListener(this, config, permissionCallbacks);
+        RationaleDialogConfig config = new RationaleDialogConfig(getArguments());
+        RationaleDialogClickListener clickListener =
+                new RationaleDialogClickListener(this,
+                                                 config,
+                                                 mPermissionCallbacks);
 
         // Create an AlertDialog
         return config.createDialog(getActivity(), clickListener);
