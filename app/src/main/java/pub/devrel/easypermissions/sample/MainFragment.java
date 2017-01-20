@@ -19,7 +19,6 @@ public class MainFragment extends Fragment implements EasyPermissions.Permission
 
     private static final String TAG = "MainFragment";
     private static final int RC_SMS_PERM = 122;
-    private static final int RC_SETTINGS = 123;
 
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

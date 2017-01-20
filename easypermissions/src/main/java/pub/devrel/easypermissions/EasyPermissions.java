@@ -126,6 +126,7 @@ public class EasyPermissions {
                                           int requestCode,
                                           @NonNull String... perms) {
         if (hasPermissions(activity, perms)) {
+            notifyAlreadyHasPermissions(activity, requestCode, perms);
             return;
         }
 
@@ -189,6 +190,7 @@ public class EasyPermissions {
                                           int requestCode,
                                           @NonNull String... perms) {
         if (hasPermissions(fragment.getContext(), perms)) {
+            notifyAlreadyHasPermissions(fragment, requestCode, perms);
             return;
         }
 
@@ -253,6 +255,7 @@ public class EasyPermissions {
                                           int requestCode,
                                           @NonNull String... perms) {
         if (hasPermissions(fragment.getContext(), perms)) {
+            notifyAlreadyHasPermissions(fragment, requestCode, perms);
             return;
         }
 
@@ -288,10 +291,9 @@ public class EasyPermissions {
                                                   @NonNull String[] permissions,
                                                   @NonNull int[] grantResults,
                                                   @NonNull Object... receivers) {
-
         // Make a collection of granted and denied permissions from the request.
-        ArrayList<String> granted = new ArrayList<>();
-        ArrayList<String> denied = new ArrayList<>();
+        List<String> granted = new ArrayList<>();
+        List<String> denied = new ArrayList<>();
         for (int i = 0; i < permissions.length; i++) {
             String perm = permissions[i];
             if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
@@ -322,7 +324,6 @@ public class EasyPermissions {
                 runAnnotatedMethods(object, requestCode);
             }
         }
-
     }
 
     /**
@@ -424,6 +425,17 @@ public class EasyPermissions {
         return !shouldShowRequestPermissionRationale(fragment, deniedPermission);
     }
 
+    private static void notifyAlreadyHasPermissions(Object object,
+                                                    int requestCode,
+                                                    @NonNull String[] perms) {
+        int[] grantResults = new int[perms.length];
+        for (int i = 0; i < perms.length; i++) {
+            grantResults[i] = PackageManager.PERMISSION_GRANTED;
+        }
+
+        onRequestPermissionsResult(requestCode, perms, grantResults, object);
+    }
+
 
     /**
      * @param object Activity or Fragment
@@ -492,6 +504,7 @@ public class EasyPermissions {
         if (isUsingAndroidAnnotations(object)) {
             clazz = clazz.getSuperclass();
         }
+
         for (Method method : clazz.getDeclaredMethods()) {
             if (method.isAnnotationPresent(AfterPermissionGranted.class)) {
                 // Check for annotated methods with matching request code.
