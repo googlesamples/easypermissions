@@ -194,7 +194,7 @@ public class EasyPermissions {
      *
      * @see #requestPermissions(android.app.Fragment, String, int, int, int, String...)
      */
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     public static void requestPermissions(@NonNull android.app.Fragment fragment,
                                           @NonNull String rationale,
                                           int requestCode,
@@ -215,14 +215,15 @@ public class EasyPermissions {
      *                 android.app.Fragment#onRequestPermissionsResult(int, String[], int[])}.
      * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @SuppressWarnings("NewApi")
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     public static void requestPermissions(@NonNull android.app.Fragment fragment,
                                           @NonNull String rationale,
                                           @StringRes int positiveButton,
                                           @StringRes int negativeButton,
                                           int requestCode,
                                           @NonNull String... perms) {
-        if (hasPermissions(fragment.getContext(), perms)) {
+        if (hasPermissions(fragment.getActivity(), perms)) {
             notifyAlreadyHasPermissions(fragment, requestCode, perms);
             return;
         }
