@@ -15,6 +15,9 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
+/**
+ *  Created in {@link R.layout#activity_main}
+ */
 public class MainFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
 
     private static final String TAG = "MainFragment";
