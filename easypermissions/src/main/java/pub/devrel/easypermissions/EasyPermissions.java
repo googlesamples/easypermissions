@@ -15,6 +15,7 @@
  */
 package pub.devrel.easypermissions;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -24,6 +25,7 @@ import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -54,10 +56,10 @@ public class EasyPermissions {
      * Check if the calling context has a set of permissions.
      *
      * @param context the calling context.
-     * @param perms   one ore more permissions, such as {@link android.Manifest.permission#CAMERA}.
+     * @param perms   one ore more permissions, such as {@link Manifest.permission#CAMERA}.
      * @return true if all permissions are already granted, false if at least one permission is not
      * yet granted.
-     * @see android.Manifest.permission
+     * @see Manifest.permission
      */
     public static boolean hasPermissions(@NonNull Context context, @NonNull String... perms) {
         // Always return true for SDK < M, let the system deal with the permissions
@@ -82,14 +84,7 @@ public class EasyPermissions {
     /**
      * Request a set of permissions, showing a rationale if the system requests it.
      *
-     * @param activity    {@link Activity} requesting permissions. Should implement {@link
-     *                    android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback}
-     *                    or {@code android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}.
-     * @param rationale   a message explaining why the application needs this set of permissions,
-     *                    will be displayed if the user rejects the request the first time.
-     * @param requestCode request code to track this request, must be < 256.
-     * @param perms       a set of permissions to be requested.
-     * @see android.Manifest.permission
+     * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
     public static void requestPermissions(@NonNull Activity activity,
                                           @NonNull String rationale,
@@ -108,15 +103,16 @@ public class EasyPermissions {
      * Request a set of permissions, showing rationale if the system requests it.
      *
      * @param activity       {@link Activity} requesting permissions. Should implement {@link
-     *                       ActivityCompat.OnRequestPermissionsResultCallback} {@code
-     *                       android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
+     *                       ActivityCompat.OnRequestPermissionsResultCallback} or override {@link
+     *                       FragmentActivity#onRequestPermissionsResult(int, String[], int[])} if
+     *                       it extends from {@link FragmentActivity}.
      * @param rationale      a message explaining why the application needs this set of permissions,
      *                       will be displayed if the user rejects the request the first time.
      * @param positiveButton custom text for positive button
      * @param negativeButton custom text for negative button
      * @param requestCode    request code to track this request, must be < 256.
      * @param perms          a set of permissions to be requested.
-     * @see android.Manifest.permission
+     * @see Manifest.permission
      */
     @SuppressWarnings("NewApi")
     public static void requestPermissions(@NonNull Activity activity,
@@ -146,14 +142,7 @@ public class EasyPermissions {
     /**
      * Request a set of permissions, showing rationale if the system requests it.
      *
-     * @param fragment    {@link Fragment} requesting permissions. Should implement {@link
-     *                    android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback}
-     *                    or {@code android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
-     * @param rationale   a message explaining why the application needs this set of permissions,
-     *                    will be displayed if the user rejects the request the first time.
-     * @param requestCode request code to track this request, must be < 256.
-     * @param perms       a set of permissions to be requested.
-     * @see android.Manifest.permission
+     * @see #requestPermissions(Fragment, String, int, int, int, String...)
      */
     public static void requestPermissions(@NonNull Fragment fragment,
                                           @NonNull String rationale,
@@ -171,16 +160,9 @@ public class EasyPermissions {
     /**
      * Request a set of permissions, showing rationale if the system requests it.
      *
-     * @param fragment       {@link Fragment} requesting permissions. Should implement {@link
-     *                       ActivityCompat.OnRequestPermissionsResultCallback} {@code
-     *                       android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
-     * @param rationale      a message explaining why the application needs this set of permissions,
-     *                       will be displayed if the user rejects the request the first time.
-     * @param positiveButton custom text for positive button
-     * @param negativeButton custom text for negative button
-     * @param requestCode    request code to track this request, must be < 256.
-     * @param perms          a set of permissions to be requested.
-     * @see android.Manifest.permission
+     * @param fragment {@link Fragment} requesting permissions. Should override {@link
+     *                 Fragment#onRequestPermissionsResult(int, String[], int[])}.
+     * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
     @SuppressWarnings("NewApi")
     public static void requestPermissions(@NonNull Fragment fragment,
@@ -210,14 +192,7 @@ public class EasyPermissions {
     /**
      * Request a set of permissions, showing rationale if the system requests it.
      *
-     * @param fragment    {@link android.app.Fragment} requesting permissions. Should implement
-     *                    {@link android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback}
-     *                    or {@code android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
-     * @param rationale   a message explaining why the application needs this set of permissions,
-     *                    will be displayed if the user rejects the request the first time.
-     * @param requestCode request code to track this request, must be < 256.
-     * @param perms       a set of permissions to be requested.
-     * @see android.Manifest.permission
+     * @see #requestPermissions(android.app.Fragment, String, int, int, int, String...)
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
     public static void requestPermissions(@NonNull android.app.Fragment fragment,
@@ -236,16 +211,9 @@ public class EasyPermissions {
     /**
      * Request a set of permissions, showing rationale if the system requests it.
      *
-     * @param fragment       {@link android.app.Fragment} requesting permissions. Should implement
-     *                       {@link ActivityCompat.OnRequestPermissionsResultCallback} {@code
-     *                       android.support.v13.app.FragmentCompat.OnRequestPermissionsResultCallback}
-     * @param rationale      a message explaining why the application needs this set of permissions,
-     *                       will be displayed if the user rejects the request the first time.
-     * @param positiveButton custom text for positive button
-     * @param negativeButton custom text for negative button
-     * @param requestCode    request code to track this request, must be < 256.
-     * @param perms          a set of permissions to be requested.
-     * @see android.Manifest.permission
+     * @param fragment {@link android.app.Fragment} requesting permissions. Should override {@link
+     *                 android.app.Fragment#onRequestPermissionsResult(int, String[], int[])}.
+     * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
     public static void requestPermissions(@NonNull android.app.Fragment fragment,
@@ -274,7 +242,7 @@ public class EasyPermissions {
 
     /**
      * Handle the result of a permission request, should be called from the calling {@link
-     * Activity}'s {@link android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult(int,
+     * Activity}'s {@link ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult(int,
      * String[], int[])} method.
      * <p>
      * If any permissions were granted or denied, the {@code object} will receive the appropriate
@@ -350,10 +318,7 @@ public class EasyPermissions {
      * Check if at least one permission in the list of denied permissions has been permanently
      * denied (user clicked "Never ask again").
      *
-     * @param fragment          {@link Fragment} requesting permissions.
-     * @param deniedPermissions list of denied permissions, usually from {@link
-     *                          PermissionCallbacks#onPermissionsDenied(int, List)}
-     * @return {@code true} if at least one permission in the list was permanently denied.
+     * @see #somePermissionPermanentlyDenied(Activity, List)
      */
     public static boolean somePermissionPermanentlyDenied(@NonNull Fragment fragment,
                                                           @NonNull List<String> deniedPermissions) {
@@ -370,10 +335,7 @@ public class EasyPermissions {
      * Check if at least one permission in the list of denied permissions has been permanently
      * denied (user clicked "Never ask again").
      *
-     * @param fragment          {@link android.app.Fragment} requesting permissions.
-     * @param deniedPermissions list of denied permissions, usually from {@link
-     *                          PermissionCallbacks#onPermissionsDenied(int, List)}
-     * @return {@code true} if at least one permission in the list was permanently denied.
+     * @see #somePermissionPermanentlyDenied(Activity, List)
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
     public static boolean somePermissionPermanentlyDenied(@NonNull android.app.Fragment fragment,
@@ -403,9 +365,7 @@ public class EasyPermissions {
     /**
      * Check if a permission has been permanently denied (user clicked "Never ask again").
      *
-     * @param fragment         {@link Fragment} requesting permissions.
-     * @param deniedPermission denied permission.
-     * @return {@code true} if the permissions has been permanently denied.
+     * @see #permissionPermanentlyDenied(Activity, String)
      */
     public static boolean permissionPermanentlyDenied(@NonNull Fragment fragment,
                                                       @NonNull String deniedPermission) {
@@ -415,9 +375,7 @@ public class EasyPermissions {
     /**
      * Check if a permission has been permanently denied (user clicked "Never ask again").
      *
-     * @param fragment         {@link android.app.Fragment} requesting permissions.
-     * @param deniedPermission denied permission.
-     * @return {@code true} if the permissions has been permanently denied.
+     * @see #permissionPermanentlyDenied(Activity, String)
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
     public static boolean permissionPermanentlyDenied(@NonNull android.app.Fragment fragment,
