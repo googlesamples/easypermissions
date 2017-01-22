@@ -430,9 +430,9 @@ public class EasyPermissions {
                                                     @StringRes int negativeButton,
                                                     int requestCode,
                                                     @NonNull String... perms) {
-        RationaleDialogFragment fragment = RationaleDialogFragment
-                .newInstance(positiveButton, negativeButton, rationale, requestCode, perms);
-        fragment.show(fragmentManager, DIALOG_TAG);
+        RationaleDialogFragment
+                .newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
+                .show(fragmentManager, DIALOG_TAG);
     }
 
     private static void runAnnotatedMethods(@NonNull Object object, int requestCode) {
