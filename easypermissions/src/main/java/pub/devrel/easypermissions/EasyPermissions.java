@@ -39,6 +39,14 @@ import java.util.List;
  */
 public class EasyPermissions {
 
+    public interface PermissionCallbacks extends ActivityCompat.OnRequestPermissionsResultCallback {
+
+        void onPermissionsGranted(int requestCode, List<String> perms);
+
+        void onPermissionsDenied(int requestCode, List<String> perms);
+
+    }
+
     private static final String TAG = "EasyPermissions";
     private static final String DIALOG_TAG = "RationaleDialogFragmentCompat";
 
@@ -470,13 +478,5 @@ public class EasyPermissions {
         } catch (ClassNotFoundException e) {
             return false;
         }
-    }
-
-    public interface PermissionCallbacks extends ActivityCompat.OnRequestPermissionsResultCallback {
-
-        void onPermissionsGranted(int requestCode, List<String> perms);
-
-        void onPermissionsDenied(int requestCode, List<String> perms);
-
     }
 }
