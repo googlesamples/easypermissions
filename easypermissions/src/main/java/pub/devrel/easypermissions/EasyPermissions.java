@@ -26,7 +26,6 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -42,15 +41,6 @@ public class EasyPermissions {
 
     private static final String TAG = "EasyPermissions";
     private static final String DIALOG_TAG = "RationaleDialogFragmentCompat";
-
-
-    public interface PermissionCallbacks extends ActivityCompat.OnRequestPermissionsResultCallback {
-
-        void onPermissionsGranted(int requestCode, List<String> perms);
-
-        void onPermissionsDenied(int requestCode, List<String> perms);
-
-    }
 
     /**
      * Check if the calling context has a set of permissions.
@@ -177,13 +167,9 @@ public class EasyPermissions {
         }
 
         if (shouldShowRationale(fragment, perms)) {
-            showRationaleDialogFragmentCompat(
-                    fragment.getChildFragmentManager(),
-                    rationale,
-                    positiveButton,
-                    negativeButton,
-                    requestCode,
-                    perms);
+            RationaleDialogFragmentCompat
+                    .newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
+                    .show(fragment.getChildFragmentManager(), DIALOG_TAG);
         } else {
             fragment.requestPermissions(perms, requestCode);
         }
@@ -350,7 +336,6 @@ public class EasyPermissions {
         return false;
     }
 
-
     /**
      * Check if a permission has been permanently denied (user clicked "Never ask again").
      *
@@ -395,7 +380,6 @@ public class EasyPermissions {
         onRequestPermissionsResult(requestCode, perms, grantResults, object);
     }
 
-
     /**
      * @param object Activity or Fragment
      * @return true if the user has previously denied any of the {@code perms} and we should show a
@@ -426,21 +410,6 @@ public class EasyPermissions {
         } else {
             throw new IllegalArgumentException("Object was neither an Activity nor a Fragment.");
         }
-    }
-
-    /**
-     * Show a {@link RationaleDialogFragmentCompat} explaining permission request rationale.
-     */
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private static void showRationaleDialogFragmentCompat(@NonNull FragmentManager fragmentManager,
-                                                          @NonNull String rationale,
-                                                          @StringRes int positiveButton,
-                                                          @StringRes int negativeButton,
-                                                          int requestCode,
-                                                          @NonNull String... perms) {
-        RationaleDialogFragmentCompat fragment = RationaleDialogFragmentCompat
-                .newInstance(positiveButton, negativeButton, rationale, requestCode, perms);
-        fragment.show(fragmentManager, DIALOG_TAG);
     }
 
     /**
@@ -501,5 +470,13 @@ public class EasyPermissions {
         } catch (ClassNotFoundException e) {
             return false;
         }
+    }
+
+    public interface PermissionCallbacks extends ActivityCompat.OnRequestPermissionsResultCallback {
+
+        void onPermissionsGranted(int requestCode, List<String> perms);
+
+        void onPermissionsDenied(int requestCode, List<String> perms);
+
     }
 }
