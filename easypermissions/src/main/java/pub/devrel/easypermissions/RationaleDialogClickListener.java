@@ -4,6 +4,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 
 import java.util.Arrays;
 
@@ -48,8 +51,12 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == Dialog.BUTTON_POSITIVE) {
-            EasyPermissions.executePermissionsRequest(mHost,
-                    mConfig.permissions, mConfig.requestCode);
+            if (mHost instanceof Fragment) {
+                ((Fragment) mHost).requestPermissions(mConfig.permissions, mConfig.requestCode);
+            } else { // mHost instance of FragmentActivity
+                ActivityCompat.requestPermissions(
+                        (FragmentActivity) mHost, mConfig.permissions, mConfig.requestCode);
+            }
         } else {
             notifyPermissionDenied();
         }

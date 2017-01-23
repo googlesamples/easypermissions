@@ -15,11 +15,13 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
+/**
+ *  Created in {@link R.layout#activity_main}
+ */
 public class MainFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
 
     private static final String TAG = "MainFragment";
     private static final int RC_SMS_PERM = 122;
-    private static final int RC_SETTINGS = 123;
 
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

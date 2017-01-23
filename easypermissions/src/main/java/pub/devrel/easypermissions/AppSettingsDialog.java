@@ -1,6 +1,5 @@
 package pub.devrel.easypermissions;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,10 +7,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -88,7 +89,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
         mNegativeListener = negativeListener;
     }
 
-    @TargetApi(11)
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     private void startForResult(Intent intent) {
         if (mActivityOrFragment instanceof Activity) {
             ((Activity) mActivityOrFragment).startActivityForResult(intent, mRequestCode);
@@ -135,6 +136,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
         intent.setData(uri);
 
         // Start for result
+        //noinspection NewApi The Builder constructor prevents this
         startForResult(intent);
     }
 
@@ -197,7 +199,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
          * @param fragment  the Fragment in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
          */
-        @TargetApi(11)
+        @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
         public Builder(@NonNull android.app.Fragment fragment, @NonNull String rationale) {
             mActivityOrFragment = fragment;
             mContext = fragment.getActivity();
