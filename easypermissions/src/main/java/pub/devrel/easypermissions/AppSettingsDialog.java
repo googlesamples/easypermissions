@@ -5,14 +5,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RestrictTo;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.RestrictTo;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -27,8 +27,6 @@ import android.text.TextUtils;
 public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickListener {
     public static final int DEFAULT_SETTINGS_REQ_CODE = 16061;
 
-    static final String EXTRA_APP_SETTINGS = "extra_app_settings";
-
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     public static final Parcelable.Creator<AppSettingsDialog> CREATOR = new Parcelable.Creator<AppSettingsDialog>() {
         @Override
@@ -42,14 +40,16 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
         }
     };
 
-    private Object mActivityOrFragment;
-    private Context mContext;
+    static final String EXTRA_APP_SETTINGS = "extra_app_settings";
+
     private final String mRationale;
     private final String mTitle;
     private final String mPositiveButtonText;
     private final String mNegativeButtonText;
-    private DialogInterface.OnClickListener mNegativeListener;
     private final int mRequestCode;
+    private Context mContext;
+    private Object mActivityOrFragment;
+    private DialogInterface.OnClickListener mNegativeListener;
 
     private AppSettingsDialog(Parcel in) {
         mRationale = in.readString();
@@ -106,6 +106,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
      */
     public void show() {
         if (mNegativeListener == null) {
+            //noinspection NewApi The Builder constructor prevents this
             startForResult(AppSettingsDialogHolderActivity.createShowDialogIntent(mContext, this));
         } else {
             // We can't pass the cancel listener to an activity so we default to old behavior it there is one.
@@ -229,9 +230,10 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
          *
          * @deprecated To set the title of the cancel button, use {@link #setNegativeButton(String)}.
          * <p>
-         * To know if a user cancelled the request, check if your permissions were given with
-         * {@link EasyPermissions#hasPermissions(Context, String...)} in {@link Activity#onActivityResult(int, int, Intent)}.
-         * If you still don't have the right permissions, then the request was cancelled.
+         * To know if a user cancelled the request, check if your permissions were given with {@link
+         * EasyPermissions#hasPermissions(Context, String...)} in {@link
+         * Activity#onActivityResult(int, int, Intent)}. If you still don't have the right
+         * permissions, then the request was cancelled.
          */
         @Deprecated
         public Builder setNegativeButton(String negativeButton,
