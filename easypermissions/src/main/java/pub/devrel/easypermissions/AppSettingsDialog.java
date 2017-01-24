@@ -1,15 +1,16 @@
 package pub.devrel.easypermissions;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -68,6 +69,7 @@ public class AppSettingsDialog {
                 intent.setData(uri);
 
                 // Start for result
+                //noinspection NewApi The Builder constructor prevents this
                 startForResult(activityOrFragment, intent, settingsRequestCode);
             }
         });
@@ -79,7 +81,7 @@ public class AppSettingsDialog {
         mAlertDialog = dialogBuilder.create();
     }
 
-    @TargetApi(11)
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     private void startForResult(Object object, Intent intent, int requestCode) {
         if (object instanceof Activity) {
             ((Activity) object).startActivityForResult(intent, requestCode);
@@ -149,8 +151,8 @@ public class AppSettingsDialog {
          * @deprecated Use {@link #Builder(android.app.Fragment)} with {@link #setRationale(String)}
          * or {@link #setRationale(int)}.
          */
-        @TargetApi(11)
         @Deprecated
+        @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
         public Builder(@NonNull android.app.Fragment fragment, @NonNull String rationale) {
             mActivityOrFragment = fragment;
             mContext = fragment.getActivity();
