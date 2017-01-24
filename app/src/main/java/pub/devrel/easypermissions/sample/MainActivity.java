@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     private static final int RC_CAMERA_PERM = 123;
     private static final int RC_LOCATION_CONTACTS_PERM = 124;
-    private static final int RC_SETTINGS_SCREEN = 125;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,17 +57,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 locationAndContactsTask();
             }
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SETTINGS_SCREEN) {
-            // Do something after user returned from app settings screen, like showing a Toast.
-            Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT)
-                    .show();
-        }
     }
 
     @AfterPermissionGranted(RC_CAMERA_PERM)
@@ -116,9 +104,17 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
         // This will display a dialog directing them to enable the permission in app settings.
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            new AppSettingsDialog.Builder(this)
-                    .setRequestCode(RC_SETTINGS_SCREEN)
-                    .build()
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            // Do something after user returned from app settings screen, like showing a Toast.
+            Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT)
                     .show();
         }
     }
