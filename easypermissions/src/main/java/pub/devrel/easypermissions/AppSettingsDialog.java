@@ -184,7 +184,7 @@ public class AppSettingsDialog {
          *
          * @param fragment the Fragment in which to display the dialog.
          */
-        @TargetApi(11)
+        @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
         public Builder(@NonNull android.app.Fragment fragment) {
             mActivityOrFragment = fragment;
             mContext = fragment.getActivity();
