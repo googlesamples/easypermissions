@@ -172,7 +172,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
         /**
          * Create a new Builder for an {@link AppSettingsDialog}.
          *
-         * @param activity  the Activity in which to display the dialog.
+         * @param activity  the {@link Activity} in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
          */
         public Builder(@NonNull Activity activity, @NonNull String rationale) {
@@ -184,11 +184,10 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
         /**
          * Create a new Builder for an {@link AppSettingsDialog}.
          *
-         * @param fragment  the Fragment in which to display the dialog.
+         * @param fragment  the {@link Fragment} in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
          */
-        public Builder(@NonNull android.support.v4.app.Fragment fragment,
-                       @NonNull String rationale) {
+        public Builder(@NonNull Fragment fragment, @NonNull String rationale) {
             mActivityOrFragment = fragment;
             mContext = fragment.getContext();
             mRationale = rationale;
@@ -197,7 +196,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
         /**
          * Create a new Builder for an {@link AppSettingsDialog}.
          *
-         * @param fragment  the Fragment in which to display the dialog.
+         * @param fragment  the {@link android.app.Fragment} in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
          */
         @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
@@ -217,7 +216,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
         }
 
         /**
-         * Set the positive button text, default is {@code android.R.string.ok}.
+         * Set the positive button text, default is {@link android.R.string#ok}.
          */
         public Builder setPositiveButton(String positiveButton) {
             mPositiveButton = positiveButton;
@@ -226,7 +225,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
 
         /**
          * Set the negative button text and click listener, default text is
-         * {@code android.R.string.cancel}.
+         * {@link android.R.string#cancel}.
          *
          * @deprecated To set the title of the cancel button, use {@link #setNegativeButton(String)}.
          * <p>
@@ -244,7 +243,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
         }
 
         /**
-         * Set the negative button text, default is {@code android.R.string.cancel}.
+         * Set the negative button text, default is {@link android.R.string#cancel}.
          */
         public Builder setNegativeButton(String negativeButton) {
             mNegativeButton = negativeButton;
@@ -252,9 +251,9 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
         }
 
         /**
-         * Set the request code use when launching the Settings screen for result, can be
-         * retrieved in the calling Activity's {@code onActivityResult} method. Default is
-         * {@link #DEFAULT_SETTINGS_REQ_CODE}.
+         * Set the request code use when launching the Settings screen for result, can be retrieved
+         * in the calling Activity's {@link Activity#onActivityResult(int, int, Intent)} method.
+         * Default is {@link #DEFAULT_SETTINGS_REQ_CODE}.
          */
         public Builder setRequestCode(int requestCode) {
             mRequestCode = requestCode;
