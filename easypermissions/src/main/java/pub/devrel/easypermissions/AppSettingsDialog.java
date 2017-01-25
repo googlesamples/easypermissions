@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -61,7 +62,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
 
     private AppSettingsDialog(@NonNull final Object activityOrFragment,
                               @NonNull final Context context,
-                              @NonNull String rationale,
+                              @Nullable String rationale,
                               @Nullable String title,
                               @Nullable String positiveButtonText,
                               @Nullable String negativeButtonText,
@@ -174,7 +175,10 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
          *
          * @param activity  the {@link Activity} in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
+         * @deprecated Use {@link #Builder(Activity)} with {@link #setRationale(String)} or {@link
+         * #setRationale(int)}.
          */
+        @Deprecated
         public Builder(@NonNull Activity activity, @NonNull String rationale) {
             mActivityOrFragment = activity;
             mContext = activity;
@@ -186,7 +190,10 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
          *
          * @param fragment  the {@link Fragment} in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
+         * @deprecated Use {@link #Builder(Fragment)} with {@link #setRationale(String)} or {@link
+         * #setRationale(int)}.
          */
+        @Deprecated
         public Builder(@NonNull Fragment fragment, @NonNull String rationale) {
             mActivityOrFragment = fragment;
             mContext = fragment.getContext();
@@ -198,7 +205,10 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
          *
          * @param fragment  the {@link android.app.Fragment} in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
+         * @deprecated Use {@link #Builder(android.app.Fragment)} with {@link #setRationale(String)}
+         * or {@link #setRationale(int)}.
          */
+        @Deprecated
         @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
         public Builder(@NonNull android.app.Fragment fragment, @NonNull String rationale) {
             mActivityOrFragment = fragment;
@@ -206,12 +216,71 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
             mRationale = rationale;
         }
 
+        /**
+         * Create a new Builder for an {@link AppSettingsDialog}.
+         *
+         * @param activity the {@link Activity} in which to display the dialog.
+         */
+        public Builder(@NonNull Activity activity) {
+            mActivityOrFragment = activity;
+            mContext = activity;
+        }
 
         /**
-         * Set the title dialog. Default is no title.
+         * Create a new Builder for an {@link AppSettingsDialog}.
+         *
+         * @param fragment the {@link Fragment} in which to display the dialog.
+         */
+        public Builder(@NonNull Fragment fragment) {
+            mActivityOrFragment = fragment;
+            mContext = fragment.getContext();
+        }
+
+        /**
+         * Create a new Builder for an {@link AppSettingsDialog}.
+         *
+         * @param fragment the {@link android.app.Fragment} in which to display the dialog.
+         */
+        @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
+        public Builder(@NonNull android.app.Fragment fragment) {
+            mActivityOrFragment = fragment;
+            mContext = fragment.getActivity();
+        }
+
+
+        /**
+         * Set the title dialog. Default is "Permissions Required".
          */
         public Builder setTitle(String title) {
             mTitle = title;
+            return this;
+        }
+
+        /**
+         * Set the title dialog. Default is "Permissions Required".
+         */
+        public Builder setTitle(@StringRes int title) {
+            mTitle = mContext.getString(title);
+            return this;
+        }
+
+        /**
+         * Set the rationale dialog. Default is
+         * "This app may not work correctly without the requested permissions.
+         * Open the app settings screen to modify app permissions."
+         */
+        public Builder setRationale(String rationale) {
+            mRationale = rationale;
+            return this;
+        }
+
+        /**
+         * Set the rationale dialog. Default is
+         * "This app may not work correctly without the requested permissions.
+         * Open the app settings screen to modify app permissions."
+         */
+        public Builder setRationale(@StringRes int rationale) {
+            mRationale = mContext.getString(rationale);
             return this;
         }
 
@@ -220,6 +289,14 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
          */
         public Builder setPositiveButton(String positiveButton) {
             mPositiveButton = positiveButton;
+            return this;
+        }
+
+        /**
+         * Set the positive button text, default is {@link android.R.string#ok}.
+         */
+        public Builder setPositiveButton(@StringRes int positiveButton) {
+            mPositiveButton = mContext.getString(positiveButton);
             return this;
         }
 
@@ -251,6 +328,14 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
         }
 
         /**
+         * Set the negative button text, default is {@link android.R.string#cancel}.
+         */
+        public Builder setNegativeButton(@StringRes int negativeButton) {
+            mNegativeButton = mContext.getString(negativeButton);
+            return this;
+        }
+
+        /**
          * Set the request code use when launching the Settings screen for result, can be retrieved
          * in the calling Activity's {@link Activity#onActivityResult(int, int, Intent)} method.
          * Default is {@link #DEFAULT_SETTINGS_REQ_CODE}.
@@ -265,6 +350,10 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
          * call to {@link AppSettingsDialog#show()}.
          */
         public AppSettingsDialog build() {
+            mRationale = TextUtils.isEmpty(mRationale) ?
+                    mContext.getString(R.string.rationale_ask_again) : mRationale;
+            mTitle = TextUtils.isEmpty(mTitle) ?
+                    mContext.getString(R.string.title_settings_dialog) : mTitle;
             mPositiveButton = TextUtils.isEmpty(mPositiveButton) ?
                     mContext.getString(android.R.string.ok) : mPositiveButton;
             mNegativeButton = TextUtils.isEmpty(mNegativeButton) ?

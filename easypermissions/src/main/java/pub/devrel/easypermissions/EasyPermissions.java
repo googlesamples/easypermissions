@@ -16,6 +16,7 @@
 package pub.devrel.easypermissions;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -112,7 +113,7 @@ public class EasyPermissions {
      * @param perms          a set of permissions to be requested.
      * @see Manifest.permission
      */
-    @SuppressWarnings("NewApi")
+    @SuppressLint("NewApi")
     public static void requestPermissions(@NonNull Activity activity,
                                           @NonNull String rationale,
                                           @StringRes int positiveButton,
@@ -162,7 +163,7 @@ public class EasyPermissions {
      *                 Fragment#onRequestPermissionsResult(int, String[], int[])}.
      * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
-    @SuppressWarnings("NewApi")
+    @SuppressLint("NewApi")
     public static void requestPermissions(@NonNull Fragment fragment,
                                           @NonNull String rationale,
                                           @StringRes int positiveButton,
@@ -209,7 +210,7 @@ public class EasyPermissions {
      *                 android.app.Fragment#onRequestPermissionsResult(int, String[], int[])}.
      * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
-    @SuppressWarnings("NewApi")
+    @SuppressLint("NewApi")
     @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     public static void requestPermissions(@NonNull android.app.Fragment fragment,
                                           @NonNull String rationale,
