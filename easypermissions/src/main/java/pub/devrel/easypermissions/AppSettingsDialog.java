@@ -190,8 +190,8 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
          *
          * @param fragment  the {@link Fragment} in which to display the dialog.
          * @param rationale text explaining why the user should launch the app settings screen.
-         * @deprecated Use {@link #Builder(android.support.v4.app.Fragment)} with {@link
-         * #setRationale(String)} or {@link #setRationale(int)}.
+         * @deprecated Use {@link #Builder(Fragment)} with {@link #setRationale(String)} or {@link
+         * #setRationale(int)}.
          */
         @Deprecated
         public Builder(@NonNull Fragment fragment, @NonNull String rationale) {
@@ -320,21 +320,18 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
         }
 
         /**
-         * Set the negative button text and click listener, default text is
-         * {@link android.R.string#cancel}.
+         * Set the negative button text, default is {@link android.R.string#cancel}.
          */
-        public Builder setNegativeButton(@StringRes int negativeButton,
-                                         DialogInterface.OnClickListener negativeListener) {
-            mNegativeButton = mContext.getString(negativeButton);
-            mNegativeListener = negativeListener;
+        public Builder setNegativeButton(String negativeButton) {
+            mNegativeButton = negativeButton;
             return this;
         }
 
         /**
          * Set the negative button text, default is {@link android.R.string#cancel}.
          */
-        public Builder setNegativeButton(String negativeButton) {
-            mNegativeButton = negativeButton;
+        public Builder setNegativeButton(@StringRes int negativeButton) {
+            mNegativeButton = mContext.getString(negativeButton);
             return this;
         }
 
