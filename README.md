@@ -9,7 +9,7 @@ EasyPermissions is installed by adding the following dependency to your `build.g
 
 ```groovy
 dependencies {
-    compile 'pub.devrel:easypermissions:0.2.1'
+    compile 'pub.devrel:easypermissions:0.3.0'
 }
 ```
 
@@ -120,12 +120,7 @@ public void onPermissionsDenied(int requestCode, List<String> perms) {
     // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
     // This will display a dialog directing them to enable the permission in app settings.
     if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-        new AppSettingsDialog.Builder(this, getString(R.string.rationale_ask_again))
-                .setTitle(getString(R.string.title_settings_dialog))
-                .setPositiveButton(getString(R.string.setting))
-                .setNegativeButton(getString(R.string.cancel))
-                .build()
-                .show();
+        new AppSettingsDialog.Builder(this).build().show();
     }
 }
 
