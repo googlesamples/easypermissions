@@ -53,7 +53,15 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
         if (which == Dialog.BUTTON_POSITIVE) {
             if (mHost instanceof Fragment) {
                 ((Fragment) mHost).requestPermissions(mConfig.permissions, mConfig.requestCode);
-            } else { // mHost instance of FragmentActivity
+            } else if (mHost instanceof android.app.Fragment) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    ((android.app.Fragment) mHost)
+                            .requestPermissions(mConfig.permissions, mConfig.requestCode);
+                } else {
+                    throw new IllegalArgumentException(
+                            "Target SDK needs to be greater than 23 if caller is android.app.Fragment");
+                }
+            } else if (mHost instanceof FragmentActivity) {
                 ActivityCompat.requestPermissions(
                         (FragmentActivity) mHost, mConfig.permissions, mConfig.requestCode);
             }
