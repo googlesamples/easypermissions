@@ -4,6 +4,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 
 import java.util.Arrays;
 
@@ -48,8 +51,20 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == Dialog.BUTTON_POSITIVE) {
-            EasyPermissions.executePermissionsRequest(mHost,
-                    mConfig.permissions, mConfig.requestCode);
+            if (mHost instanceof Fragment) {
+                ((Fragment) mHost).requestPermissions(mConfig.permissions, mConfig.requestCode);
+            } else if (mHost instanceof android.app.Fragment) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    ((android.app.Fragment) mHost)
+                            .requestPermissions(mConfig.permissions, mConfig.requestCode);
+                } else {
+                    throw new IllegalArgumentException(
+                            "Target SDK needs to be greater than 23 if caller is android.app.Fragment");
+                }
+            } else if (mHost instanceof FragmentActivity) {
+                ActivityCompat.requestPermissions(
+                        (FragmentActivity) mHost, mConfig.permissions, mConfig.requestCode);
+            }
         } else {
             notifyPermissionDenied();
         }

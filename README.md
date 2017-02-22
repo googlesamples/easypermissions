@@ -7,9 +7,9 @@ Android M or higher.
 
 EasyPermissions is installed by adding the following dependency to your `build.gradle` file:
 
-```java
+```groovy
 dependencies {
-    compile 'pub.devrel:easypermissions:0.2.1'
+    compile 'pub.devrel:easypermissions:0.3.0'
 }
 ```
 
@@ -74,8 +74,7 @@ Optionally, for a finer control, you can have your `Activity` / `Fragment` imple
 the `PermissionCallbacks` interface.
 
 ```java
-public class MainActivity extends AppCompatActivity
-    implements EasyPermissions.PermissionCallbacks {
+public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,13 +120,7 @@ public void onPermissionsDenied(int requestCode, List<String> perms) {
     // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
     // This will display a dialog directing them to enable the permission in app settings.
     if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-        new AppSettingsDialog.Builder(this, getString(R.string.rationale_ask_again))
-                .setTitle(getString(R.string.title_settings_dialog))
-                .setPositiveButton(getString(R.string.setting))
-                .setNegativeButton(getString(R.string.cancel), null /* click listener */)
-                .setRequestCode(RC_SETTINGS_SCREEN)
-                .build()
-                .show();
+        new AppSettingsDialog.Builder(this).build().show();
     }
 }
 
@@ -135,7 +128,7 @@ public void onPermissionsDenied(int requestCode, List<String> perms) {
 public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
-    if (requestCode == RC_SETTINGS_SCREEN) {
+    if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
         // Do something after user returned from app settings screen, like showing a Toast.
         Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT)
                 .show();
