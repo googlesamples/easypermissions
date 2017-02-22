@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0-beta2'
+        classpath 'com.android.tools.build:gradle:2.3.0-rc1'
 
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
@@ -33,7 +33,7 @@ ext {
 
     bintrayOrg = 'easygoogle'
 
-    support_library_version = '25.1.0'
+    support_library_version = '25.1.1'
 
     buildTools = '25.0.2'
     compileSdk = 25

@@ -442,30 +442,34 @@ public class EasyPermissions {
             clazz = clazz.getSuperclass();
         }
 
-        for (Method method : clazz.getDeclaredMethods()) {
-            if (method.isAnnotationPresent(AfterPermissionGranted.class)) {
-                // Check for annotated methods with matching request code.
-                AfterPermissionGranted ann = method.getAnnotation(AfterPermissionGranted.class);
-                if (ann.value() == requestCode) {
-                    // Method must be void so that we can invoke it
-                    if (method.getParameterTypes().length > 0) {
-                        throw new RuntimeException(
-                                "Cannot execute method " + method.getName() + " because it is non-void method and/or has input parameters.");
-                    }
-
-                    try {
-                        // Make method accessible if private
-                        if (!method.isAccessible()) {
-                            method.setAccessible(true);
+        while (clazz != null) {
+            for (Method method : clazz.getDeclaredMethods()) {
+                if (method.isAnnotationPresent(AfterPermissionGranted.class)) {
+                    // Check for annotated methods with matching request code.
+                    AfterPermissionGranted ann = method.getAnnotation(AfterPermissionGranted.class);
+                    if (ann.value() == requestCode) {
+                        // Method must be void so that we can invoke it
+                        if (method.getParameterTypes().length > 0) {
+                            throw new RuntimeException(
+                                    "Cannot execute method " + method.getName() + " because it is non-void method and/or has input parameters.");
                         }
-                        method.invoke(object);
-                    } catch (IllegalAccessException e) {
-                        Log.e(TAG, "runDefaultMethod:IllegalAccessException", e);
-                    } catch (InvocationTargetException e) {
-                        Log.e(TAG, "runDefaultMethod:InvocationTargetException", e);
+
+                        try {
+                            // Make method accessible if private
+                            if (!method.isAccessible()) {
+                                method.setAccessible(true);
+                            }
+                            method.invoke(object);
+                        } catch (IllegalAccessException e) {
+                            Log.e(TAG, "runDefaultMethod:IllegalAccessException", e);
+                        } catch (InvocationTargetException e) {
+                            Log.e(TAG, "runDefaultMethod:InvocationTargetException", e);
+                        }
                     }
                 }
             }
+
+            clazz = clazz.getSuperclass();
         }
     }
 
