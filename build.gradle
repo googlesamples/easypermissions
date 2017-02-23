@@ -33,7 +33,7 @@ ext {
 
     bintrayOrg = 'easygoogle'
 
-    support_library_version = '25.1.1'
+    support_library_version = '25.2.0'
 
     buildTools = '25.0.2'
     compileSdk = 25
