@@ -403,6 +403,20 @@ public class EasyPermissions {
         return shouldShowRationale;
     }
 
+    /**
+     * @param activity Activity
+     * @return true if the user has previously denied any of the {@code perms} and we should show a
+     * rationale, false otherwise.
+     */
+    public static boolean shouldShowRationale(@NonNull Activity activity, @NonNull String[] perms) {
+        boolean shouldShowRationale = false;
+        for (String perm : perms) {
+            shouldShowRationale =
+                    shouldShowRationale || shouldShowRequestPermissionRationale(activity, perm);
+        }
+        return shouldShowRationale;
+    }
+
     private static boolean shouldShowRequestPermissionRationale(@NonNull Object object,
                                                                 @NonNull String perm) {
         if (object instanceof Activity) {
