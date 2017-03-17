@@ -405,16 +405,33 @@ public class EasyPermissions {
 
     /**
      * @param activity Activity
+     * @param perms Array of permissions
      * @return true if the user has previously denied any of the {@code perms} and we should show a
      * rationale, false otherwise.
      */
-    public static boolean shouldShowRationale(@NonNull Activity activity, @NonNull String[] perms) {
-        boolean shouldShowRationale = false;
-        for (String perm : perms) {
-            shouldShowRationale =
-                    shouldShowRationale || shouldShowRequestPermissionRationale(activity, perm);
-        }
-        return shouldShowRationale;
+    public static boolean somePermissionDenied(@NonNull Activity activity, @NonNull String[] perms) {
+        return shouldShowRationale(activity, perms);
+    }
+
+    /**
+     * @param fragment Fragment
+     * @param perms Array of permissions
+     * @return true if the user has previously denied any of the {@code perms} and we should show a
+     * rationale, false otherwise.
+     */
+    public static boolean somePermissionDenied(@NonNull Fragment fragment, @NonNull String[] perms) {
+        return shouldShowRationale(fragment, perms);
+    }
+
+    /**
+     * @param fragment Fragment
+     * @param perms Array of permissions
+     * @return true if the user has previously denied any of the {@code perms} and we should show a
+     * rationale, false otherwise.
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public static boolean somePermissionDenied(@NonNull android.app.Fragment fragment, @NonNull String[] perms) {
+        return shouldShowRationale(fragment, perms);
     }
 
     private static boolean shouldShowRequestPermissionRationale(@NonNull Object object,
