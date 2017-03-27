@@ -48,6 +48,11 @@ public class EasyPermissions {
 
     }
 
+    public interface PermissionCallback extends ActivityCompat.OnRequestPermissionsResultCallback {
+
+        void onPermissionsResults(int requestCode, List<String> grantedPerms, List<String> deniedPerms);
+    }
+
     private static final String TAG = "EasyPermissions";
     private static final String DIALOG_TAG = "RationaleDialogFragmentCompat";
 
@@ -242,7 +247,7 @@ public class EasyPermissions {
      * String[], int[])} method.
      * <p>
      * If any permissions were granted or denied, the {@code object} will receive the appropriate
-     * callbacks through {@link PermissionCallbacks} and methods annotated with {@link
+     * callbacks through {@link PermissionCallbacks} or {@link PermissionCallback}, and methods annotated with {@link
      * AfterPermissionGranted} will be run if appropriate.
      *
      * @param requestCode  requestCode argument to permission result callback.
@@ -283,6 +288,11 @@ public class EasyPermissions {
                 }
             }
 
+            // Report all requested permissions, granted or denied
+            if (object instanceof PermissionCallback) {
+                ((PermissionCallback) object).onPermissionsResults(requestCode, granted, denied);
+            }
+
             // If 100% successful, call annotated methods
             if (!granted.isEmpty() && denied.isEmpty()) {
                 runAnnotatedMethods(object, requestCode);
@@ -295,8 +305,9 @@ public class EasyPermissions {
      * denied (user clicked "Never ask again").
      *
      * @param activity          {@link Activity} requesting permissions.
-     * @param deniedPermissions list of denied permissions, usually from {@link
-     *                          PermissionCallbacks#onPermissionsDenied(int, List)}
+     * @param deniedPermissions list of denied permissions, usually from
+     *                          {@link PermissionCallbacks#onPermissionsDenied(int, List)} or
+     *                          {@link PermissionCallback#onPermissionsResults(int, List, List)}
      * @return {@code true} if at least one permission in the list was permanently denied.
      */
     public static boolean somePermissionPermanentlyDenied(@NonNull Activity activity,

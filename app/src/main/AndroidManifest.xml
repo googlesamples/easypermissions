@@ -30,5 +30,8 @@
         <activity
             android:name=".BasicActivity"
             android:exported="true" />
+        <activity
+            android:name=".SingleCallbackActivity"
+            android:exported="true" />
     </application>
 </manifest>
