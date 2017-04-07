@@ -40,6 +40,10 @@ import java.util.List;
  */
 public class EasyPermissions {
 
+    /**
+     * Callback interface to receive the results of {@code EasyPermissions.requestPermissions()}
+     * calls.
+     */
     public interface PermissionCallbacks extends ActivityCompat.OnRequestPermissionsResultCallback {
 
         void onPermissionsGranted(int requestCode, List<String> perms);
@@ -434,6 +438,12 @@ public class EasyPermissions {
         return shouldShowRationale(fragment, perms);
     }
 
+    /**
+     * Determine if rationale should be shown before asking for the given permission.
+     * @param object the Fragment or Activity.
+     * @param perm the permission.
+     * @return {@code true} if rationale should be shown, {@code false} otherwise.
+     */
     private static boolean shouldShowRequestPermissionRationale(@NonNull Object object,
                                                                 @NonNull String perm) {
         if (object instanceof Activity) {
@@ -467,6 +477,12 @@ public class EasyPermissions {
                 .show(fragmentManager, DIALOG_TAG);
     }
 
+    /**
+     * Find all methods annotated with {@link AfterPermissionGranted} on a given object with the
+     * correc requestCode argument.
+     * @param object the object with annotated methods.
+     * @param requestCode the requestCode passed to the annotation.
+     */
     private static void runAnnotatedMethods(@NonNull Object object, int requestCode) {
         Class clazz = object.getClass();
         if (isUsingAndroidAnnotations(object)) {
@@ -504,6 +520,9 @@ public class EasyPermissions {
         }
     }
 
+    /**
+     * Determine if the project is using the AndroidAnnoations library.
+     */
     private static boolean isUsingAndroidAnnotations(@NonNull Object object) {
         if (!object.getClass().getSimpleName().endsWith("_")) {
             return false;

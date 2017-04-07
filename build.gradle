@@ -29,11 +29,11 @@ ext {
 
     mavenGroup = 'pub.devrel'
     mavenArtifactId = 'easypermissions'
-    mavenVersion = '0.3.0'
+    mavenVersion = '0.3.1'
 
     bintrayOrg = 'easygoogle'
 
-    support_library_version = '25.2.0'
+    support_library_version = '25.3.1'
 
     buildTools = '25.0.2'
     compileSdk = 25
