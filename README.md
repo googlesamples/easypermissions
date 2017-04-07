@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 ### Request Permissions
 
 The example below shows how to request permissions for a method that requires both
-`CAMERA` and `CHANGE_WIFI_STATE` permissions. There are a few things to note:
+`CAMERA` and `ACCESS_FINE_LOCATION` permissions. There are a few things to note:
 
   * Using `EasyPermissions#hasPermissions(...)` to check if the app already has the
     required permissions. This method can take any number of permissions as its final
@@ -56,16 +56,16 @@ The example below shows how to request permissions for a method that requires bo
     This can also be achieved by adding logic on the `onPermissionsGranted` callback.
 
 ```java
-@AfterPermissionGranted(RC_CAMERA_AND_WIFI)
+@AfterPermissionGranted(RC_CAMERA_AND_LOCATION)
 private void methodRequiresTwoPermission() {
-    String[] perms = {Manifest.permission.CAMERA, Manifest.permission.CHANGE_WIFI_STATE};
+    String[] perms = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION};
     if (EasyPermissions.hasPermissions(this, perms)) {
         // Already have permission, do the thing
         // ...
     } else {
         // Do not have permissions, request them now
-        EasyPermissions.requestPermissions(this, getString(R.string.camera_and_wifi_rationale),
-                RC_CAMERA_AND_WIFI, perms);
+        EasyPermissions.requestPermissions(this, getString(R.string.camera_and_location_rationale),
+                RC_CAMERA_AND_LOCATION, perms);
     }
 }
 ```
