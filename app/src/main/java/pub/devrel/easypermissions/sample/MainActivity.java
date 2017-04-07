@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         });
 
         // Button click listener that will request two permissions.
-        findViewById(R.id.button_location_and_wifi).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button_location_and_contacts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 locationAndContactsTask();

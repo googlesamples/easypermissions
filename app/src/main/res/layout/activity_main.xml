@@ -17,7 +17,7 @@
         android:text="@string/camera" />
 
     <Button
-        android:id="@+id/button_location_and_wifi"
+        android:id="@+id/button_location_and_contacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/location_and_contacts" />
