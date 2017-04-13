@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -18,6 +19,7 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
     private Object mHost;
     private RationaleDialogConfig mConfig;
     private EasyPermissions.PermissionCallbacks mCallbacks;
+    private EasyPermissions.PermissionCallback mCallback;
 
     RationaleDialogClickListener(RationaleDialogFragmentCompat compatDialogFragment,
                                  RationaleDialogConfig config,
@@ -29,6 +31,18 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
 
         mConfig = config;
         mCallbacks = callbacks;
+    }
+
+    RationaleDialogClickListener(RationaleDialogFragmentCompat compatDialogFragment,
+                                 RationaleDialogConfig config,
+                                 EasyPermissions.PermissionCallback callback) {
+
+        mHost = compatDialogFragment.getParentFragment() != null
+                ? compatDialogFragment.getParentFragment()
+                : compatDialogFragment.getActivity();
+
+        mConfig = config;
+        mCallback = callback;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
@@ -46,6 +60,23 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
 
         mConfig = config;
         mCallbacks = callbacks;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
+    RationaleDialogClickListener(RationaleDialogFragment dialogFragment,
+                                 RationaleDialogConfig config,
+                                 EasyPermissions.PermissionCallback callback) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            mHost = dialogFragment.getParentFragment() != null ?
+                    dialogFragment.getParentFragment() :
+                    dialogFragment.getActivity();
+        } else {
+            mHost = dialogFragment.getActivity();
+        }
+
+        mConfig = config;
+        mCallback = callback;
     }
 
     @Override
@@ -74,6 +105,9 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
         if (mCallbacks != null) {
             mCallbacks.onPermissionsDenied(mConfig.requestCode,
                     Arrays.asList(mConfig.permissions));
+        } else if (mCallback != null) {
+            mCallback.onPermissionsResults(mConfig.requestCode,
+                    new ArrayList<String>(), Arrays.asList(mConfig.permissions));
         }
     }
 }

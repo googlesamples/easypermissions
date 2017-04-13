@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatDialogFragment;
 public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
 
     private EasyPermissions.PermissionCallbacks mPermissionCallbacks;
+    private EasyPermissions.PermissionCallback mPermissionCallback;
 
     static RationaleDialogFragmentCompat newInstance(
             @StringRes int positiveButton, @StringRes int negativeButton,
@@ -36,10 +37,16 @@ public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (getParentFragment() != null && getParentFragment() instanceof EasyPermissions.PermissionCallbacks) {
-            mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) getParentFragment();
+        if (getParentFragment() != null) {
+            if (getParentFragment() instanceof EasyPermissions.PermissionCallbacks) {
+                mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) getParentFragment();
+            } else if (getParentFragment() instanceof EasyPermissions.PermissionCallback) {
+                mPermissionCallback = (EasyPermissions.PermissionCallback) getParentFragment();
+            }
         } else if (context instanceof EasyPermissions.PermissionCallbacks) {
             mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) context;
+        } else if (context instanceof EasyPermissions.PermissionCallback) {
+            mPermissionCallback = (EasyPermissions.PermissionCallback) context;
         }
     }
 
@@ -47,6 +54,7 @@ public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
     public void onDetach() {
         super.onDetach();
         mPermissionCallbacks = null;
+        mPermissionCallback = null;
     }
 
     @NonNull
@@ -59,6 +67,12 @@ public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
         RationaleDialogConfig config = new RationaleDialogConfig(getArguments());
         RationaleDialogClickListener clickListener =
                 new RationaleDialogClickListener(this, config, mPermissionCallbacks);
+
+        if (mPermissionCallbacks == null && mPermissionCallback != null) {
+            clickListener = new RationaleDialogClickListener(this, config, mPermissionCallbacks);
+        } else if (mPermissionCallback != null) {
+            clickListener = new RationaleDialogClickListener(this, config, mPermissionCallback);
+        }
 
         // Create an AlertDialog
         return config.createDialog(getContext(), clickListener);
