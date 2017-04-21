@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.RestrictTo;
 import android.support.annotation.StringRes;
 
 /**
@@ -15,11 +16,14 @@ import android.support.annotation.StringRes;
  * a Fragment or Activity that can host a Fragment.
  */
 @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 public class RationaleDialogFragment extends DialogFragment {
+
+    public static final String TAG = "RationaleDialogFragment";
 
     private EasyPermissions.PermissionCallbacks mPermissionCallbacks;
 
-    static RationaleDialogFragment newInstance(
+    public static RationaleDialogFragment newInstance(
             @StringRes int positiveButton, @StringRes int negativeButton,
             @NonNull String rationaleMsg, int requestCode, @NonNull String[] permissions) {
 
