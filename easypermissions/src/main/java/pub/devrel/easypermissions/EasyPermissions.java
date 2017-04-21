@@ -19,9 +19,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
@@ -60,7 +64,22 @@ public class EasyPermissions {
      * @see Manifest.permission
      */
     public static boolean hasPermissions(@NonNull Context context, @NonNull String... perms) {
-        return PermissionHelper.hasPermissions(context, perms);
+        // Always return true for SDK < M, let the system deal with the permissions
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            Log.w(TAG, "hasPermissions: API version < M, returning true by default");
+
+            // DANGER ZONE!!! Changing this will break the library.
+            return true;
+        }
+
+        for (String perm : perms) {
+            if (ContextCompat.checkSelfPermission(context, perm)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -87,12 +106,20 @@ public class EasyPermissions {
      * @param perms          a set of permissions to be requested.
      * @see Manifest.permission
      */
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     public static void requestPermissions(@NonNull Object host,
                                           @NonNull String rationale,
                                           @StringRes int positiveButton,
                                           @StringRes int negativeButton,
                                           int requestCode,
                                           @NonNull String... perms) {
+
+        // Check for permissions before dispatching
+        if (hasPermissions(getContext(host), perms)) {
+            notifyAlreadyHasPermissions(host, requestCode, perms);
+            return;
+        }
+
         PermissionHelper.getInstance(host).requestPermissions(rationale, positiveButton,
                 negativeButton, requestCode, perms);
     }
@@ -196,6 +223,44 @@ public class EasyPermissions {
      */
     public static boolean somePermissionDenied(@NonNull Object host, @NonNull String[] perms) {
         return PermissionHelper.getInstance(host).somePermissionDenied(perms);
+    }
+
+    /**
+     * Get an {@link Context} from an object that could be an Activity or Fragment.
+     */
+    @NonNull
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
+    private static Context getContext(@NonNull Object object) {
+        // TODO(samstern): I'd really like to remove this method so that there is no
+        //                 type-checking in this class but LowApiPermissionHelper stops me
+        //                 since it can't provide a Context for its host.
+        if (object instanceof Activity) {
+            return ((Activity) object);
+        } else if (object instanceof Fragment) {
+            return ((Fragment) object).getActivity();
+        } else if (object instanceof android.app.Fragment) {
+            return ((android.app.Fragment) object).getActivity();
+        } else {
+            throw new IllegalArgumentException("Cannot get context from object: " + object);
+        }
+    }
+
+    /**
+     * Run permission callbacks on an object that requested permissions but already has them
+     * by simulating {@link PackageManager#PERMISSION_GRANTED}.
+     * @param object the object requesting permissions.
+     * @param requestCode the permission request code.
+     * @param perms a list of permissions requested.
+     */
+    private static void notifyAlreadyHasPermissions(@NonNull Object object,
+                                                    int requestCode,
+                                                    @NonNull String[] perms) {
+        int[] grantResults = new int[perms.length];
+        for (int i = 0; i < perms.length; i++) {
+            grantResults[i] = PackageManager.PERMISSION_GRANTED;
+        }
+
+        onRequestPermissionsResult(requestCode, perms, grantResults, object);
     }
 
     /**

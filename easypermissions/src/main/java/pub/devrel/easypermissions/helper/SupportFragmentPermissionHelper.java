@@ -24,12 +24,6 @@ class SupportFragmentPermissionHelper extends PermissionHelper<Fragment> {
                                    int requestCode,
                                    @NonNull String... perms) {
 
-        // Check for permissions before dispatching
-        if (hasPermissions(getHost().getContext(), perms)) {
-            notifyAlreadyHasPermissions(getHost(), requestCode, perms);
-            return;
-        }
-
         if (shouldShowRationale(perms)) {
             RationaleDialogFragmentCompat
                     .newInstance(positiveButton, negativeButton, rationale, requestCode, perms)

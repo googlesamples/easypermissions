@@ -1,20 +1,15 @@
 package pub.devrel.easypermissions.helper;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import java.util.List;
 
-import pub.devrel.easypermissions.EasyPermissions;
 import pub.devrel.easypermissions.RationaleDialogFragment;
 
 /**
@@ -51,25 +46,6 @@ public abstract class PermissionHelper<T> {
 
     public PermissionHelper(@NonNull T host) {
         this.mHost = host;
-    }
-
-    public static boolean hasPermissions(Context context, String... perms) {
-        // Always return true for SDK < M, let the system deal with the permissions
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            Log.w(TAG, "hasPermissions: API version < M, returning true by default");
-
-            // DANGER ZONE!!! Changing this will break the library.
-            return true;
-        }
-
-        for (String perm : perms) {
-            if (ContextCompat.checkSelfPermission(context, perm)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     public void requestPermissions(@NonNull String rationale,
@@ -140,17 +116,6 @@ public abstract class PermissionHelper<T> {
         RationaleDialogFragment
                 .newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
                 .show(fragmentManager, RationaleDialogFragment.TAG);
-    }
-
-    protected void notifyAlreadyHasPermissions(Object object,
-                                               int requestCode,
-                                               @NonNull String[] perms) {
-        int[] grantResults = new int[perms.length];
-        for (int i = 0; i < perms.length; i++) {
-            grantResults[i] = PackageManager.PERMISSION_GRANTED;
-        }
-
-        EasyPermissions.onRequestPermissionsResult(requestCode, perms, grantResults, object);
     }
 
     @NonNull
