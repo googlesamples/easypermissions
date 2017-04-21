@@ -24,21 +24,30 @@ public abstract class PermissionHelper<T> {
     private T mHost;
 
     @NonNull
-    public static PermissionHelper getInstance(Object host) {
-        // If the API version is < M, just return an PermissionsHelper that does not do anything.
+    public static PermissionHelper newInstance(Activity host) {
         if (Build.VERSION.SDK_INT < 23) {
             return new LowApiPermissionsHelper(host);
         }
 
-        if (host instanceof Activity) {
-            return new ActivityPermissionHelper((Activity) host);
-        } else if (host instanceof Fragment) {
-            return new SupportFragmentPermissionHelper((Fragment) host);
-        } else if (host instanceof android.app.Fragment) {
-            return new FrameworkFragmentPermissionHelper((android.app.Fragment) host);
-        } else {
-            throw new IllegalArgumentException("Host object must be an Activity or Fragment");
+        return new ActivityPermissionHelper(host);
+    }
+
+    @NonNull
+    public static PermissionHelper newInstance(Fragment host) {
+        if (Build.VERSION.SDK_INT < 23) {
+            return new LowApiPermissionsHelper(host);
         }
+
+        return new SupportFragmentPermissionHelper(host);
+    }
+
+    @NonNull
+    public static PermissionHelper newInstance(android.app.Fragment host) {
+        if (Build.VERSION.SDK_INT < 23) {
+            return new LowApiPermissionsHelper(host);
+        }
+
+        return new FrameworkFragmentPermissionHelper(host);
     }
 
     // ============================================================================
@@ -76,6 +85,11 @@ public abstract class PermissionHelper<T> {
         return shouldShowRationale(perms);
     }
 
+    @NonNull
+    public T getHost() {
+        return mHost;
+    }
+
     // ============================================================================
     // Public abstract methods
     // ============================================================================
@@ -108,11 +122,6 @@ public abstract class PermissionHelper<T> {
         RationaleDialogFragment
                 .newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
                 .show(fragmentManager, RationaleDialogFragment.TAG);
-    }
-
-    @NonNull
-    protected T getHost() {
-        return mHost;
     }
 
 }
