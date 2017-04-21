@@ -55,10 +55,10 @@ public abstract class PermissionHelper<T> {
     // ============================================================================
 
     public PermissionHelper(@NonNull T host) {
-        this.mHost = host;
+        mHost = host;
     }
 
-    public boolean shouldShowRationale(@NonNull String[] perms) {
+    public boolean shouldShowRationale(@NonNull String... perms) {
         for (String perm : perms) {
             if (shouldShowRequestPermissionRationale(perm)) {
                 return true;
@@ -81,7 +81,7 @@ public abstract class PermissionHelper<T> {
         return !shouldShowRequestPermissionRationale(perms);
     }
 
-    public boolean somePermissionDenied(@NonNull String[] perms) {
+    public boolean somePermissionDenied(@NonNull String... perms) {
         return shouldShowRationale(perms);
     }
 

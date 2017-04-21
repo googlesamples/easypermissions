@@ -308,23 +308,23 @@ public class EasyPermissions {
      * rationale, false otherwise.
      */
     public static boolean somePermissionDenied(@NonNull Activity host,
-                                               @NonNull String[] perms) {
+                                               @NonNull String... perms) {
         return PermissionHelper.newInstance(host).somePermissionDenied(perms);
     }
 
     /**
-     * @see #somePermissionDenied(Activity, String[])
+     * @see #somePermissionDenied(Activity, String...)
      */
     public static boolean somePermissionDenied(@NonNull Fragment host,
-                                               @NonNull String[] perms) {
+                                               @NonNull String... perms) {
         return PermissionHelper.newInstance(host).somePermissionDenied(perms);
     }
 
     /**
-     * @see #somePermissionDenied(Activity, String[])
+     * @see #somePermissionDenied(Activity, String...)
      */
     public static boolean somePermissionDenied(@NonNull android.app.Fragment host,
-                                               @NonNull String[] perms) {
+                                               @NonNull String... perms) {
         return PermissionHelper.newInstance(host).somePermissionDenied(perms);
     }
 
