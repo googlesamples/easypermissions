@@ -1,6 +1,7 @@
 package pub.devrel.easypermissions.helper;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -48,17 +49,6 @@ public abstract class PermissionHelper<T> {
         this.mHost = host;
     }
 
-    public void requestPermissions(@NonNull String rationale,
-                                   int requestCode,
-                                   @NonNull String... perms) {
-        // Use default Android OK and Cancel strings
-        requestPermissions(rationale,
-                android.R.string.ok,
-                android.R.string.cancel,
-                requestCode,
-                perms);
-    }
-
     public boolean shouldShowRationale(@NonNull String[] perms) {
         for (String perm : perms) {
             if (shouldShowRequestPermissionRationale(perm)) {
@@ -97,6 +87,8 @@ public abstract class PermissionHelper<T> {
                                             @NonNull String... perms);
 
     public abstract boolean shouldShowRequestPermissionRationale(@NonNull String perm);
+
+    public abstract Context getContext();
 
     // ============================================================================
     // Protected methods

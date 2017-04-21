@@ -2,6 +2,7 @@ package pub.devrel.easypermissions.helper;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
@@ -39,5 +40,10 @@ class ActivityPermissionHelper extends PermissionHelper<Activity> {
     @Override
     public boolean shouldShowRequestPermissionRationale(@NonNull String perm) {
         return ActivityCompat.shouldShowRequestPermissionRationale(getHost(), perm);
+    }
+
+    @Override
+    public Context getContext() {
+        return getHost();
     }
 }

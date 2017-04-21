@@ -21,10 +21,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -63,13 +61,19 @@ public class EasyPermissions {
      * yet granted.
      * @see Manifest.permission
      */
-    public static boolean hasPermissions(@NonNull Context context, @NonNull String... perms) {
+    public static boolean hasPermissions(Context context, @NonNull String... perms) {
         // Always return true for SDK < M, let the system deal with the permissions
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             Log.w(TAG, "hasPermissions: API version < M, returning true by default");
 
             // DANGER ZONE!!! Changing this will break the library.
             return true;
+        }
+
+        // Null context may be passed if we have detected Low API (less than M) so getting
+        // to this point with a null context should not be possible.
+        if (context == null) {
+            throw new IllegalArgumentException("Can't check permissions for null context");
         }
 
         for (String perm : perms) {
@@ -91,7 +95,14 @@ public class EasyPermissions {
                                           @NonNull String rationale,
                                           int requestCode,
                                           @NonNull String... perms) {
-        PermissionHelper.getInstance(host).requestPermissions(rationale, requestCode, perms);
+
+        // Use default Android 'OK' and 'Cancel' buttons
+        requestPermissions(host,
+                rationale,
+                android.R.string.ok,
+                android.R.string.cancel,
+                requestCode,
+                perms);
     }
 
     /**
@@ -106,7 +117,6 @@ public class EasyPermissions {
      * @param perms          a set of permissions to be requested.
      * @see Manifest.permission
      */
-    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     public static void requestPermissions(@NonNull Object host,
                                           @NonNull String rationale,
                                           @StringRes int positiveButton,
@@ -114,13 +124,17 @@ public class EasyPermissions {
                                           int requestCode,
                                           @NonNull String... perms) {
 
-        // Check for permissions before dispatching
-        if (hasPermissions(getContext(host), perms)) {
+        // Get a permission helper for the calling object
+        PermissionHelper helper = PermissionHelper.getInstance(host);
+
+        // Check for permissions before dispatching the request
+        if (hasPermissions(helper.getContext(), perms)) {
             notifyAlreadyHasPermissions(host, requestCode, perms);
             return;
         }
 
-        PermissionHelper.getInstance(host).requestPermissions(rationale, positiveButton,
+        // Request permissions
+        helper.requestPermissions(rationale, positiveButton,
                 negativeButton, requestCode, perms);
     }
 
@@ -223,26 +237,6 @@ public class EasyPermissions {
      */
     public static boolean somePermissionDenied(@NonNull Object host, @NonNull String[] perms) {
         return PermissionHelper.getInstance(host).somePermissionDenied(perms);
-    }
-
-    /**
-     * Get an {@link Context} from an object that could be an Activity or Fragment.
-     */
-    @NonNull
-    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
-    private static Context getContext(@NonNull Object object) {
-        // TODO(samstern): I'd really like to remove this method so that there is no
-        //                 type-checking in this class but LowApiPermissionHelper stops me
-        //                 since it can't provide a Context for its host.
-        if (object instanceof Activity) {
-            return ((Activity) object);
-        } else if (object instanceof Fragment) {
-            return ((Fragment) object).getActivity();
-        } else if (object instanceof android.app.Fragment) {
-            return ((android.app.Fragment) object).getActivity();
-        } else {
-            throw new IllegalArgumentException("Cannot get context from object: " + object);
-        }
     }
 
     /**

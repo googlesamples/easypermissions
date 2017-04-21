@@ -27,4 +27,9 @@ class LowApiPermissionsHelper extends PermissionHelper<Object> {
     public boolean shouldShowRequestPermissionRationale(@NonNull String perm) {
         return false;
     }
+
+    @Override
+    public Context getContext() {
+        return null;
+    }
 }

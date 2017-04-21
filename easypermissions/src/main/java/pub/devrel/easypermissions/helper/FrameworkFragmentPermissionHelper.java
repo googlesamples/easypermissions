@@ -2,6 +2,7 @@ package pub.devrel.easypermissions.helper;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
@@ -38,5 +39,11 @@ class FrameworkFragmentPermissionHelper extends PermissionHelper<Fragment> {
     @SuppressLint("NewApi")
     public boolean shouldShowRequestPermissionRationale(@NonNull String perm) {
         return getHost().shouldShowRequestPermissionRationale(perm);
+    }
+
+    @Override
+    @SuppressLint("NewApi")
+    public Context getContext() {
+        return getHost().getActivity();
     }
 }
