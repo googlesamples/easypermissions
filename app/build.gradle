@@ -10,6 +10,8 @@ android {
         targetSdkVersion targetSdk
         versionCode 1
         versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -24,4 +26,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:$support_library_version"
 
     compile project(':easypermissions')
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.robolectric:robolectric:3.3.2'
 }
