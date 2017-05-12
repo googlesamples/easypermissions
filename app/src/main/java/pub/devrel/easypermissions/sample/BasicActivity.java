@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.View;
 
 import java.util.List;
 
@@ -25,13 +24,10 @@ public class BasicActivity extends Activity implements EasyPermissions.Permissio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basic);
 
-        findViewById(R.id.button_request).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Request SMS permission
-                EasyPermissions.requestPermissions(BasicActivity.this, "NEED SMS PLZ", 1001,
-                        Manifest.permission.READ_SMS);
-            }
+        findViewById(R.id.button_request).setOnClickListener(v -> {
+            // Request SMS permission
+            EasyPermissions.requestPermissions(BasicActivity.this, "NEED SMS PLZ", 1001,
+                    Manifest.permission.READ_SMS);
         });
     }
 

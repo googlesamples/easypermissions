@@ -105,9 +105,9 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
     /**
      * Display the built dialog.
      */
+    @SuppressWarnings("NewApi")
     public void show() {
         if (mNegativeListener == null) {
-            //noinspection NewApi The Builder constructor prevents this
             startForResult(AppSettingsDialogHolderActivity.createShowDialogIntent(mContext, this));
         } else {
             // We can't pass the cancel listener to an activity so we default to old behavior it there is one.
@@ -130,6 +130,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
                 .show();
     }
 
+    @SuppressWarnings("NewApi")
     @Override
     public void onClick(DialogInterface dialog, int which) {
         // Create app settings intent
@@ -138,7 +139,6 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
         intent.setData(uri);
 
         // Start for result
-        //noinspection NewApi The Builder constructor prevents this
         startForResult(intent);
     }
 
