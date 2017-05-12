@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.RestrictTo;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatDialogFragment;
 
@@ -14,11 +15,14 @@ import android.support.v7.app.AppCompatDialogFragment;
  * comes from a Fragment or Activity that can host a Fragment.
  */
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
+
+    public static final String TAG = "RationaleDialogFragmentCompat";
 
     private EasyPermissions.PermissionCallbacks mPermissionCallbacks;
 
-    static RationaleDialogFragmentCompat newInstance(
+    public static RationaleDialogFragmentCompat newInstance(
             @StringRes int positiveButton, @StringRes int negativeButton,
             @NonNull String rationaleMsg, int requestCode, @NonNull String[] permissions) {
 
