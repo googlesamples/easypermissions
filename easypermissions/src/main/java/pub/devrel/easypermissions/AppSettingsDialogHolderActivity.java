@@ -31,7 +31,9 @@ public class AppSettingsDialogHolderActivity extends AppCompatActivity implement
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mDialog.dismiss();
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
     }
 
     @Override
