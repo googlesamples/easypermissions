@@ -6,10 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.RestrictTo;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class AppSettingsDialogHolderActivity extends AppCompatActivity implements DialogInterface.OnClickListener {
+    private AlertDialog mDialog;
+
     public static Intent createShowDialogIntent(Context context, AppSettingsDialog dialog) {
         return new Intent(context, AppSettingsDialogHolderActivity.class)
                 .putExtra(AppSettingsDialog.EXTRA_APP_SETTINGS, dialog);
@@ -22,7 +25,15 @@ public class AppSettingsDialogHolderActivity extends AppCompatActivity implement
         dialog.setContext(this);
         dialog.setActivityOrFragment(this);
         dialog.setNegativeListener(this);
-        dialog.showDialog();
+        mDialog = dialog.showDialog();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
     }
 
     @Override

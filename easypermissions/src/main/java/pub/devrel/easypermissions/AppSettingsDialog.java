@@ -119,14 +119,13 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
     /**
      * Show the dialog. {@link #show()} is a wrapper to ensure backwards compatibility
      */
-    void showDialog() {
-        new AlertDialog.Builder(mContext)
+    AlertDialog showDialog() {
+        return new AlertDialog.Builder(mContext)
                 .setCancelable(false)
                 .setTitle(mTitle)
                 .setMessage(mRationale)
                 .setPositiveButton(mPositiveButtonText, this)
                 .setNegativeButton(mNegativeButtonText, mNegativeListener)
-                .create()
                 .show();
     }
 
