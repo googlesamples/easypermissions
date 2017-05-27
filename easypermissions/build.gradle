@@ -18,15 +18,12 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 }
 
 dependencies {
     compile "com.android.support:appcompat-v7:$support_library_version"
 }
 
-apply from: 'maven.gradle'
-apply from: 'bintray.gradle'
+//apply from: 'maven.gradle'
+//apply from: 'bintray.gradle'
+apply from: 'gradle-mvn-push.gradle'
