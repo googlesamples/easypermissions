@@ -12,13 +12,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        jackOptions{
-            enabled true
-        }
     }
-
-
 
     buildTypes {
         release {
