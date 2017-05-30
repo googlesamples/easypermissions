@@ -3,7 +3,7 @@
 
     <style name="EasyPermissions" parent="Theme.AppCompat.Light.DarkActionBar"/>
 
-    <style name="EasyPermissions.Transparent" parent="EasyPermissions">
+    <style name="EasyPermissions.Transparent">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
