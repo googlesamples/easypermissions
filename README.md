@@ -51,7 +51,7 @@ The example below shows how to request permissions for a method that requires bo
     can take any number of permissions as its final argument.
   * Use of the `AfterPermissionGranted` annotation. This is optional, but provided for
     convenience. If all of the permissions in a given request are granted, any methods
-    annotated with the proper request code will be executed. This is to simplify the common
+    annotated with the proper request code will be executed (methods have to be in the same Context class Activity/Fragment ). This is to simplify the common
     flow of needing to run the requesting method after all of its permissions have been granted.
     This can also be achieved by adding logic on the `onPermissionsGranted` callback.
 
