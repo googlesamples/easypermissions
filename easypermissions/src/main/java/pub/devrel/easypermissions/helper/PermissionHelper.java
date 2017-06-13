@@ -4,14 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 
 import java.util.List;
-
-import pub.devrel.easypermissions.RationaleDialogFragment;
 
 /**
  * Delegate class to make permission calls based on the 'host' (Fragment, Activity, etc).
@@ -67,6 +64,19 @@ public abstract class PermissionHelper<T> {
         return false;
     }
 
+    public void requestPermissions(@NonNull String rationale,
+                                   @StringRes int positiveButton,
+                                   @StringRes int negativeButton,
+                                   int requestCode,
+                                   @NonNull String... perms) {
+        if (shouldShowRationale(perms)) {
+            showRequestPermissionRationale(
+                    rationale, positiveButton, negativeButton, requestCode, perms);
+        } else {
+            directRequestPermissions(requestCode, perms);
+        }
+    }
+
     public boolean somePermissionPermanentlyDenied(@NonNull List<String> perms) {
         for (String deniedPermission : perms) {
             if (permissionPermanentlyDenied(deniedPermission)) {
@@ -94,34 +104,15 @@ public abstract class PermissionHelper<T> {
     // Public abstract methods
     // ============================================================================
 
-    public abstract void requestPermissions(@NonNull String rationale,
-                                            @StringRes int positiveButton,
-                                            @StringRes int negativeButton,
-                                            int requestCode,
-                                            @NonNull String... perms);
+    public abstract void directRequestPermissions(int requestCode, @NonNull String... perms);
 
     public abstract boolean shouldShowRequestPermissionRationale(@NonNull String perm);
 
+    public abstract void showRequestPermissionRationale(@NonNull String rationale,
+                                                        @StringRes int positiveButton,
+                                                        @StringRes int negativeButton,
+                                                        int requestCode,
+                                                        @NonNull String... perms);
     public abstract Context getContext();
-
-    // ============================================================================
-    // Protected methods
-    // ============================================================================
-
-    /**
-     * Show a {@link RationaleDialogFragment} explaining permission request rationale.
-     */
-    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
-    protected void showRationaleDialogFragment(@NonNull android.app.FragmentManager fragmentManager,
-                                               @NonNull String rationale,
-                                               @StringRes int positiveButton,
-                                               @StringRes int negativeButton,
-                                               int requestCode,
-                                               @NonNull String... perms) {
-
-        RationaleDialogFragment
-                .newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
-                .show(fragmentManager, RationaleDialogFragment.TAG);
-    }
 
 }

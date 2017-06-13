@@ -5,9 +5,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.List;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
@@ -19,15 +22,18 @@ public class BasicActivity extends Activity implements EasyPermissions.Permissio
 
     private static final String TAG = "BasicActivity";
 
+    private static final int RC_REQUEST_SMS = 1001;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basic);
 
-        findViewById(R.id.button_request).setOnClickListener(v -> {
-            // Request SMS permission
-            EasyPermissions.requestPermissions(BasicActivity.this, "NEED SMS PLZ", 1001,
-                    Manifest.permission.READ_SMS);
+        findViewById(R.id.button_request).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doSmsTask();
+            }
         });
     }
 
@@ -39,6 +45,16 @@ public class BasicActivity extends Activity implements EasyPermissions.Permissio
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
+    @AfterPermissionGranted(RC_REQUEST_SMS)
+    public void doSmsTask() {
+        String perm = Manifest.permission.READ_SMS;
+        if (!EasyPermissions.hasPermissions(this, perm)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_sms),
+                    RC_REQUEST_SMS, perm);
+        } else {
+            Toast.makeText(this, "TODO: SMS Task", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {

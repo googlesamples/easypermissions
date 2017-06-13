@@ -1,14 +1,15 @@
 package pub.devrel.easypermissions;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 
 import java.util.Arrays;
+
+import pub.devrel.easypermissions.helper.PermissionHelper;
 
 /**
  * Click listener for either {@link RationaleDialogFragment} or {@link RationaleDialogFragmentCompat}.
@@ -52,18 +53,16 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
     public void onClick(DialogInterface dialog, int which) {
         if (which == Dialog.BUTTON_POSITIVE) {
             if (mHost instanceof Fragment) {
-                ((Fragment) mHost).requestPermissions(mConfig.permissions, mConfig.requestCode);
+                PermissionHelper.newInstance((Fragment) mHost).directRequestPermissions(
+                        mConfig.requestCode, mConfig.permissions);
             } else if (mHost instanceof android.app.Fragment) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    ((android.app.Fragment) mHost)
-                            .requestPermissions(mConfig.permissions, mConfig.requestCode);
-                } else {
-                    throw new IllegalArgumentException(
-                            "Target SDK needs to be greater than 23 if caller is android.app.Fragment");
-                }
-            } else if (mHost instanceof FragmentActivity) {
-                ActivityCompat.requestPermissions(
-                        (FragmentActivity) mHost, mConfig.permissions, mConfig.requestCode);
+                PermissionHelper.newInstance((android.app.Fragment) mHost).directRequestPermissions(
+                        mConfig.requestCode, mConfig.permissions);
+            } else if (mHost instanceof Activity) {
+                PermissionHelper.newInstance((Activity) mHost).directRequestPermissions(
+                        mConfig.requestCode, mConfig.permissions);
+            } else {
+                throw new RuntimeException("Host must be an Activity or Fragment!");
             }
         } else {
             notifyPermissionDenied();
