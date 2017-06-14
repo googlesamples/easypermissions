@@ -31,7 +31,12 @@ public class MainFragment extends Fragment implements EasyPermissions.Permission
         View v =  inflater.inflate(R.layout.fragment_main, container);
 
         // Button click listener
-        v.findViewById(R.id.button_sms).setOnClickListener(v1 -> smsTask());
+        v.findViewById(R.id.button_sms).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                smsTask();
+            }
+        });
 
         return v;
     }
