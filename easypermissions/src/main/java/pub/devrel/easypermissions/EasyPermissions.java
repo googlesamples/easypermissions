@@ -35,7 +35,7 @@ import java.util.List;
 import pub.devrel.easypermissions.helper.PermissionHelper;
 
 /**
- * Utility to request and check System permissions for apps targeting Android M (API >= 23).
+ * Utility to request and check System permissions for apps targeting Android M (API &gt;= 23).
  */
 public class EasyPermissions {
 
@@ -130,7 +130,7 @@ public class EasyPermissions {
      *                       will be displayed if the user rejects the request the first time.
      * @param positiveButton custom text for positive button
      * @param negativeButton custom text for negative button
-     * @param requestCode    request code to track this request, must be < 256.
+     * @param requestCode    request code to track this request, must be &lt; 256.
      * @param perms          a set of permissions to be requested.
      * @see Manifest.permission
      */
@@ -254,7 +254,7 @@ public class EasyPermissions {
     }
 
     /**
-     * @see #somePermissionPermanentlyDenied(Activity, List).
+     * @see #somePermissionPermanentlyDenied(Activity, List)
      */
     public static boolean somePermissionPermanentlyDenied(@NonNull Fragment host,
                                                           @NonNull List<String> deniedPermissions) {
@@ -284,7 +284,7 @@ public class EasyPermissions {
     }
 
     /**
-     * @see #permissionPermanentlyDenied(Activity, String).
+     * @see #permissionPermanentlyDenied(Activity, String)
      */
     public static boolean permissionPermanentlyDenied(@NonNull Fragment host,
                                                       @NonNull String deniedPermission) {
