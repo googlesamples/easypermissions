@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.StringRes;
+import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -43,6 +44,8 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
 
     static final String EXTRA_APP_SETTINGS = "extra_app_settings";
 
+    @StyleRes
+    private final int mThemeResId;
     private final String mRationale;
     private final String mTitle;
     private final String mPositiveButtonText;
@@ -53,6 +56,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
     private DialogInterface.OnClickListener mNegativeListener;
 
     private AppSettingsDialog(Parcel in) {
+        mThemeResId = in.readInt();
         mRationale = in.readString();
         mTitle = in.readString();
         mPositiveButtonText = in.readString();
@@ -62,6 +66,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
 
     private AppSettingsDialog(@NonNull final Object activityOrFragment,
                               @NonNull final Context context,
+                              @StyleRes int themeResId,
                               @Nullable String rationale,
                               @Nullable String title,
                               @Nullable String positiveButtonText,
@@ -70,6 +75,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
                               int requestCode) {
         mActivityOrFragment = activityOrFragment;
         mContext = context;
+        mThemeResId = themeResId;
         mRationale = rationale;
         mTitle = title;
         mPositiveButtonText = positiveButtonText;
@@ -98,7 +104,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
             ((Fragment) mActivityOrFragment).startActivityForResult(intent, mRequestCode);
         } else if (mActivityOrFragment instanceof android.app.Fragment) {
             ((android.app.Fragment) mActivityOrFragment).startActivityForResult(intent,
-                                                                                mRequestCode);
+                    mRequestCode);
         }
     }
 
@@ -120,7 +126,13 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
      * Show the dialog. {@link #show()} is a wrapper to ensure backwards compatibility
      */
     AlertDialog showDialog() {
-        return new AlertDialog.Builder(mContext)
+        AlertDialog.Builder builder;
+        if (mThemeResId > 0) {
+            builder = new AlertDialog.Builder(mContext, mThemeResId);
+        } else {
+            builder = new AlertDialog.Builder(mContext);
+        }
+        return builder
                 .setCancelable(false)
                 .setTitle(mTitle)
                 .setMessage(mRationale)
@@ -148,6 +160,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeInt(mThemeResId);
         dest.writeString(mRationale);
         dest.writeString(mTitle);
         dest.writeString(mPositiveButtonText);
@@ -162,6 +175,8 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
 
         private Object mActivityOrFragment;
         private Context mContext;
+        @StyleRes
+        private int mThemeResId = -1;
         private String mRationale;
         private String mTitle;
         private String mPositiveButton;
@@ -246,6 +261,13 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
             mContext = fragment.getActivity();
         }
 
+        /**
+         * Set the dialog theme.
+         */
+        public Builder setThemeResId(@StyleRes int themeResId) {
+            mThemeResId = themeResId;
+            return this;
+        }
 
         /**
          * Set the title dialog. Default is "Permissions Required".
@@ -362,6 +384,7 @@ public class AppSettingsDialog implements Parcelable, DialogInterface.OnClickLis
             return new AppSettingsDialog(
                     mActivityOrFragment,
                     mContext,
+                    mThemeResId,
                     mRationale,
                     mTitle,
                     mPositiveButton,
