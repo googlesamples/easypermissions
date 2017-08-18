@@ -65,6 +65,6 @@ public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
                 new RationaleDialogClickListener(this, config, mPermissionCallbacks);
 
         // Create an AlertDialog
-        return config.createDialog(getContext(), clickListener);
+        return config.createSupportDialog(getContext(), clickListener);
     }
 }
