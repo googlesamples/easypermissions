@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "pub.devrel.easypermissions.sample"
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion targetSdk
         versionCode 1
         versionName "1.0"
@@ -28,5 +28,5 @@ dependencies {
     compile project(':easypermissions')
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.robolectric:robolectric:3.3.2'
+    testCompile 'org.robolectric:robolectric:3.4.2'
 }

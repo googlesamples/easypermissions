@@ -14,8 +14,7 @@ android:
   components:
     - tools
     - platform-tools
-    - build-tools-25.0.3
-    - android-25
-    - extra-android-m2repository
+    - build-tools-26.0.1
+    - android-26
 
 script: ./gradlew build
