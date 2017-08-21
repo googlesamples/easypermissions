@@ -89,6 +89,7 @@ public class EasyPermissions {
 
     /**
      * Request permissions from an Activity with standard OK/Cancel buttons.
+     *
      * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
     public static void requestPermissions(
@@ -100,6 +101,7 @@ public class EasyPermissions {
 
     /**
      * Request permissions from a Support Fragment with standard OK/Cancel buttons.
+     *
      * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
     public static void requestPermissions(
@@ -112,6 +114,7 @@ public class EasyPermissions {
 
     /**
      * Request permissions from a standard Fragment with standard OK/Cancel buttons.
+     *
      * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
     public static void requestPermissions(
@@ -145,6 +148,7 @@ public class EasyPermissions {
 
     /**
      * Request permissions from a Support Fragment.
+     *
      * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
     public static void requestPermissions(
@@ -302,7 +306,7 @@ public class EasyPermissions {
     /**
      * See if some denied permission has been permanently denied.
      *
-     * @param host requesting context.
+     * @param host  requesting context.
      * @param perms array of permissions.
      * @return true if the user has previously denied any of the {@code perms} and we should show a
      * rationale, false otherwise.
@@ -329,11 +333,12 @@ public class EasyPermissions {
     }
 
     /**
-     * Run permission callbacks on an object that requested permissions but already has them
-     * by simulating {@link PackageManager#PERMISSION_GRANTED}.
-     * @param object the object requesting permissions.
+     * Run permission callbacks on an object that requested permissions but already has them by
+     * simulating {@link PackageManager#PERMISSION_GRANTED}.
+     *
+     * @param object      the object requesting permissions.
      * @param requestCode the permission request code.
-     * @param perms a list of permissions requested.
+     * @param perms       a list of permissions requested.
      */
     private static void notifyAlreadyHasPermissions(@NonNull Object object,
                                                     int requestCode,
@@ -348,8 +353,9 @@ public class EasyPermissions {
 
     /**
      * Find all methods annotated with {@link AfterPermissionGranted} on a given object with the
-     * correc requestCode argument.
-     * @param object the object with annotated methods.
+     * correct requestCode argument.
+     *
+     * @param object      the object with annotated methods.
      * @param requestCode the requestCode passed to the annotation.
      */
     private static void runAnnotatedMethods(@NonNull Object object, int requestCode) {
@@ -360,9 +366,9 @@ public class EasyPermissions {
 
         while (clazz != null) {
             for (Method method : clazz.getDeclaredMethods()) {
-                if (method.isAnnotationPresent(AfterPermissionGranted.class)) {
+                AfterPermissionGranted ann = method.getAnnotation(AfterPermissionGranted.class);
+                if (ann != null) {
                     // Check for annotated methods with matching request code.
-                    AfterPermissionGranted ann = method.getAnnotation(AfterPermissionGranted.class);
                     if (ann.value() == requestCode) {
                         // Method must be void so that we can invoke it
                         if (method.getParameterTypes().length > 0) {
@@ -390,7 +396,7 @@ public class EasyPermissions {
     }
 
     /**
-     * Determine if the project is using the AndroidAnnoations library.
+     * Determine if the project is using the AndroidAnnotations library.
      */
     private static boolean isUsingAndroidAnnotations(@NonNull Object object) {
         if (!object.getClass().getSimpleName().endsWith("_")) {
