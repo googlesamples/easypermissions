@@ -73,7 +73,7 @@ public class RationaleDialogFragment extends DialogFragment {
                 new RationaleDialogClickListener(this, config, mPermissionCallbacks);
 
         // Create an AlertDialog
-        return config.createDialog(getActivity(), clickListener);
+        return config.createFrameworkDialog(getActivity(), clickListener);
     }
 
 }

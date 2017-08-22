@@ -54,8 +54,17 @@ class RationaleDialogConfig {
         return bundle;
     }
 
-    AlertDialog createDialog(Context context, Dialog.OnClickListener listener) {
+    AlertDialog createSupportDialog(Context context, Dialog.OnClickListener listener) {
         return new AlertDialog.Builder(context)
+                .setCancelable(false)
+                .setPositiveButton(positiveButton, listener)
+                .setNegativeButton(negativeButton, listener)
+                .setMessage(rationaleMsg)
+                .create();
+    }
+
+    android.app.AlertDialog createFrameworkDialog(Context context, Dialog.OnClickListener listener) {
+        return new android.app.AlertDialog.Builder(context)
                 .setCancelable(false)
                 .setPositiveButton(positiveButton, listener)
                 .setNegativeButton(negativeButton, listener)
