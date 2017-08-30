@@ -1,6 +1,5 @@
 package pub.devrel.easypermissions.helper;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -24,7 +23,6 @@ class LowApiPermissionsHelper extends PermissionHelper<Object> {
     }
 
     @Override
-    @SuppressLint("NewApi")
     public void showRequestPermissionRationale(@NonNull String rationale,
                                                int positiveButton,
                                                int negativeButton,
