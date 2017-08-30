@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
 
@@ -26,7 +27,11 @@ public abstract class PermissionHelper<T> {
             return new LowApiPermissionsHelper(host);
         }
 
-        return new ActivityPermissionHelper(host);
+        if (host instanceof AppCompatActivity) {
+            return new AppCompatActivityPermissionHelper((AppCompatActivity) host);
+        } else {
+            return new ActivityPermissionHelper(host);
+        }
     }
 
     @NonNull
