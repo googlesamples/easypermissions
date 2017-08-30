@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
@@ -98,7 +96,6 @@ public class AppSettingsDialog implements Parcelable {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     private void startForResult(Intent intent) {
         if (mActivityOrFragment instanceof Activity) {
             ((Activity) mActivityOrFragment).startActivityForResult(intent, mRequestCode);
@@ -113,7 +110,6 @@ public class AppSettingsDialog implements Parcelable {
     /**
      * Display the built dialog.
      */
-    @SuppressWarnings("NewApi")
     public void show() {
         startForResult(AppSettingsDialogHolderActivity.createShowDialogIntent(mContext, this));
     }
@@ -193,7 +189,6 @@ public class AppSettingsDialog implements Parcelable {
          *
          * @param fragment the {@link android.app.Fragment} in which to display the dialog.
          */
-        @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
         public Builder(@NonNull android.app.Fragment fragment) {
             mActivityOrFragment = fragment;
             mContext = fragment.getActivity();

@@ -22,7 +22,7 @@ public abstract class PermissionHelper<T> {
 
     @NonNull
     public static PermissionHelper newInstance(Activity host) {
-        if (Build.VERSION.SDK_INT < 23) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return new LowApiPermissionsHelper(host);
         }
 
@@ -31,7 +31,7 @@ public abstract class PermissionHelper<T> {
 
     @NonNull
     public static PermissionHelper newInstance(Fragment host) {
-        if (Build.VERSION.SDK_INT < 23) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return new LowApiPermissionsHelper(host);
         }
 
@@ -40,7 +40,7 @@ public abstract class PermissionHelper<T> {
 
     @NonNull
     public static PermissionHelper newInstance(android.app.Fragment host) {
-        if (Build.VERSION.SDK_INT < 23) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return new LowApiPermissionsHelper(host);
         }
 

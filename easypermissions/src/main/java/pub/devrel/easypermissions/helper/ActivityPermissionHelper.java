@@ -1,6 +1,5 @@
 package pub.devrel.easypermissions.helper;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -17,7 +16,6 @@ class ActivityPermissionHelper extends BaseFrameworkPermissionsHelper<Activity> 
     }
 
     @Override
-    @SuppressLint("NewApi")
     public FragmentManager getFragmentManager() {
         return getHost().getFragmentManager();
     }

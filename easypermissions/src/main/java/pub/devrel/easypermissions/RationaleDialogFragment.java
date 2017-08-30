@@ -1,13 +1,11 @@
 package pub.devrel.easypermissions;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.StringRes;
 
@@ -15,7 +13,6 @@ import android.support.annotation.StringRes;
  * {@link DialogFragment} to display rationale for permission requests when the request comes from
  * a Fragment or Activity that can host a Fragment.
  */
-@RequiresApi(Build.VERSION_CODES.HONEYCOMB)
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public class RationaleDialogFragment extends DialogFragment {
 
@@ -38,15 +35,10 @@ public class RationaleDialogFragment extends DialogFragment {
         return dialogFragment;
     }
 
-    @SuppressLint("NewApi")
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        // getParentFragment() requires API 17 or higher
-        boolean isAtLeastJellyBeanMR1 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
-
-        if (isAtLeastJellyBeanMR1
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
                 && getParentFragment() != null
                 && getParentFragment() instanceof EasyPermissions.PermissionCallbacks) {
             mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) getParentFragment();

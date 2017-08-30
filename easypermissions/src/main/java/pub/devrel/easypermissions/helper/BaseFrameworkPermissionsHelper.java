@@ -1,9 +1,7 @@
 package pub.devrel.easypermissions.helper;
 
 import android.app.FragmentManager;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 
 import pub.devrel.easypermissions.RationaleDialogFragment;
 
@@ -19,7 +17,6 @@ public abstract class BaseFrameworkPermissionsHelper<T> extends PermissionHelper
     public abstract FragmentManager getFragmentManager();
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     public void showRequestPermissionRationale(@NonNull String rationale,
                                                int positiveButton,
                                                int negativeButton,
