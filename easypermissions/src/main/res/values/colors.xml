@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Use system defaults for devs not using AppCompat -->
+    <color name="colorPrimary">#ff212121</color>
+    <color name="colorPrimaryDark">@android:color/black</color>
+    <color name="colorAccent">#ff80cbc4</color>
+</resources>

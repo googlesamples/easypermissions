@@ -1,6 +1,5 @@
 package pub.devrel.easypermissions.helper;
 
-import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
@@ -18,7 +17,6 @@ public abstract class BaseSupportPermissionsHelper<T> extends PermissionHelper<T
     public abstract FragmentManager getSupportFragmentManager();
 
     @Override
-    @SuppressLint("NewApi")
     public void showRequestPermissionRationale(@NonNull String rationale,
                                                int positiveButton,
                                                int negativeButton,

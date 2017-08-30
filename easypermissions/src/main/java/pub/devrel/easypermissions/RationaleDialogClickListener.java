@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 
 import java.util.Arrays;
@@ -32,7 +31,6 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
         mCallbacks = callbacks;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     RationaleDialogClickListener(RationaleDialogFragment dialogFragment,
                                  RationaleDialogConfig config,
                                  EasyPermissions.PermissionCallbacks callbacks) {

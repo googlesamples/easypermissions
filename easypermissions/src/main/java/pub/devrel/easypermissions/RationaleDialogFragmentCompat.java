@@ -2,10 +2,8 @@ package pub.devrel.easypermissions;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatDialogFragment;
@@ -14,7 +12,6 @@ import android.support.v7.app.AppCompatDialogFragment;
  * {@link AppCompatDialogFragment} to display rationale for permission requests when the request
  * comes from a Fragment or Activity that can host a Fragment.
  */
-@RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
 

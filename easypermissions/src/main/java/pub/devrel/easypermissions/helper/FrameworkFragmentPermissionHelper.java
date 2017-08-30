@@ -36,7 +36,6 @@ class FrameworkFragmentPermissionHelper extends BaseFrameworkPermissionsHelper<F
     }
 
     @Override
-    @SuppressLint("NewApi")
     public Context getContext() {
         return getHost().getActivity();
     }

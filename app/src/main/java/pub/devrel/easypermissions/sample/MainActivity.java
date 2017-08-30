@@ -33,6 +33,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
     private static final String TAG = "MainActivity";
+    private static final String[] LOCATION_AND_CONTACTS =
+            {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_CONTACTS};
 
     private static final int RC_CAMERA_PERM = 123;
     private static final int RC_LOCATION_CONTACTS_PERM = 124;
@@ -59,33 +61,52 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         });
     }
 
+    private boolean hasCameraPermission() {
+        return EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA);
+    }
+
+    private boolean hasLocationAndContactsPermissions() {
+        return EasyPermissions.hasPermissions(this, LOCATION_AND_CONTACTS);
+    }
+
+    private boolean hasSmsPermission() {
+        return EasyPermissions.hasPermissions(this, Manifest.permission.READ_SMS);
+    }
+
     @AfterPermissionGranted(RC_CAMERA_PERM)
     public void cameraTask() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)) {
+        if (hasCameraPermission()) {
             // Have permission, do the thing!
             Toast.makeText(this, "TODO: Camera things", Toast.LENGTH_LONG).show();
         } else {
             // Ask for one permission
-            EasyPermissions.requestPermissions(this, getString(R.string.rationale_camera),
-                    RC_CAMERA_PERM, Manifest.permission.CAMERA);
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.rationale_camera),
+                    RC_CAMERA_PERM,
+                    Manifest.permission.CAMERA);
         }
     }
 
     @AfterPermissionGranted(RC_LOCATION_CONTACTS_PERM)
     public void locationAndContactsTask() {
-        String[] perms = { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_CONTACTS };
-        if (EasyPermissions.hasPermissions(this, perms)) {
+        if (hasLocationAndContactsPermissions()) {
             // Have permissions, do the thing!
             Toast.makeText(this, "TODO: Location and Contacts things", Toast.LENGTH_LONG).show();
         } else {
             // Ask for both permissions
-            EasyPermissions.requestPermissions(this, getString(R.string.rationale_location_contacts),
-                    RC_LOCATION_CONTACTS_PERM, perms);
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.rationale_location_contacts),
+                    RC_LOCATION_CONTACTS_PERM,
+                    LOCATION_AND_CONTACTS);
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         // EasyPermissions handles the request result.
@@ -113,8 +134,17 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            String yes = getString(R.string.yes);
+            String no = getString(R.string.no);
+
             // Do something after user returned from app settings screen, like showing a Toast.
-            Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT)
+            Toast.makeText(
+                    this,
+                    getString(R.string.returned_from_app_settings_to_activity,
+                              hasCameraPermission() ? yes : no,
+                              hasLocationAndContactsPermissions() ? yes : no,
+                              hasSmsPermission() ? yes : no),
+                    Toast.LENGTH_LONG)
                     .show();
         }
     }
