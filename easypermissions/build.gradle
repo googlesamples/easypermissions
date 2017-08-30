@@ -21,6 +21,9 @@ android {
 
 dependencies {
     compile "com.android.support:appcompat-v7:$support_library_version"
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.robolectric:robolectric:3.4.2'
 }
 
 apply from: 'maven.gradle'
