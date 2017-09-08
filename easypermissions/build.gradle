@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    implementation "com.android.support:appcompat-v7:$support_library_version"
+    api "com.android.support:appcompat-v7:$support_library_version"
     api "com.android.support:support-compat:$support_library_version"
     api "com.android.support:support-fragment:$support_library_version"
 
