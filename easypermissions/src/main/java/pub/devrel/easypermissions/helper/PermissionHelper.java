@@ -82,7 +82,7 @@ public abstract class PermissionHelper<T> {
         }
     }
 
-    public boolean somePermissionPermanentlyDenied(@NonNull List<String> perms) {
+    public boolean somePermissionPermanentlyDenied(@NonNull String... perms) {
         for (String deniedPermission : perms) {
             if (permissionPermanentlyDenied(deniedPermission)) {
                 return true;

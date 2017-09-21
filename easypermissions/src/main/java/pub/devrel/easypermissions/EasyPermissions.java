@@ -252,7 +252,7 @@ public class EasyPermissions {
      * @return {@code true} if at least one permission in the list was permanently denied.
      */
     public static boolean somePermissionPermanentlyDenied(@NonNull Activity host,
-                                                          @NonNull List<String> deniedPermissions) {
+                                                          @NonNull String... deniedPermissions) {
         return PermissionHelper.newInstance(host)
                 .somePermissionPermanentlyDenied(deniedPermissions);
     }
@@ -261,7 +261,7 @@ public class EasyPermissions {
      * @see #somePermissionPermanentlyDenied(Activity, List)
      */
     public static boolean somePermissionPermanentlyDenied(@NonNull Fragment host,
-                                                          @NonNull List<String> deniedPermissions) {
+                                                          @NonNull String... deniedPermissions) {
         return PermissionHelper.newInstance(host)
                 .somePermissionPermanentlyDenied(deniedPermissions);
     }
@@ -270,7 +270,7 @@ public class EasyPermissions {
      * @see #somePermissionPermanentlyDenied(Activity, List).
      */
     public static boolean somePermissionPermanentlyDenied(@NonNull android.app.Fragment host,
-                                                          @NonNull List<String> deniedPermissions) {
+                                                          @NonNull String... deniedPermissions) {
         return PermissionHelper.newInstance(host)
                 .somePermissionPermanentlyDenied(deniedPermissions);
     }
