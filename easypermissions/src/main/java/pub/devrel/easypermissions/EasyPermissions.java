@@ -45,9 +45,9 @@ public class EasyPermissions {
      */
     public interface PermissionCallbacks extends ActivityCompat.OnRequestPermissionsResultCallback {
 
-        void onPermissionsGranted(int requestCode, List<String> perms);
+        void onPermissionsGranted(int requestCode, String... perms);
 
-        void onPermissionsDenied(int requestCode, List<String> perms);
+        void onPermissionsDenied(int requestCode, String... perms);
 
     }
 
@@ -224,14 +224,14 @@ public class EasyPermissions {
             // Report granted permissions, if any.
             if (!granted.isEmpty()) {
                 if (object instanceof PermissionCallbacks) {
-                    ((PermissionCallbacks) object).onPermissionsGranted(requestCode, granted);
+                    ((PermissionCallbacks) object).onPermissionsGranted(requestCode, granted.toArray(new String[granted.size()]));
                 }
             }
 
             // Report denied permissions, if any.
             if (!denied.isEmpty()) {
                 if (object instanceof PermissionCallbacks) {
-                    ((PermissionCallbacks) object).onPermissionsDenied(requestCode, denied);
+                    ((PermissionCallbacks) object).onPermissionsDenied(requestCode, denied.toArray(new String[denied.size()]));
                 }
             }
 
@@ -248,29 +248,29 @@ public class EasyPermissions {
      *
      * @param host              context requesting permissions.
      * @param deniedPermissions list of denied permissions, usually from {@link
-     *                          PermissionCallbacks#onPermissionsDenied(int, List)}
+     *                          PermissionCallbacks#onPermissionsDenied(int, String...)}
      * @return {@code true} if at least one permission in the list was permanently denied.
      */
     public static boolean somePermissionPermanentlyDenied(@NonNull Activity host,
-                                                          @NonNull List<String> deniedPermissions) {
+                                                          @NonNull String... deniedPermissions) {
         return PermissionHelper.newInstance(host)
                 .somePermissionPermanentlyDenied(deniedPermissions);
     }
 
     /**
-     * @see #somePermissionPermanentlyDenied(Activity, List)
+     * @see #somePermissionPermanentlyDenied(Activity, String...)
      */
     public static boolean somePermissionPermanentlyDenied(@NonNull Fragment host,
-                                                          @NonNull List<String> deniedPermissions) {
+                                                          @NonNull String... deniedPermissions) {
         return PermissionHelper.newInstance(host)
                 .somePermissionPermanentlyDenied(deniedPermissions);
     }
 
     /**
-     * @see #somePermissionPermanentlyDenied(Activity, List).
+     * @see #somePermissionPermanentlyDenied(Activity, String...).
      */
     public static boolean somePermissionPermanentlyDenied(@NonNull android.app.Fragment host,
-                                                          @NonNull List<String> deniedPermissions) {
+                                                          @NonNull String... deniedPermissions) {
         return PermissionHelper.newInstance(host)
                 .somePermissionPermanentlyDenied(deniedPermissions);
     }

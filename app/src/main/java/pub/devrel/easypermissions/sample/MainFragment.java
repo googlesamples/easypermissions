@@ -62,12 +62,12 @@ public class MainFragment extends Fragment implements EasyPermissions.Permission
     }
 
     @Override
-    public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
+    public void onPermissionsGranted(int requestCode, String... perms) {
+        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.length);
     }
 
     @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms) {
-        Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
+    public void onPermissionsDenied(int requestCode, String... perms) {
+        Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.length);
     }
 }

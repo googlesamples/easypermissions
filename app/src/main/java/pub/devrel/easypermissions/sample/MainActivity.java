@@ -114,13 +114,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     @Override
-    public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
+    public void onPermissionsGranted(int requestCode, String... perms) {
+        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.length);
     }
 
     @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms) {
-        Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
+    public void onPermissionsDenied(int requestCode, String... perms) {
+        Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.length);
 
         // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
         // This will display a dialog directing them to enable the permission in app settings.
