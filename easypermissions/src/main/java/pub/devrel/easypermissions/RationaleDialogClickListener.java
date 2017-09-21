@@ -70,7 +70,7 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
     private void notifyPermissionDenied() {
         if (mCallbacks != null) {
             mCallbacks.onPermissionsDenied(mConfig.requestCode,
-                    Arrays.asList(mConfig.permissions));
+                    mConfig.permissions);
         }
     }
 }
