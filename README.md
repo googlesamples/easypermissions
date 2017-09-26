@@ -9,7 +9,7 @@ EasyPermissions is installed by adding the following dependency to your `build.g
 
 ```groovy
 dependencies {
-    compile 'pub.devrel:easypermissions:1.0.0'
+    compile 'pub.devrel:easypermissions:1.0.1'
 }
 ```
 
