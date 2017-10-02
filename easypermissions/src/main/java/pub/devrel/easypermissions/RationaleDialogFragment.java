@@ -2,6 +2,7 @@ package pub.devrel.easypermissions;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ public class RationaleDialogFragment extends DialogFragment {
     public static final String TAG = "RationaleDialogFragment";
 
     private EasyPermissions.PermissionCallbacks mPermissionCallbacks;
+    private boolean mStateSaved = false;
 
     public static RationaleDialogFragment newInstance(
             @StringRes int positiveButton, @StringRes int negativeButton,
@@ -45,6 +47,31 @@ public class RationaleDialogFragment extends DialogFragment {
         } else if (context instanceof EasyPermissions.PermissionCallbacks) {
             mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) context;
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        mStateSaved = true;
+        super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * Version of {@link #show(FragmentManager, String)} that no-ops when an IllegalStateException
+     * would otherwise occur.
+     */
+    public void showAllowingStateLoss(FragmentManager manager, String tag) {
+        // API 26 added this convenient method
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (manager.isStateSaved()) {
+                return;
+            }
+        }
+
+        if (mStateSaved) {
+            return;
+        }
+
+        show(manager, tag);
     }
 
     @Override

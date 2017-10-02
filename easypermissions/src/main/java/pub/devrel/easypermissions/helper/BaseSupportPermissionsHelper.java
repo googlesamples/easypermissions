@@ -24,6 +24,6 @@ public abstract class BaseSupportPermissionsHelper<T> extends PermissionHelper<T
                                                @NonNull String... perms) {
         RationaleDialogFragmentCompat
                 .newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
-                .show(getSupportFragmentManager(), RationaleDialogFragmentCompat.TAG);
+                .showAllowingStateLoss(getSupportFragmentManager(), RationaleDialogFragmentCompat.TAG);
     }
 }
