@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.StringRes;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatDialogFragment;
 
 /**
@@ -32,6 +33,18 @@ public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
         dialogFragment.setArguments(config.toBundle());
 
         return dialogFragment;
+    }
+
+    /**
+     * Version of {@link #show(FragmentManager, String)} that no-ops when an IllegalStateException
+     * would otherwise occur.
+     */
+    public void showAllowingStateLoss(FragmentManager manager, String tag) {
+        if (manager.isStateSaved()) {
+            return;
+        }
+
+        show(manager, tag);
     }
 
     @Override
