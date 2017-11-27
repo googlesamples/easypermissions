@@ -197,6 +197,7 @@ public class AppSettingsDialog implements Parcelable {
         /**
          * Set the dialog theme.
          */
+        @NonNull
         public Builder setThemeResId(@StyleRes int themeResId) {
             mThemeResId = themeResId;
             return this;
@@ -205,7 +206,8 @@ public class AppSettingsDialog implements Parcelable {
         /**
          * Set the title dialog. Default is "Permissions Required".
          */
-        public Builder setTitle(String title) {
+        @NonNull
+        public Builder setTitle(@Nullable String title) {
             mTitle = title;
             return this;
         }
@@ -213,6 +215,7 @@ public class AppSettingsDialog implements Parcelable {
         /**
          * Set the title dialog. Default is "Permissions Required".
          */
+        @NonNull
         public Builder setTitle(@StringRes int title) {
             mTitle = mContext.getString(title);
             return this;
@@ -223,7 +226,8 @@ public class AppSettingsDialog implements Parcelable {
          * "This app may not work correctly without the requested permissions.
          * Open the app settings screen to modify app permissions."
          */
-        public Builder setRationale(String rationale) {
+        @NonNull
+        public Builder setRationale(@Nullable String rationale) {
             mRationale = rationale;
             return this;
         }
@@ -233,6 +237,7 @@ public class AppSettingsDialog implements Parcelable {
          * "This app may not work correctly without the requested permissions.
          * Open the app settings screen to modify app permissions."
          */
+        @NonNull
         public Builder setRationale(@StringRes int rationale) {
             mRationale = mContext.getString(rationale);
             return this;
@@ -241,7 +246,8 @@ public class AppSettingsDialog implements Parcelable {
         /**
          * Set the positive button text, default is {@link android.R.string#ok}.
          */
-        public Builder setPositiveButton(String text) {
+        @NonNull
+        public Builder setPositiveButton(@Nullable String text) {
             mPositiveButtonText = text;
             return this;
         }
@@ -249,6 +255,7 @@ public class AppSettingsDialog implements Parcelable {
         /**
          * Set the positive button text, default is {@link android.R.string#ok}.
          */
+        @NonNull
         public Builder setPositiveButton(@StringRes int textId) {
             mPositiveButtonText = mContext.getString(textId);
             return this;
@@ -262,7 +269,8 @@ public class AppSettingsDialog implements Parcelable {
          * Activity#onActivityResult(int, int, Intent)}. If you still don't have the right
          * permissions, then the request was cancelled.
          */
-        public Builder setNegativeButton(String text) {
+        @NonNull
+        public Builder setNegativeButton(@Nullable String text) {
             mNegativeButtonText = text;
             return this;
         }
@@ -270,6 +278,7 @@ public class AppSettingsDialog implements Parcelable {
         /**
          * Set the negative button text, default is {@link android.R.string#cancel}.
          */
+        @NonNull
         public Builder setNegativeButton(@StringRes int textId) {
             mNegativeButtonText = mContext.getString(textId);
             return this;
@@ -280,6 +289,7 @@ public class AppSettingsDialog implements Parcelable {
          * in the calling Activity's {@link Activity#onActivityResult(int, int, Intent)} method.
          * Default is {@link #DEFAULT_SETTINGS_REQ_CODE}.
          */
+        @NonNull
         public Builder setRequestCode(int requestCode) {
             mRequestCode = requestCode;
             return this;
@@ -289,6 +299,7 @@ public class AppSettingsDialog implements Parcelable {
          * Build the {@link AppSettingsDialog} from the specified options. Generally followed by a
          * call to {@link AppSettingsDialog#show()}.
          */
+        @NonNull
         public AppSettingsDialog build() {
             mRationale = TextUtils.isEmpty(mRationale) ?
                     mContext.getString(R.string.rationale_ask_again) : mRationale;
