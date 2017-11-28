@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Size;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -45,9 +46,9 @@ public class EasyPermissions {
      */
     public interface PermissionCallbacks extends ActivityCompat.OnRequestPermissionsResultCallback {
 
-        void onPermissionsGranted(int requestCode, List<String> perms);
+        void onPermissionsGranted(int requestCode, @NonNull List<String> perms);
 
-        void onPermissionsDenied(int requestCode, List<String> perms);
+        void onPermissionsDenied(int requestCode, @NonNull List<String> perms);
 
     }
 
@@ -62,7 +63,8 @@ public class EasyPermissions {
      * yet granted.
      * @see Manifest.permission
      */
-    public static boolean hasPermissions(Context context, @NonNull String... perms) {
+    public static boolean hasPermissions(@NonNull Context context,
+                                         @Size(min = 1) @NonNull String... perms) {
         // Always return true for SDK < M, let the system deal with the permissions
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             Log.w(TAG, "hasPermissions: API version < M, returning true by default");
@@ -94,7 +96,7 @@ public class EasyPermissions {
      */
     public static void requestPermissions(
             @NonNull Activity host, @NonNull String rationale,
-            int requestCode, @NonNull String... perms) {
+            int requestCode, @Size(min = 1) @NonNull String... perms) {
         requestPermissions(host, rationale, android.R.string.ok, android.R.string.cancel,
                 requestCode, perms);
     }
@@ -106,7 +108,7 @@ public class EasyPermissions {
      */
     public static void requestPermissions(
             @NonNull Fragment host, @NonNull String rationale,
-            int requestCode, @NonNull String... perms) {
+            int requestCode, @Size(min = 1) @NonNull String... perms) {
 
         requestPermissions(host, rationale, android.R.string.ok, android.R.string.cancel,
                 requestCode, perms);
@@ -119,7 +121,7 @@ public class EasyPermissions {
      */
     public static void requestPermissions(
             @NonNull android.app.Fragment host, @NonNull String rationale,
-            int requestCode, @NonNull String... perms) {
+            int requestCode, @Size(min = 1) @NonNull String... perms) {
 
         requestPermissions(host, rationale, android.R.string.ok, android.R.string.cancel,
                 requestCode, perms);
@@ -140,7 +142,7 @@ public class EasyPermissions {
     public static void requestPermissions(
             @NonNull Activity host, @NonNull String rationale,
             @StringRes int positiveButton, @StringRes int negativeButton,
-            int requestCode, @NonNull String... perms) {
+            int requestCode, @Size(min = 1) @NonNull String... perms) {
         requestPermissions(PermissionHelper.newInstance(host), rationale,
                 positiveButton, negativeButton,
                 requestCode, perms);
@@ -154,7 +156,7 @@ public class EasyPermissions {
     public static void requestPermissions(
             @NonNull Fragment host, @NonNull String rationale,
             @StringRes int positiveButton, @StringRes int negativeButton,
-            int requestCode, @NonNull String... perms) {
+            int requestCode, @Size(min = 1) @NonNull String... perms) {
         requestPermissions(PermissionHelper.newInstance(host), rationale,
                 positiveButton, negativeButton,
                 requestCode, perms);
@@ -166,7 +168,7 @@ public class EasyPermissions {
     public static void requestPermissions(
             @NonNull android.app.Fragment host, @NonNull String rationale,
             @StringRes int positiveButton, @StringRes int negativeButton,
-            int requestCode, @NonNull String... perms) {
+            int requestCode, @Size(min = 1) @NonNull String... perms) {
         requestPermissions(PermissionHelper.newInstance(host), rationale,
                 positiveButton, negativeButton,
                 requestCode, perms);
@@ -175,7 +177,7 @@ public class EasyPermissions {
     private static void requestPermissions(
             @NonNull PermissionHelper helper, @NonNull String rationale,
             @StringRes int positiveButton, @StringRes int negativeButton,
-            int requestCode, @NonNull String... perms) {
+            int requestCode, @Size(min = 1) @NonNull String... perms) {
 
         // Check for permissions before dispatching the request
         if (hasPermissions(helper.getContext(), perms)) {
