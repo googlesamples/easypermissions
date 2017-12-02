@@ -94,11 +94,14 @@ public class EasyPermissions {
      *
      * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
+    @Deprecated
     public static void requestPermissions(
             @NonNull Activity host, @NonNull String rationale,
             int requestCode, @Size(min = 1) @NonNull String... perms) {
-        requestPermissions(host, rationale, android.R.string.ok, android.R.string.cancel,
-                requestCode, perms);
+        requestPermissions(
+                new PermissionRequest.Builder(host, requestCode, perms)
+                        .setRationale(rationale)
+                        .build());
     }
 
     /**
@@ -106,12 +109,15 @@ public class EasyPermissions {
      *
      * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
+    @Deprecated
     public static void requestPermissions(
             @NonNull Fragment host, @NonNull String rationale,
             int requestCode, @Size(min = 1) @NonNull String... perms) {
 
-        requestPermissions(host, rationale, android.R.string.ok, android.R.string.cancel,
-                requestCode, perms);
+        requestPermissions(
+                new PermissionRequest.Builder(host, requestCode, perms)
+                        .setRationale(rationale)
+                        .build());
     }
 
     /**
@@ -119,12 +125,15 @@ public class EasyPermissions {
      *
      * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
+    @Deprecated
     public static void requestPermissions(
             @NonNull android.app.Fragment host, @NonNull String rationale,
             int requestCode, @Size(min = 1) @NonNull String... perms) {
 
-        requestPermissions(host, rationale, android.R.string.ok, android.R.string.cancel,
-                requestCode, perms);
+        requestPermissions(
+                new PermissionRequest.Builder(host, requestCode, perms)
+                        .setRationale(rationale)
+                        .build());
     }
 
     /**
@@ -139,13 +148,17 @@ public class EasyPermissions {
      * @param perms          a set of permissions to be requested.
      * @see Manifest.permission
      */
+    @Deprecated
     public static void requestPermissions(
             @NonNull Activity host, @NonNull String rationale,
             @StringRes int positiveButton, @StringRes int negativeButton,
             int requestCode, @Size(min = 1) @NonNull String... perms) {
-        requestPermissions(PermissionHelper.newInstance(host), rationale,
-                positiveButton, negativeButton,
-                requestCode, perms);
+        requestPermissions(
+                new PermissionRequest.Builder(host, requestCode, perms)
+                        .setRationale(rationale)
+                        .setPositiveButtonText(positiveButton)
+                        .setNegativeButtonText(negativeButton)
+                        .build());
     }
 
     /**
@@ -153,41 +166,52 @@ public class EasyPermissions {
      *
      * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
+    @Deprecated
     public static void requestPermissions(
             @NonNull Fragment host, @NonNull String rationale,
             @StringRes int positiveButton, @StringRes int negativeButton,
             int requestCode, @Size(min = 1) @NonNull String... perms) {
-        requestPermissions(PermissionHelper.newInstance(host), rationale,
-                positiveButton, negativeButton,
-                requestCode, perms);
+        requestPermissions(
+                new PermissionRequest.Builder(host, requestCode, perms)
+                        .setRationale(rationale)
+                        .setPositiveButtonText(positiveButton)
+                        .setNegativeButtonText(negativeButton)
+                        .build());
     }
 
     /**
      * @see #requestPermissions(Activity, String, int, int, int, String...)
      */
+    @Deprecated
     public static void requestPermissions(
             @NonNull android.app.Fragment host, @NonNull String rationale,
             @StringRes int positiveButton, @StringRes int negativeButton,
             int requestCode, @Size(min = 1) @NonNull String... perms) {
-        requestPermissions(PermissionHelper.newInstance(host), rationale,
-                positiveButton, negativeButton,
-                requestCode, perms);
+        requestPermissions(
+                new PermissionRequest.Builder(host, requestCode, perms)
+                        .setRationale(rationale)
+                        .setPositiveButtonText(positiveButton)
+                        .setNegativeButtonText(negativeButton)
+                        .build());
     }
 
-    private static void requestPermissions(
-            @NonNull PermissionHelper helper, @NonNull String rationale,
-            @StringRes int positiveButton, @StringRes int negativeButton,
-            int requestCode, @Size(min = 1) @NonNull String... perms) {
+    public static void requestPermissions(PermissionRequest request) {
 
         // Check for permissions before dispatching the request
-        if (hasPermissions(helper.getContext(), perms)) {
-            notifyAlreadyHasPermissions(helper.getHost(), requestCode, perms);
+        if (hasPermissions(request.getHelper().getContext(), request.getPerms())) {
+            notifyAlreadyHasPermissions(
+                    request.getHelper().getHost(), request.getRequestCode(), request.getPerms());
             return;
         }
 
         // Request permissions
-        helper.requestPermissions(rationale, positiveButton,
-                negativeButton, requestCode, perms);
+        request.getHelper().requestPermissions(
+                request.getRationale(),
+                request.getPositiveButtonText(),
+                request.getNegativeButtonText(),
+                request.getTheme(),
+                request.getRequestCode(),
+                request.getPerms());
     }
 
     /**

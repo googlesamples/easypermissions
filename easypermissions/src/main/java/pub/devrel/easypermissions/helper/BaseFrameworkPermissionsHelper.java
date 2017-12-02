@@ -2,6 +2,7 @@ package pub.devrel.easypermissions.helper;
 
 import android.app.FragmentManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.StyleRes;
 
 import pub.devrel.easypermissions.RationaleDialogFragment;
 
@@ -18,12 +19,13 @@ public abstract class BaseFrameworkPermissionsHelper<T> extends PermissionHelper
 
     @Override
     public void showRequestPermissionRationale(@NonNull String rationale,
-                                               int positiveButton,
-                                               int negativeButton,
+                                               @NonNull String positiveButton,
+                                               @NonNull String negativeButton,
+                                               @StyleRes int theme,
                                                int requestCode,
                                                @NonNull String... perms) {
         RationaleDialogFragment
-                .newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
+                .newInstance(positiveButton, negativeButton, rationale, theme, requestCode, perms)
                 .showAllowingStateLoss(getFragmentManager(), RationaleDialogFragment.TAG);
     }
 }

@@ -8,7 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import android.support.annotation.StringRes;
+import android.support.annotation.StyleRes;
 
 /**
  * {@link DialogFragment} to display rationale for permission requests when the request comes from
@@ -23,15 +23,19 @@ public class RationaleDialogFragment extends DialogFragment {
     private boolean mStateSaved = false;
 
     public static RationaleDialogFragment newInstance(
-            @StringRes int positiveButton, @StringRes int negativeButton,
-            @NonNull String rationaleMsg, int requestCode, @NonNull String[] permissions) {
+            @NonNull String positiveButton,
+            @NonNull String negativeButton,
+            @NonNull String rationaleMsg,
+            @StyleRes int theme,
+            int requestCode,
+            @NonNull String[] permissions) {
 
         // Create new Fragment
         RationaleDialogFragment dialogFragment = new RationaleDialogFragment();
 
         // Initialize configuration as arguments
         RationaleDialogConfig config = new RationaleDialogConfig(
-                positiveButton, negativeButton, rationaleMsg, requestCode, permissions);
+                positiveButton, negativeButton, rationaleMsg, theme, requestCode, permissions);
         dialogFragment.setArguments(config.toBundle());
 
         return dialogFragment;
