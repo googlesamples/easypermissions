@@ -14,7 +14,8 @@ import java.util.Arrays;
 import pub.devrel.easypermissions.helper.PermissionHelper;
 
 /**
- * An immutable model representing a permission request.
+ * An immutable model object that holds all of the parameters associated with a permission request,
+ * such as the permissions, request code, and rationale.
  *
  * @see EasyPermissions#requestPermissions(PermissionRequest)
  * @see PermissionRequest.Builder
