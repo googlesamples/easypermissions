@@ -14,7 +14,7 @@ import java.util.Arrays;
 import pub.devrel.easypermissions.helper.PermissionHelper;
 
 /**
- * An immutable model represent a permission request.
+ * An immutable model representing a permission request.
  *
  * @see EasyPermissions#requestPermissions(PermissionRequest)
  * @see PermissionRequest.Builder
@@ -165,7 +165,7 @@ public final class PermissionRequest {
          * at least once, but has not yet permanently denied your permissions. Should the user
          * permanently deny your permissions, use the {@link AppSettingsDialog} instead.
          * <p>
-         * The default is {@link R.string#rationale_ask}.
+         * The default rationale text is {@link R.string#rationale_ask}.
          *
          * @param rationale the rationale to be displayed to the user should they deny your
          *                  permission at least once
@@ -187,7 +187,7 @@ public final class PermissionRequest {
         }
 
         /**
-         * Set the positive button for the rationale dialog should it be shown.
+         * Set the positive button text for the rationale dialog should it be shown.
          * <p>
          * The default is {@link android.R.string#ok}
          */
@@ -207,7 +207,7 @@ public final class PermissionRequest {
         }
 
         /**
-         * Set the negative button for the rationale dialog should it be shown.
+         * Set the negative button text for the rationale dialog should it be shown.
          * <p>
          * The default is {@link android.R.string#cancel}
          */
