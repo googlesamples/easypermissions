@@ -29,7 +29,6 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
-import pub.devrel.easypermissions.PermissionRequest;
 
 public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
@@ -82,9 +81,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         } else {
             // Ask for one permission
             EasyPermissions.requestPermissions(
-                    new PermissionRequest.Builder(this, RC_CAMERA_PERM, Manifest.permission.CAMERA)
-                            .setRationale(getString(R.string.rationale_camera))
-                            .build());
+                    this,
+                    getString(R.string.rationale_camera),
+                    RC_CAMERA_PERM,
+                    Manifest.permission.CAMERA);
         }
     }
 
@@ -96,11 +96,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         } else {
             // Ask for both permissions
             EasyPermissions.requestPermissions(
-                    new PermissionRequest.Builder(this,
-                                                  RC_LOCATION_CONTACTS_PERM,
-                                                  LOCATION_AND_CONTACTS)
-                            .setRationale(getString(R.string.rationale_location_contacts))
-                            .build());
+                    this,
+                    getString(R.string.rationale_location_contacts),
+                    RC_LOCATION_CONTACTS_PERM,
+                    LOCATION_AND_CONTACTS);
         }
     }
 

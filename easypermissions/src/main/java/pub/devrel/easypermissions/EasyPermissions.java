@@ -90,11 +90,15 @@ public class EasyPermissions {
     }
 
     /**
-     * Request permissions from an Activity with standard OK/Cancel buttons.
+     * Request a set of permissions, showing a rationale if the system requests it.
      *
-     * @see #requestPermissions(Activity, String, int, int, int, String...)
+     * @param host        requesting context.
+     * @param rationale   a message explaining why the application needs this set of permissions;
+     *                    will be displayed if the user rejects the request the first time.
+     * @param requestCode request code to track this request, must be &lt; 256.
+     * @param perms       a set of permissions to be requested.
+     * @see Manifest.permission
      */
-    @Deprecated
     public static void requestPermissions(
             @NonNull Activity host, @NonNull String rationale,
             int requestCode, @Size(min = 1) @NonNull String... perms) {
@@ -107,13 +111,11 @@ public class EasyPermissions {
     /**
      * Request permissions from a Support Fragment with standard OK/Cancel buttons.
      *
-     * @see #requestPermissions(Activity, String, int, int, int, String...)
+     * @see #requestPermissions(Activity, String, int, String...)
      */
-    @Deprecated
     public static void requestPermissions(
             @NonNull Fragment host, @NonNull String rationale,
             int requestCode, @Size(min = 1) @NonNull String... perms) {
-
         requestPermissions(
                 new PermissionRequest.Builder(host, requestCode, perms)
                         .setRationale(rationale)
@@ -123,13 +125,11 @@ public class EasyPermissions {
     /**
      * Request permissions from a standard Fragment with standard OK/Cancel buttons.
      *
-     * @see #requestPermissions(Activity, String, int, int, int, String...)
+     * @see #requestPermissions(Activity, String, int, String...)
      */
-    @Deprecated
     public static void requestPermissions(
             @NonNull android.app.Fragment host, @NonNull String rationale,
             int requestCode, @Size(min = 1) @NonNull String... perms) {
-
         requestPermissions(
                 new PermissionRequest.Builder(host, requestCode, perms)
                         .setRationale(rationale)
@@ -147,6 +147,7 @@ public class EasyPermissions {
      * @param requestCode    request code to track this request, must be &lt; 256.
      * @param perms          a set of permissions to be requested.
      * @see Manifest.permission
+     * @deprecated use {@link #requestPermissions(PermissionRequest)} instead
      */
     @Deprecated
     public static void requestPermissions(
@@ -165,6 +166,7 @@ public class EasyPermissions {
      * Request permissions from a Support Fragment.
      *
      * @see #requestPermissions(Activity, String, int, int, int, String...)
+     * @deprecated use {@link #requestPermissions(PermissionRequest)} instead
      */
     @Deprecated
     public static void requestPermissions(
@@ -181,6 +183,7 @@ public class EasyPermissions {
 
     /**
      * @see #requestPermissions(Activity, String, int, int, int, String...)
+     * @deprecated use {@link #requestPermissions(PermissionRequest)} instead
      */
     @Deprecated
     public static void requestPermissions(
@@ -195,6 +198,12 @@ public class EasyPermissions {
                         .build());
     }
 
+    /**
+     * Request a set of permissions.
+     *
+     * @param request the permission request
+     * @see PermissionRequest
+     */
     public static void requestPermissions(PermissionRequest request) {
 
         // Check for permissions before dispatching the request

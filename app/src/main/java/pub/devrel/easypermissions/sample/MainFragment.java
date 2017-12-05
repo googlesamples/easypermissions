@@ -14,7 +14,6 @@ import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
-import pub.devrel.easypermissions.PermissionRequest;
 
 /**
  * Created in {@link R.layout#activity_main}
@@ -61,10 +60,8 @@ public class MainFragment extends Fragment implements EasyPermissions.Permission
             Toast.makeText(getActivity(), "TODO: SMS things", Toast.LENGTH_LONG).show();
         } else {
             // Request one permission
-            EasyPermissions.requestPermissions(
-                    new PermissionRequest.Builder(this, RC_SMS_PERM, Manifest.permission.READ_SMS)
-                            .setRationale(getString(R.string.rationale_sms))
-                            .build());
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_sms),
+                    RC_SMS_PERM, Manifest.permission.READ_SMS);
         }
     }
 
