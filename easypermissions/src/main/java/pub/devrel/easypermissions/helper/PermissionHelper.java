@@ -18,15 +18,13 @@ public abstract class PermissionHelper<T> {
     private T mHost;
 
     @NonNull
-    public static PermissionHelper<Activity> newInstance(Activity host) {
+    public static PermissionHelper<? extends Activity> newInstance(Activity host) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return new LowApiPermissionsHelper<>(host);
         }
 
         if (host instanceof AppCompatActivity)
-            //noinspection unchecked Hmmm... not sure what's going on here
-            return (PermissionHelper<Activity>) (Object)
-                    new AppCompatActivityPermissionHelper((AppCompatActivity) host);
+            return new AppCompatActivityPermissionHelper((AppCompatActivity) host);
         else {
             return new ActivityPermissionHelper(host);
         }
