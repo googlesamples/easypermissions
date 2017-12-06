@@ -1,14 +1,16 @@
 package pub.devrel.easypermissions.helper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.StyleRes;
+import android.support.v4.app.Fragment;
 
 /**
  * Permissions helper for apps built against API < 23, which do not need runtime permissions.
  */
-class LowApiPermissionsHelper extends PermissionHelper<Object> {
-
-    public LowApiPermissionsHelper(@NonNull Object host) {
+class LowApiPermissionsHelper<T> extends PermissionHelper<T> {
+    public LowApiPermissionsHelper(@NonNull T host) {
         super(host);
     }
 
@@ -24,8 +26,9 @@ class LowApiPermissionsHelper extends PermissionHelper<Object> {
 
     @Override
     public void showRequestPermissionRationale(@NonNull String rationale,
-                                               int positiveButton,
-                                               int negativeButton,
+                                               @NonNull String positiveButton,
+                                               @NonNull String negativeButton,
+                                               @StyleRes int theme,
                                                int requestCode,
                                                @NonNull String... perms) {
         throw new IllegalStateException("Should never be requesting permissions on API < 23!");
@@ -33,6 +36,14 @@ class LowApiPermissionsHelper extends PermissionHelper<Object> {
 
     @Override
     public Context getContext() {
-        return null;
+        if (getHost() instanceof Activity) {
+            return (Context) getHost();
+        } else if (getHost() instanceof Fragment) {
+            return ((Fragment) getHost()).getContext();
+        } else if (getHost() instanceof android.app.Fragment) {
+            return ((Fragment) getHost()).getContext();
+        } else {
+            throw new IllegalStateException("Unknown host: " + getHost());
+        }
     }
 }

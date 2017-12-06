@@ -16,7 +16,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
- *  Created in {@link R.layout#activity_main}
+ * Created in {@link R.layout#activity_main}
  */
 public class MainFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
 
@@ -24,11 +24,13 @@ public class MainFragment extends Fragment implements EasyPermissions.Permission
     private static final int RC_SMS_PERM = 122;
 
     @Override
-    public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         // Create view
-        View v =  inflater.inflate(R.layout.fragment_main, container);
+        View v = inflater.inflate(R.layout.fragment_main, container);
 
         // Button click listener
         v.findViewById(R.id.button_sms).setOnClickListener(new View.OnClickListener() {
@@ -42,7 +44,9 @@ public class MainFragment extends Fragment implements EasyPermissions.Permission
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         // EasyPermissions handles the request result.

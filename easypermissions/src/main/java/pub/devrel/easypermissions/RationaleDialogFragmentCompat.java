@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import android.support.annotation.StringRes;
+import android.support.annotation.StyleRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatDialogFragment;
 
@@ -21,15 +21,19 @@ public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
     private EasyPermissions.PermissionCallbacks mPermissionCallbacks;
 
     public static RationaleDialogFragmentCompat newInstance(
-            @StringRes int positiveButton, @StringRes int negativeButton,
-            @NonNull String rationaleMsg, int requestCode, @NonNull String[] permissions) {
+            @NonNull String rationaleMsg,
+            @NonNull String positiveButton,
+            @NonNull String negativeButton,
+            @StyleRes int theme,
+            int requestCode,
+            @NonNull String[] permissions) {
 
         // Create new Fragment
         RationaleDialogFragmentCompat dialogFragment = new RationaleDialogFragmentCompat();
 
         // Initialize configuration as arguments
         RationaleDialogConfig config = new RationaleDialogConfig(
-                positiveButton, negativeButton, rationaleMsg, requestCode, permissions);
+                positiveButton, negativeButton, rationaleMsg, theme, requestCode, permissions);
         dialogFragment.setArguments(config.toBundle());
 
         return dialogFragment;
