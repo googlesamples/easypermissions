@@ -66,16 +66,20 @@ private void methodRequiresTwoPermission() {
         // Do not have permissions, request them now
         EasyPermissions.requestPermissions(this, getString(R.string.camera_and_location_rationale),
                 RC_CAMERA_AND_LOCATION, perms);
-        // OR for finer control over the rationale dialog
-        EasyPermissions.requestPermissions(
-                new PermissionRequest.Builder(this, RC_CAMERA_AND_LOCATION, perms)
-                        .setRationale(R.string.camera_and_location_rationale)
-                        .setPositiveButtonText(R.string.rationale_ask_ok)
-                        .setNegativeButtonText(R.string.rationale_ask_cancel)
-                        .setTheme(R.style.my_fancy_style)
-                        .build());
     }
 }
+```
+
+Or for finer control over the rationale dialog, use a `PermissionRequest`:
+
+```java
+EasyPermissions.requestPermissions(
+        new PermissionRequest.Builder(this, RC_CAMERA_AND_LOCATION, perms)
+                .setRationale(R.string.camera_and_location_rationale)
+                .setPositiveButtonText(R.string.rationale_ask_ok)
+                .setNegativeButtonText(R.string.rationale_ask_cancel)
+                .setTheme(R.style.my_fancy_style)
+                .build());
 ```
 
 Optionally, for a finer control, you can have your `Activity` / `Fragment` implement
