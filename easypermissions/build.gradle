@@ -27,5 +27,4 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:3.5.1'
 }
 
-apply from: 'maven.gradle'
 apply from: 'bintray.gradle'
