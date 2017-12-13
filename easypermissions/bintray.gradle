@@ -89,6 +89,14 @@ bintray {
     user = hasProperty('BINTRAY_USER') ? getProperty('BINTRAY_USER') : System.getenv('BINTRAY_USER')
     key = hasProperty('BINTRAY_KEY') ? getProperty('BINTRAY_KEY') : System.getenv('BINTRAY_KEY')
 
+    filesSpec {
+        from "$buildDir/publications/library/pom-default.xml"
+        into "pub/devrel/$mavenArtifactId/$mavenVersion/"
+        rename { String fileName ->
+            "${mavenArtifactId}-${mavenVersion}.pom"
+        }
+    }
+
     configurations = [ 'archives' ]
 
     pkg {
@@ -103,4 +111,11 @@ bintray {
             released = new Date()
         }
     }
+}
+
+afterEvaluate { project ->
+    def pomTask = "generatePomFileForLibraryPublication"
+
+    // Convenience task to prepare everything we need for releases
+    task prepareArtifacts(dependsOn: [javadocJar, sourcesJar, assembleRelease, pomTask]) {}
 }
