@@ -76,6 +76,8 @@ public abstract class PermissionHelper<T> {
                     rationale, positiveButton, negativeButton, theme, requestCode, perms);
         } else {
             directRequestPermissions(requestCode, perms);
+            if(mHost instanceof Callback)
+                ((Callback) mHost).onAndroidRequestPermissionsCalled();
         }
     }
 
@@ -100,6 +102,10 @@ public abstract class PermissionHelper<T> {
     @NonNull
     public T getHost() {
         return mHost;
+    }
+
+    public interface Callback {
+        void onAndroidRequestPermissionsCalled();
     }
 
     // ============================================================================

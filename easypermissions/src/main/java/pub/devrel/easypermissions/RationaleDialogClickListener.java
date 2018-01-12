@@ -53,12 +53,18 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
             if (mHost instanceof Fragment) {
                 PermissionHelper.newInstance((Fragment) mHost).directRequestPermissions(
                         mConfig.requestCode, mConfig.permissions);
+                if(mHost instanceof PermissionHelper.Callback)
+                    ((PermissionHelper.Callback) mHost).onAndroidRequestPermissionsCalled();
             } else if (mHost instanceof android.app.Fragment) {
                 PermissionHelper.newInstance((android.app.Fragment) mHost).directRequestPermissions(
                         mConfig.requestCode, mConfig.permissions);
+                if(mHost instanceof PermissionHelper.Callback)
+                    ((PermissionHelper.Callback) mHost).onAndroidRequestPermissionsCalled();
             } else if (mHost instanceof Activity) {
                 PermissionHelper.newInstance((Activity) mHost).directRequestPermissions(
                         mConfig.requestCode, mConfig.permissions);
+                if(mHost instanceof PermissionHelper.Callback)
+                    ((PermissionHelper.Callback) mHost).onAndroidRequestPermissionsCalled();
             } else {
                 throw new RuntimeException("Host must be an Activity or Fragment!");
             }

@@ -11,22 +11,28 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <Button
+        android:id="@+id/button_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test"/>
+
+    <Button
         android:id="@+id/button_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/camera" />
+        android:text="@string/camera"/>
 
     <Button
         android:id="@+id/button_location_and_contacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/location_and_contacts" />
+        android:text="@string/location_and_contacts"/>
 
     <fragment
         android:id="@+id/fragment"
         android:name="pub.devrel.easypermissions.sample.MainFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main"/>
 
 </LinearLayout>
