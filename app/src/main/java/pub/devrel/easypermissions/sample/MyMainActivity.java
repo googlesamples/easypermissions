@@ -89,7 +89,7 @@ public class MyMainActivity extends AppCompatActivity implements EasyPermissions
     public void onDialogResult(int requestCode, int resultCode, @Nullable Bundle data) {
         if(requestCode == AppSettingDialogFragment.Companion.getDEFAULT_SETTINGS_REQ_CODE()) {
             if(resultCode == DialogFragmentCallback.Companion.getRESULT_CANCEL()) {
-                // TODO 
+                // TODO
             }
         }
     }
