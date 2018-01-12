@@ -1,5 +1,6 @@
 package pub.devrel.easypermissions.helper;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
@@ -24,8 +25,11 @@ public abstract class BaseFrameworkPermissionsHelper<T> extends PermissionHelper
                                                @StyleRes int theme,
                                                int requestCode,
                                                @NonNull String... perms) {
+        FragmentManager fm = getFragmentManager();
+        Fragment fragment = fm.findFragmentByTag(RationaleDialogFragment.TAG);
+        if (fragment != null) return;
         RationaleDialogFragment
                 .newInstance(positiveButton, negativeButton, rationale, theme, requestCode, perms)
-                .showAllowingStateLoss(getFragmentManager(), RationaleDialogFragment.TAG);
+                .showAllowingStateLoss(fm, RationaleDialogFragment.TAG);
     }
 }

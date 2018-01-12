@@ -11,6 +11,9 @@
 
     <uses-permission android:name="android.permission.READ_SMS" />
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:label="@string/app_name"
         android:allowBackup="true"
@@ -20,6 +23,8 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
         <activity android:name=".MainActivity">
+        </activity>
+        <activity android:name=".MyMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
