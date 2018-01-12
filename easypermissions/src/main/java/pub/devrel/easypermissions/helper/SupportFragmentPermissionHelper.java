@@ -3,6 +3,7 @@ package pub.devrel.easypermissions.helper;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 /**
@@ -16,7 +17,12 @@ class SupportFragmentPermissionHelper extends BaseSupportPermissionsHelper<Fragm
 
     @Override
     public FragmentManager getSupportFragmentManager() {
-        return getHost().getChildFragmentManager();
+        FragmentActivity hostActivity = getHost().getActivity();
+        if (hostActivity != null) {
+            return hostActivity.getSupportFragmentManager();
+        } else {
+            return getHost().getChildFragmentManager();
+        }
     }
 
     @Override

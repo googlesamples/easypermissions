@@ -32,7 +32,7 @@ public abstract class BaseFrameworkPermissionsHelper<T> extends PermissionHelper
 
         // Check if fragment is already showing
         Fragment fragment = fm.findFragmentByTag(RationaleDialogFragment.TAG);
-        if (fragment != null && fragment instanceof RationaleDialogFragment) {
+        if (fragment instanceof RationaleDialogFragment) {
             Log.d(TAG, "Found existing fragment, not showing rationale.");
             return;
         }
