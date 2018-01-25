@@ -17,12 +17,7 @@ class SupportFragmentPermissionHelper extends BaseSupportPermissionsHelper<Fragm
 
     @Override
     public FragmentManager getSupportFragmentManager() {
-        FragmentActivity hostActivity = getHost().getActivity();
-        if (hostActivity != null) {
-            return hostActivity.getSupportFragmentManager();
-        } else {
-            return getHost().getChildFragmentManager();
-        }
+        return getHost().getChildFragmentManager();
     }
 
     @Override
