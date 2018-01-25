@@ -9,11 +9,11 @@ EasyPermissions is installed by adding the following dependency to your `build.g
 
 ```groovy
 dependencies {
-    implementation 'pub.devrel:easypermissions:1.1.2'
+    implementation 'pub.devrel:easypermissions:1.1.3'
 }
 ```
 
-Note that EasyPermissions depends on Android Support Library `27.0.1` so you will need to use
+Note that EasyPermissions depends on Android Support Library `27.0.2` so you will need to use
 `compileSdkVersion 27` or higher. This change should be safe as `compileSdkVersion` does not change
 app behavior.
 
