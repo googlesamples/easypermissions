@@ -1,7 +1,7 @@
 buildscript {
     repositories {
-        jcenter()
         google()
+        jcenter()
     }
 
     dependencies {
@@ -12,13 +12,9 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
         google()
+        jcenter()
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
 
 ext {
@@ -33,7 +29,7 @@ ext {
 
     bintrayOrg = 'easygoogle'
 
-    support_library_version = '27.0.2'
+    support_library_version = '27.1.0'
 
     compileSdk = 27
     targetSdk = 27

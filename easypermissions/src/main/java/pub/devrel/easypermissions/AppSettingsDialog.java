@@ -188,7 +188,9 @@ public class AppSettingsDialog implements Parcelable {
          * Create a new Builder for an {@link AppSettingsDialog}.
          *
          * @param fragment the {@link android.app.Fragment} in which to display the dialog.
+         * @deprecated use the support library version instead
          */
+        @Deprecated
         public Builder(@NonNull android.app.Fragment fragment) {
             mActivityOrFragment = fragment;
             mContext = fragment.getActivity();

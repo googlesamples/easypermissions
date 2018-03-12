@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 /**
  * Permissions helper for {@link Activity}.
  */
+@Deprecated
 class ActivityPermissionHelper extends BaseFrameworkPermissionsHelper<Activity> {
 
     public ActivityPermissionHelper(Activity host) {

@@ -11,6 +11,7 @@ import android.support.annotation.RequiresApi;
 /**
  * Permissions helper for {@link Fragment} from the framework.
  */
+@Deprecated
 class FrameworkFragmentPermissionHelper extends BaseFrameworkPermissionsHelper<Fragment> {
 
     public FrameworkFragmentPermissionHelper(@NonNull Fragment host) {

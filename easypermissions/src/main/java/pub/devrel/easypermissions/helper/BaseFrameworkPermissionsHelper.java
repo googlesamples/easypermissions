@@ -11,6 +11,7 @@ import pub.devrel.easypermissions.RationaleDialogFragment;
 /**
  * Implementation of {@link PermissionHelper} for framework host classes.
  */
+@Deprecated
 public abstract class BaseFrameworkPermissionsHelper<T> extends PermissionHelper<T> {
 
     private static final String TAG = "BFPermissionsHelper";
