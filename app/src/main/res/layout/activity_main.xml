@@ -29,4 +29,11 @@
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_main" />
 
+    <fragment
+            android:id="@+id/rationalFragment"
+            android:name="pub.devrel.easypermissions.sample.RationaleFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_rational" />
+
 </LinearLayout>

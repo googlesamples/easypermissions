@@ -73,6 +73,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         return EasyPermissions.hasPermissions(this, Manifest.permission.READ_SMS);
     }
 
+    private boolean hasStoragePermission() {
+        return EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
     @AfterPermissionGranted(RC_CAMERA_PERM)
     public void cameraTask() {
         if (hasCameraPermission()) {
@@ -143,7 +147,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     getString(R.string.returned_from_app_settings_to_activity,
                               hasCameraPermission() ? yes : no,
                               hasLocationAndContactsPermissions() ? yes : no,
-                              hasSmsPermission() ? yes : no),
+                              hasSmsPermission() ? yes : no,
+                              hasStoragePermission() ? yes : no),
                     Toast.LENGTH_LONG)
                     .show();
         }

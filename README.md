@@ -152,6 +152,12 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
+### RationaleDialogCallback (Optional)
+Implement this callback instead of `PermissionCallbacks if you want to interact with the rationale
+dialog buttons. This is useful for events logging.
+
+Check out [RationaleFragment](https://github.com/googlesamples/blob/master/app/src/main/java/pub/devrel/easypermissions/sample/RationaleFragment.java) in the sample app folder for example.
+
 ## LICENSE
 
 ```

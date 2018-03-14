@@ -50,6 +50,11 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == Dialog.BUTTON_POSITIVE) {
+            if (mCallbacks != null) {
+                if (mCallbacks instanceof EasyPermissions.RationaleDialogCallback) {
+                    notifyRationaleDialogButtonClicked(which);
+                }
+            }
             if (mHost instanceof Fragment) {
                 PermissionHelper.newInstance((Fragment) mHost).directRequestPermissions(
                         mConfig.requestCode, mConfig.permissions);
@@ -69,8 +74,15 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
 
     private void notifyPermissionDenied() {
         if (mCallbacks != null) {
-            mCallbacks.onPermissionsDenied(mConfig.requestCode,
-                    Arrays.asList(mConfig.permissions));
+            if (mCallbacks instanceof EasyPermissions.RationaleDialogCallback) {
+                notifyRationaleDialogButtonClicked(Dialog.BUTTON_NEGATIVE);
+            } else {
+                mCallbacks.onPermissionsDenied(mConfig.requestCode, Arrays.asList(mConfig.permissions));
+            }
         }
+    }
+
+    private void notifyRationaleDialogButtonClicked(int which){
+        ((EasyPermissions.RationaleDialogCallback)mCallbacks).onRationaleDialogButtonClicked(which, mConfig.requestCode, Arrays.asList(mConfig.permissions));
     }
 }

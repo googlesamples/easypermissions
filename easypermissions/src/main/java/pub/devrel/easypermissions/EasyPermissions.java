@@ -17,7 +17,9 @@ package pub.devrel.easypermissions;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -49,6 +51,13 @@ public class EasyPermissions {
         void onPermissionsGranted(int requestCode, @NonNull List<String> perms);
 
         void onPermissionsDenied(int requestCode, @NonNull List<String> perms);
+    }
+
+    /**
+     * Callback interface to receive button clicked events of the rationale dialog
+     */
+    public interface RationaleDialogCallback extends PermissionCallbacks {
+        void onRationaleDialogButtonClicked(int which, int requestCode, @NonNull List<String> perms);
 
     }
 
