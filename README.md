@@ -152,11 +152,32 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
-### RationaleDialogCallback (Optional)
-Implement this callback instead of `PermissionCallbacks if you want to interact with the rationale
-dialog buttons. This is useful for events logging.
+### RationaleCallbacks
+Implement this callback if you want to interact with the rationale dialog.
 
-Check out [RationaleFragment](https://github.com/googlesamples/blob/master/app/src/main/java/pub/devrel/easypermissions/sample/RationaleFragment.java) in the sample app folder for example.
+```java
+public class RationaleFragment extends Fragment implements EasyPermissions.RationaleCallbacks {
+
+    @Override
+    public void onRationaleAccepted(int requestCode) {
+        // Rationale accpets to request some permissions
+        // ...
+    }
+
+    @Override
+    public void onRationaleDenied(int requestCode) {
+        // Rationale denied to request some permissions
+        // ...
+    }
+}
+```
+
+Check out [RationaleFragment](https://github.com/googlesamples/blob/master/app/src/main/java/pub/devrel/easypermissions/sample/RationaleFragment.java) in the sample app folder for the full example.
+
+Note that permissions are not requested when the user denies or cancel the rationale dialog and `onPermissionsDenied` will be invoked.
+The user will need to reinvoke the function that requests permissions. This is callbacks can be useful for analytics tracking and UI states
+updates.
+
 
 ## LICENSE
 

@@ -1,7 +1,6 @@
 package pub.devrel.easypermissions.sample;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 import java.util.List;
 
-public class RationaleFragment extends Fragment implements EasyPermissions.RationaleDialogCallback {
+public class RationaleFragment extends Fragment implements EasyPermissions.PermissionCallbacks,
+                                                           EasyPermissions.RationaleCallbacks {
     private static final String TAG = "RationaleFragment";
     private static final int RC_STORAGE_PERM = 123;
     public static final String PERMISSION_STORAGE =  Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -65,27 +65,29 @@ public class RationaleFragment extends Fragment implements EasyPermissions.Ratio
 
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        showToast("Storage granted");
+        showToast("Storage permission granted");
         Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.toString());
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        showToast("Storage denied");
+        showToast("Storage permission denied");
         Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.toString());
+    }
+
+    @Override
+    public void onRationaleAccepted(int requestCode) {
+        showToast("Rationale accepted");
+        Log.d(TAG, "onRationaleAccepted:" + requestCode );
+    }
+
+    @Override
+    public void onRationaleDenied(int requestCode) {
+        showToast("Rationale denied");
+        Log.d(TAG, "onRationaleDenied:" + requestCode );
     }
 
     private void showToast(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onRationaleDialogButtonClicked(int which, int requestCode, @NonNull List<String> perms) {
-        if (which == Dialog.BUTTON_POSITIVE) {
-            showToast("Rational dialog positive button clicked");
-        } else {
-            showToast("Rational dialog negative button clicked");
-        }
-        Log.d(TAG, "onRationaleDialogButtonClicked:" + requestCode + ":" + perms.toString());
     }
 }

@@ -18,10 +18,12 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
     private Object mHost;
     private RationaleDialogConfig mConfig;
     private EasyPermissions.PermissionCallbacks mCallbacks;
+    private EasyPermissions.RationaleCallbacks mDialogCallbacks;
 
     RationaleDialogClickListener(RationaleDialogFragmentCompat compatDialogFragment,
                                  RationaleDialogConfig config,
-                                 EasyPermissions.PermissionCallbacks callbacks) {
+                                 EasyPermissions.PermissionCallbacks callbacks,
+                                 EasyPermissions.RationaleCallbacks dialogCallback) {
 
         mHost = compatDialogFragment.getParentFragment() != null
                 ? compatDialogFragment.getParentFragment()
@@ -29,6 +31,8 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
 
         mConfig = config;
         mCallbacks = callbacks;
+        mDialogCallbacks = dialogCallback;
+
     }
 
     RationaleDialogClickListener(RationaleDialogFragment dialogFragment,
@@ -49,40 +53,32 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
+        int requestCode = mConfig.requestCode;
         if (which == Dialog.BUTTON_POSITIVE) {
-            if (mCallbacks != null) {
-                if (mCallbacks instanceof EasyPermissions.RationaleDialogCallback) {
-                    notifyRationaleDialogButtonClicked(which);
-                }
+            String[] permissions = mConfig.permissions;
+            if (mDialogCallbacks != null) {
+                mDialogCallbacks.onRationaleAccepted(requestCode);
             }
             if (mHost instanceof Fragment) {
-                PermissionHelper.newInstance((Fragment) mHost).directRequestPermissions(
-                        mConfig.requestCode, mConfig.permissions);
+                PermissionHelper.newInstance((Fragment) mHost).directRequestPermissions(requestCode, permissions);
             } else if (mHost instanceof android.app.Fragment) {
-                PermissionHelper.newInstance((android.app.Fragment) mHost).directRequestPermissions(
-                        mConfig.requestCode, mConfig.permissions);
+                PermissionHelper.newInstance((android.app.Fragment) mHost).directRequestPermissions(requestCode, permissions);
             } else if (mHost instanceof Activity) {
-                PermissionHelper.newInstance((Activity) mHost).directRequestPermissions(
-                        mConfig.requestCode, mConfig.permissions);
+                PermissionHelper.newInstance((Activity) mHost).directRequestPermissions(requestCode, permissions);
             } else {
                 throw new RuntimeException("Host must be an Activity or Fragment!");
             }
         } else {
+            if (mDialogCallbacks != null) {
+                mDialogCallbacks.onRationaleDenied(requestCode);
+            }
             notifyPermissionDenied();
         }
     }
 
     private void notifyPermissionDenied() {
         if (mCallbacks != null) {
-            if (mCallbacks instanceof EasyPermissions.RationaleDialogCallback) {
-                notifyRationaleDialogButtonClicked(Dialog.BUTTON_NEGATIVE);
-            } else {
-                mCallbacks.onPermissionsDenied(mConfig.requestCode, Arrays.asList(mConfig.permissions));
-            }
+            mCallbacks.onPermissionsDenied(mConfig.requestCode, Arrays.asList(mConfig.permissions));
         }
-    }
-
-    private void notifyRationaleDialogButtonClicked(int which){
-        ((EasyPermissions.RationaleDialogCallback)mCallbacks).onRationaleDialogButtonClicked(which, mConfig.requestCode, Arrays.asList(mConfig.permissions));
     }
 }

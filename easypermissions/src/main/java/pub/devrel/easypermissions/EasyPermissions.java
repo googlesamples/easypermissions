@@ -56,8 +56,9 @@ public class EasyPermissions {
     /**
      * Callback interface to receive button clicked events of the rationale dialog
      */
-    public interface RationaleDialogCallback extends PermissionCallbacks {
-        void onRationaleDialogButtonClicked(int which, int requestCode, @NonNull List<String> perms);
+    public interface RationaleCallbacks {
+        void onRationaleAccepted(int requestCode);
+        void onRationaleDenied(int requestCode);
 
     }
 
