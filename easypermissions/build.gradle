@@ -2,10 +2,9 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion compileSdk
-    buildToolsVersion buildTools
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion targetSdk
         versionCode 1
         versionName mavenVersion
@@ -14,14 +13,18 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            consumerProguardFiles 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$support_library_version"
+    api "com.android.support:appcompat-v7:$support_library_version"
+    api "com.android.support:support-compat:$support_library_version"
+    api "com.android.support:support-fragment:$support_library_version"
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.robolectric:robolectric:3.5.1'
 }
 
-apply from: 'maven.gradle'
 apply from: 'bintray.gradle'

@@ -1,58 +1,81 @@
 package pub.devrel.easypermissions;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
-import android.support.annotation.StringRes;
+import android.support.annotation.StyleRes;
 
 /**
  * {@link DialogFragment} to display rationale for permission requests when the request comes from
  * a Fragment or Activity that can host a Fragment.
  */
-@RequiresApi(Build.VERSION_CODES.HONEYCOMB)
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public class RationaleDialogFragment extends DialogFragment {
 
     public static final String TAG = "RationaleDialogFragment";
 
     private EasyPermissions.PermissionCallbacks mPermissionCallbacks;
+    private boolean mStateSaved = false;
 
     public static RationaleDialogFragment newInstance(
-            @StringRes int positiveButton, @StringRes int negativeButton,
-            @NonNull String rationaleMsg, int requestCode, @NonNull String[] permissions) {
+            @NonNull String positiveButton,
+            @NonNull String negativeButton,
+            @NonNull String rationaleMsg,
+            @StyleRes int theme,
+            int requestCode,
+            @NonNull String[] permissions) {
 
         // Create new Fragment
         RationaleDialogFragment dialogFragment = new RationaleDialogFragment();
 
         // Initialize configuration as arguments
         RationaleDialogConfig config = new RationaleDialogConfig(
-                positiveButton, negativeButton, rationaleMsg, requestCode, permissions);
+                positiveButton, negativeButton, rationaleMsg, theme, requestCode, permissions);
         dialogFragment.setArguments(config.toBundle());
 
         return dialogFragment;
     }
 
-    @SuppressLint("NewApi")
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        // getParentFragment() requires API 17 or higher
-        boolean isAtLeastJellyBeanMR1 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
-
-        if (isAtLeastJellyBeanMR1
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
                 && getParentFragment() != null
                 && getParentFragment() instanceof EasyPermissions.PermissionCallbacks) {
             mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) getParentFragment();
         } else if (context instanceof EasyPermissions.PermissionCallbacks) {
             mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) context;
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        mStateSaved = true;
+        super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * Version of {@link #show(FragmentManager, String)} that no-ops when an IllegalStateException
+     * would otherwise occur.
+     */
+    public void showAllowingStateLoss(FragmentManager manager, String tag) {
+        // API 26 added this convenient method
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (manager.isStateSaved()) {
+                return;
+            }
+        }
+
+        if (mStateSaved) {
+            return;
+        }
+
+        show(manager, tag);
     }
 
     @Override
@@ -73,7 +96,7 @@ public class RationaleDialogFragment extends DialogFragment {
                 new RationaleDialogClickListener(this, config, mPermissionCallbacks);
 
         // Create an AlertDialog
-        return config.createDialog(getActivity(), clickListener);
+        return config.createFrameworkDialog(getActivity(), clickListener);
     }
 
 }

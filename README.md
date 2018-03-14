@@ -9,9 +9,13 @@ EasyPermissions is installed by adding the following dependency to your `build.g
 
 ```groovy
 dependencies {
-    compile 'pub.devrel:easypermissions:0.4.2'
+    implementation 'pub.devrel:easypermissions:1.1.3'
 }
 ```
+
+Note that EasyPermissions depends on Android Support Library `27.0.2` so you will need to use
+`compileSdkVersion 27` or higher. This change should be safe as `compileSdkVersion` does not change
+app behavior.
 
 ## Usage
 
@@ -50,8 +54,8 @@ The example below shows how to request permissions for a method that requires bo
     necessary. The request code provided should be unique to this request, and the method
     can take any number of permissions as its final argument.
   * Use of the `AfterPermissionGranted` annotation. This is optional, but provided for
-    convenience. If all of the permissions in a given request are granted, any methods
-    annotated with the proper request code will be executed. This is to simplify the common
+    convenience. If all of the permissions in a given request are granted, *all* methods
+    annotated with the proper request code will be executed(be sure to have an unique request code). The annotated method needs to be *void* and *without input parameters* (instead, you can use *onSaveInstanceState* in order to keep the state of your suppressed parameters). This is to simplify the common
     flow of needing to run the requesting method after all of its permissions have been granted.
     This can also be achieved by adding logic on the `onPermissionsGranted` callback.
 
@@ -68,6 +72,18 @@ private void methodRequiresTwoPermission() {
                 RC_CAMERA_AND_LOCATION, perms);
     }
 }
+```
+
+Or for finer control over the rationale dialog, use a `PermissionRequest`:
+
+```java
+EasyPermissions.requestPermissions(
+        new PermissionRequest.Builder(this, RC_CAMERA_AND_LOCATION, perms)
+                .setRationale(R.string.camera_and_location_rationale)
+                .setPositiveButtonText(R.string.rationale_ask_ok)
+                .setNegativeButtonText(R.string.rationale_ask_cancel)
+                .setTheme(R.style.my_fancy_style)
+                .build());
 ```
 
 Optionally, for a finer control, you can have your `Activity` / `Fragment` implement
@@ -134,6 +150,25 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
                 .show();
     }
 }
+```
+
+## LICENSE
+
+```
+	Copyright 2017 Google
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
 ```
 
 [1]: https://travis-ci.org/googlesamples/easypermissions.svg?branch=master

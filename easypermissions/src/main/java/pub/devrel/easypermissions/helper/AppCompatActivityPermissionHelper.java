@@ -1,23 +1,23 @@
 package pub.devrel.easypermissions.helper;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 
 /**
- * Permissions helper for {@link Activity}.
+ * Permissions helper for {@link AppCompatActivity}.
  */
-class ActivityPermissionHelper extends BaseFrameworkPermissionsHelper<Activity> {
+class AppCompatActivityPermissionHelper extends BaseSupportPermissionsHelper<AppCompatActivity> {
 
-    public ActivityPermissionHelper(Activity host) {
+    public AppCompatActivityPermissionHelper(AppCompatActivity host) {
         super(host);
     }
 
     @Override
-    public FragmentManager getFragmentManager() {
-        return getHost().getFragmentManager();
+    public FragmentManager getSupportFragmentManager() {
+        return getHost().getSupportFragmentManager();
     }
 
     @Override

@@ -1,9 +1,10 @@
 package pub.devrel.easypermissions.helper;
 
 import android.app.FragmentManager;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
+import android.support.annotation.StyleRes;
+import android.app.Fragment;
+import android.util.Log;
 
 import pub.devrel.easypermissions.RationaleDialogFragment;
 
@@ -12,6 +13,8 @@ import pub.devrel.easypermissions.RationaleDialogFragment;
  */
 public abstract class BaseFrameworkPermissionsHelper<T> extends PermissionHelper<T> {
 
+    private static final String TAG = "BFPermissionsHelper";
+
     public BaseFrameworkPermissionsHelper(@NonNull T host) {
         super(host);
     }
@@ -19,14 +22,23 @@ public abstract class BaseFrameworkPermissionsHelper<T> extends PermissionHelper
     public abstract FragmentManager getFragmentManager();
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     public void showRequestPermissionRationale(@NonNull String rationale,
-                                               int positiveButton,
-                                               int negativeButton,
+                                               @NonNull String positiveButton,
+                                               @NonNull String negativeButton,
+                                               @StyleRes int theme,
                                                int requestCode,
                                                @NonNull String... perms) {
+        FragmentManager fm = getFragmentManager();
+
+        // Check if fragment is already showing
+        Fragment fragment = fm.findFragmentByTag(RationaleDialogFragment.TAG);
+        if (fragment instanceof RationaleDialogFragment) {
+            Log.d(TAG, "Found existing fragment, not showing rationale.");
+            return;
+        }
+
         RationaleDialogFragment
-                .newInstance(positiveButton, negativeButton, rationale, requestCode, perms)
-                .show(getFragmentManager(), RationaleDialogFragment.TAG);
+                .newInstance(positiveButton, negativeButton, rationale, theme, requestCode, perms)
+                .showAllowingStateLoss(fm, RationaleDialogFragment.TAG);
     }
 }
