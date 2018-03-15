@@ -30,7 +30,8 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks,
+                                                               EasyPermissions.RationaleCallbacks{
 
     private static final String TAG = "MainActivity";
     private static final String[] LOCATION_AND_CONTACTS =
@@ -147,10 +148,19 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     getString(R.string.returned_from_app_settings_to_activity,
                               hasCameraPermission() ? yes : no,
                               hasLocationAndContactsPermissions() ? yes : no,
-                              hasSmsPermission() ? yes : no,
-                              hasStoragePermission() ? yes : no),
+                              hasSmsPermission() ? yes : no),
                     Toast.LENGTH_LONG)
                     .show();
         }
+    }
+
+    @Override
+    public void onRationaleAccepted(int requestCode) {
+        Log.d(TAG, "onRationaleAccepted:" + requestCode);
+    }
+
+    @Override
+    public void onRationaleDenied(int requestCode) {
+        Log.d(TAG, "onRationaleDenied:" + requestCode);
     }
 }

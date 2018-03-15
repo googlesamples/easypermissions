@@ -18,12 +18,12 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
     private Object mHost;
     private RationaleDialogConfig mConfig;
     private EasyPermissions.PermissionCallbacks mCallbacks;
-    private EasyPermissions.RationaleCallbacks mDialogCallbacks;
+    private EasyPermissions.RationaleCallbacks mRationaleCallbacks;
 
     RationaleDialogClickListener(RationaleDialogFragmentCompat compatDialogFragment,
                                  RationaleDialogConfig config,
                                  EasyPermissions.PermissionCallbacks callbacks,
-                                 EasyPermissions.RationaleCallbacks dialogCallback) {
+                                 EasyPermissions.RationaleCallbacks rationaleCallbacks) {
 
         mHost = compatDialogFragment.getParentFragment() != null
                 ? compatDialogFragment.getParentFragment()
@@ -31,13 +31,14 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
 
         mConfig = config;
         mCallbacks = callbacks;
-        mDialogCallbacks = dialogCallback;
+        mRationaleCallbacks = rationaleCallbacks;
 
     }
 
     RationaleDialogClickListener(RationaleDialogFragment dialogFragment,
                                  RationaleDialogConfig config,
-                                 EasyPermissions.PermissionCallbacks callbacks) {
+                                 EasyPermissions.PermissionCallbacks callbacks,
+                                 EasyPermissions.RationaleCallbacks dialogCallback) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             mHost = dialogFragment.getParentFragment() != null ?
@@ -49,6 +50,7 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
 
         mConfig = config;
         mCallbacks = callbacks;
+        mRationaleCallbacks = dialogCallback;
     }
 
     @Override
@@ -56,8 +58,8 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
         int requestCode = mConfig.requestCode;
         if (which == Dialog.BUTTON_POSITIVE) {
             String[] permissions = mConfig.permissions;
-            if (mDialogCallbacks != null) {
-                mDialogCallbacks.onRationaleAccepted(requestCode);
+            if (mRationaleCallbacks != null) {
+                mRationaleCallbacks.onRationaleAccepted(requestCode);
             }
             if (mHost instanceof Fragment) {
                 PermissionHelper.newInstance((Fragment) mHost).directRequestPermissions(requestCode, permissions);
@@ -69,8 +71,8 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
                 throw new RuntimeException("Host must be an Activity or Fragment!");
             }
         } else {
-            if (mDialogCallbacks != null) {
-                mDialogCallbacks.onRationaleDenied(requestCode);
+            if (mRationaleCallbacks != null) {
+                mRationaleCallbacks.onRationaleDenied(requestCode);
             }
             notifyPermissionDenied();
         }

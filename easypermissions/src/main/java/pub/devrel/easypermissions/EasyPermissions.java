@@ -58,8 +58,8 @@ public class EasyPermissions {
      */
     public interface RationaleCallbacks {
         void onRationaleAccepted(int requestCode);
-        void onRationaleDenied(int requestCode);
 
+        void onRationaleDenied(int requestCode);
     }
 
     private static final String TAG = "EasyPermissions";
