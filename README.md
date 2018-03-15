@@ -152,6 +152,26 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
+### Interacting with the rationale dialog
+
+Implement the `EasyPermissions.RationaleCallbacks` if you want to interact with the rationale dialog.
+
+```java
+@Override
+public void onRationaleAccepted(int requestCode) {
+    // Rationale accpets to request some permissions
+    // ...
+}
+
+@Override
+public void onRationaleDenied(int requestCode) {
+    // Rationale denied to request some permissions
+    // ...
+}
+```
+
+Rationale callbacks don't necessarily imply permission changes. To check for those, see the `EasyPermissions.RationaleCallbacks`.
+
 ## LICENSE
 
 ```

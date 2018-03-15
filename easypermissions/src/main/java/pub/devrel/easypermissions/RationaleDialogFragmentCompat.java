@@ -19,6 +19,7 @@ public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
     public static final String TAG = "RationaleDialogFragmentCompat";
 
     private EasyPermissions.PermissionCallbacks mPermissionCallbacks;
+    private EasyPermissions.RationaleCallbacks mRationaleCallbacks;
 
     public static RationaleDialogFragmentCompat newInstance(
             @NonNull String rationaleMsg,
@@ -54,10 +55,21 @@ public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (getParentFragment() != null && getParentFragment() instanceof EasyPermissions.PermissionCallbacks) {
-            mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) getParentFragment();
-        } else if (context instanceof EasyPermissions.PermissionCallbacks) {
+        if (getParentFragment() != null) {
+            if (getParentFragment() instanceof EasyPermissions.PermissionCallbacks) {
+                mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) getParentFragment();
+            }
+            if (getParentFragment() instanceof EasyPermissions.RationaleCallbacks){
+                mRationaleCallbacks = (EasyPermissions.RationaleCallbacks) getParentFragment();
+            }
+        }
+
+        if (context instanceof EasyPermissions.PermissionCallbacks) {
             mPermissionCallbacks = (EasyPermissions.PermissionCallbacks) context;
+        }
+
+        if (context instanceof EasyPermissions.RationaleCallbacks) {
+            mRationaleCallbacks = (EasyPermissions.RationaleCallbacks) context;
         }
     }
 
@@ -65,6 +77,7 @@ public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
     public void onDetach() {
         super.onDetach();
         mPermissionCallbacks = null;
+        mRationaleCallbacks = null;
     }
 
     @NonNull
@@ -76,7 +89,7 @@ public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
         // Get config from arguments, create click listener
         RationaleDialogConfig config = new RationaleDialogConfig(getArguments());
         RationaleDialogClickListener clickListener =
-                new RationaleDialogClickListener(this, config, mPermissionCallbacks);
+                new RationaleDialogClickListener(this, config, mPermissionCallbacks, mRationaleCallbacks);
 
         // Create an AlertDialog
         return config.createSupportDialog(getContext(), clickListener);

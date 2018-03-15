@@ -30,7 +30,8 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks,
+                                                               EasyPermissions.RationaleCallbacks{
 
     private static final String TAG = "MainActivity";
     private static final String[] LOCATION_AND_CONTACTS =
@@ -71,6 +72,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     private boolean hasSmsPermission() {
         return EasyPermissions.hasPermissions(this, Manifest.permission.READ_SMS);
+    }
+
+    private boolean hasStoragePermission() {
+        return EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     @AfterPermissionGranted(RC_CAMERA_PERM)
@@ -147,5 +152,15 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     Toast.LENGTH_LONG)
                     .show();
         }
+    }
+
+    @Override
+    public void onRationaleAccepted(int requestCode) {
+        Log.d(TAG, "onRationaleAccepted:" + requestCode);
+    }
+
+    @Override
+    public void onRationaleDenied(int requestCode) {
+        Log.d(TAG, "onRationaleDenied:" + requestCode);
     }
 }
