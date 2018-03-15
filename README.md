@@ -170,7 +170,7 @@ public void onRationaleDenied(int requestCode) {
 }
 ```
 
-Rationale callbacks don't necessarily imply permission changes. To check for those, see the `EasyPermissions.RationaleCallbacks`.
+Rationale callbacks don't necessarily imply permission changes. To check for those, see the `EasyPermissions.PermissionCallbacks`.
 
 ## LICENSE
 
