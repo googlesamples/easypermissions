@@ -3,8 +3,10 @@ package pub.devrel.easypermissions;
 import android.Manifest;
 import android.app.Application;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
@@ -17,8 +19,16 @@ import static junit.framework.Assert.assertTrue;
  * Basic Robolectric tests for {@link pub.devrel.easypermissions.EasyPermissions}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 23)
+@Config(application = TestApplication.class, constants = BuildConfig.class, sdk = 23)
 public class EasyPermissionsTest {
+
+    private TestActivity activity;
+
+    @Before
+    public void setUp() {
+         activity = Robolectric.setupActivity(TestActivity.class);
+    }
+
     @Test
     public void testHasPermissions() {
         Application app = RuntimeEnvironment.application;
@@ -38,5 +48,11 @@ public class EasyPermissionsTest {
         // Granting all permissions should make the whole set granted
         ShadowApplication.getInstance().grantPermissions(perms);
         assertTrue(EasyPermissions.hasPermissions(app, perms));
+    }
+
+    @Test
+    public void testPermissionPermanentlyDenied() {
+        String perm = Manifest.permission.READ_SMS;
+        assertFalse(EasyPermissions.permissionPermanentlyDenied(activity, perm));
     }
 }

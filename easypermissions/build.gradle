@@ -16,6 +16,11 @@ android {
             consumerProguardFiles 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
