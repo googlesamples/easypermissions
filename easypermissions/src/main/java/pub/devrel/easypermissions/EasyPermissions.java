@@ -64,6 +64,57 @@ public class EasyPermissions {
 
     private static final String TAG = "EasyPermissions";
 
+
+    /**
+     * @see #autoRequestPermission( Fragment, AutoRequestPermissionCallbacks,
+     *     String,int,String...)
+     */
+    public static void autoRequestPermission(
+            @NonNull Activity host,
+            @NonNull AutoRequestPermissionCallbacks autoRequestPermissionCallbacks,
+            @NonNull String rationale,
+            int requestCode,
+            @Size(min = 1) @NonNull String... perms) {
+        if (EasyPermissions.hasPermissions(host, perms)) {
+            autoRequestPermissionCallbacks.onAutoRequestPermissionGranted();
+        } else {
+            // Ask for permission you need
+            EasyPermissions.requestPermissions(host, rationale, requestCode, perms);
+        }
+    }
+
+    /**
+     * auto request permission if app don't have the permission you need.
+     *
+     * @param host requesting context.
+     * @param autoRequestPermissionCallbacks the call back receive the result
+     * @param rationale a message explaining why the application needs this set of permissions, will
+     *     be displayed if the user rejects the request the first time.
+     * @param requestCode request code to track this request, must be &lt; 256.
+     * @param perms one ore more permissions, such as {@link Manifest.permission#CAMERA}.
+     */
+    public static void autoRequestPermission(
+            @NonNull Fragment host,
+            @NonNull AutoRequestPermissionCallbacks autoRequestPermissionCallbacks,
+            @NonNull String rationale,
+            int requestCode,
+            @Size(min = 1) @NonNull String... perms) {
+        if (EasyPermissions.hasPermissions(host.getContext(), perms)) {
+            autoRequestPermissionCallbacks.onAutoRequestPermissionGranted();
+        } else {
+            // Ask for permission you need
+            EasyPermissions.requestPermissions(host, rationale, requestCode, perms);
+        }
+    }
+
+    /**
+     * Callback interface to receive granted event of {@code EasyPermissions.autoRequestPermission()}
+     * calls.
+     */
+    public interface AutoRequestPermissionCallbacks {
+        void onAutoRequestPermissionGranted();
+    }
+
     /**
      * Check if the calling context has a set of permissions.
      *
