@@ -16,6 +16,7 @@
 package pub.devrel.easypermissions.sample;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -39,12 +40,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     private static final int RC_CAMERA_PERM = 123;
     private static final int RC_LOCATION_CONTACTS_PERM = 124;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mContext = this;
         // Button click listener that will request one permission.
         findViewById(R.id.button_camera).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,17 +82,18 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     @AfterPermissionGranted(RC_CAMERA_PERM)
     public void cameraTask() {
-        if (hasCameraPermission()) {
-            // Have permission, do the thing!
-            Toast.makeText(this, "TODO: Camera things", Toast.LENGTH_LONG).show();
-        } else {
-            // Ask for one permission
-            EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.rationale_camera),
-                    RC_CAMERA_PERM,
-                    Manifest.permission.CAMERA);
-        }
+        EasyPermissions.autoRequestPermission(
+                this,
+                new EasyPermissions.AutoRequestPermissionCallbacks() {
+                        @Override
+                        public void onAutoRequestPermissionGranted() {
+                            // Have permission, do the thing!
+                            Toast.makeText(mContext, "TODO: Camera things", Toast.LENGTH_LONG).show();
+                        }
+                    },
+                getString(R.string.rationale_camera),
+                RC_CAMERA_PERM,
+                Manifest.permission.CAMERA);
     }
 
     @AfterPermissionGranted(RC_LOCATION_CONTACTS_PERM)
