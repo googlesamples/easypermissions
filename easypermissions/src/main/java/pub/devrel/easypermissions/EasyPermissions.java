@@ -291,6 +291,12 @@ public class EasyPermissions {
      * Check if at least one permission in the list of denied permissions has been permanently
      * denied (user clicked "Never ask again").
      *
+     * <b>Note</b>: Due to a limitation in the information provided by the Android
+     * framework permissions API, this method only works after the permission
+     * has been denied and your app has received the onPermissionsDenied callback.
+     * Otherwise the library cannot distinguish permanent denial from the
+     * "not yet denied" case.
+     *
      * @param host              context requesting permissions.
      * @param deniedPermissions list of denied permissions, usually from {@link
      *                          PermissionCallbacks#onPermissionsDenied(int, List)}
