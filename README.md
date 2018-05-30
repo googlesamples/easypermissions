@@ -128,6 +128,12 @@ these permissions from the user and they must be changed in app settings. You ca
 method `EasyPermissions.somePermissionPermanentlyDenied(...)` to display a dialog to the
 user in this situation and direct them to the system setting screen for your app:
 
+**Note**: Due to a limitation in the information provided by the Android
+framework permissions API, the `somePermissionPermanentlyDenied` method only
+works after the permission has been denied and your app has received
+the `onPermissionsDenied` callback. Otherwise the library cannot distinguish
+permanent denial from the "not yet denied" case.
+
 ```java
 @Override
 public void onPermissionsDenied(int requestCode, List<String> perms) {
