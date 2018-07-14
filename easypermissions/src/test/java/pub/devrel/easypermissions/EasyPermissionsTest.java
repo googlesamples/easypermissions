@@ -17,7 +17,7 @@ import static junit.framework.Assert.assertTrue;
  * Basic Robolectric tests for {@link pub.devrel.easypermissions.EasyPermissions}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 23)
+@Config(sdk = 23)
 public class EasyPermissionsTest {
     @Test
     public void testHasPermissions() {

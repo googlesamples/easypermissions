@@ -14,7 +14,7 @@ import static junit.framework.Assert.assertTrue;
  * Low-API (SDK = 19) tests for {@link pub.devrel.easypermissions.EasyPermissions}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 19)
+@Config(sdk = 19)
 public class EasyPermissionsLowApiTest {
     @Test
     public void testHasPermissions() {
