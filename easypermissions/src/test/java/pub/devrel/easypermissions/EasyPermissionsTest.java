@@ -3,6 +3,7 @@ package pub.devrel.easypermissions;
 import android.Manifest;
 import android.app.Application;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -10,8 +11,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static com.google.common.truth.Truth.assertThat;
 
 /**
  * Basic Robolectric tests for {@link pub.devrel.easypermissions.EasyPermissions}.
@@ -19,24 +19,34 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 23)
 public class EasyPermissionsTest {
-    @Test
-    public void testHasPermissions() {
-        Application app = RuntimeEnvironment.application;
 
-        String[] perms = new String[]{
+    private Application app;
+    private String[] perms;
+
+    @Before
+    public void setUp() {
+        app = RuntimeEnvironment.application;
+        perms = new String[]{
                 Manifest.permission.READ_SMS,
                 Manifest.permission.ACCESS_FINE_LOCATION
         };
+    }
 
-        // Wes should not have permissions before any are granted
-        assertFalse(EasyPermissions.hasPermissions(app, perms));
+    @Test
+    public void shouldNotHavePermissions_whenNoPermissionsGranted() {
+        assertThat(EasyPermissions.hasPermissions(app, perms)).isFalse();
+    }
 
-        // Granting one permission should not make the whole set appear granted
+
+    @Test
+    public void shouldNotHavePermissions_whenNotAllPermissionsGranted() {
         ShadowApplication.getInstance().grantPermissions(perms[0]);
-        assertFalse(EasyPermissions.hasPermissions(app, perms));
+        assertThat(EasyPermissions.hasPermissions(app, perms)).isFalse();
+    }
 
-        // Granting all permissions should make the whole set granted
+    @Test
+    public void shouldHavePermissions_whenAllPermissionsGranted() {
         ShadowApplication.getInstance().grantPermissions(perms);
-        assertTrue(EasyPermissions.hasPermissions(app, perms));
+        assertThat(EasyPermissions.hasPermissions(app, perms)).isTrue();
     }
 }
