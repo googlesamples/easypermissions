@@ -199,7 +199,7 @@ Rationale callbacks don't necessarily imply permission changes. To check for tho
 
 [1]: https://travis-ci.org/googlesamples/easypermissions.svg?branch=master
 [2]: https://travis-ci.org/googlesamples/easypermissions
-[3]: https://codecov.io/gh/googlesamples/easypermissions/branch/master/graph/badge.sv
+[3]: https://codecov.io/gh/googlesamples/easypermissions/branch/master/graph/badge.svg
 [4]: https://codecov.io/gh/googlesamples/easypermissions
 [5]: https://img.shields.io/badge/Android%20Weekly-%23185-2CB3E5.svg?style=flat
 [6]: http://androidweekly.net/issues/issue-185
