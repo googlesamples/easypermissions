@@ -36,6 +36,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.google.truth:truth:0.42'
     testImplementation 'org.robolectric:robolectric:3.8'
+    testImplementation 'org.mockito:mockito-core:2.18.0'
 }
 
 // Needed in order to process Robolectric tests when running JaCoCo
