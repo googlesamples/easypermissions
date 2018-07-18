@@ -23,4 +23,6 @@ public class EasyPermissionsLowApiTest {
         assertThat(EasyPermissions.hasPermissions(RuntimeEnvironment.application,
                 Manifest.permission.ACCESS_COARSE_LOCATION)).isTrue();
     }
+
+    //TODO: call all needed methods and expect IllegalStateException
 }
