@@ -33,7 +33,7 @@ import static org.mockito.Mockito.verify;
 @Config(sdk = 19)
 public class EasyPermissionsLowApiTest {
 
-    private static final int REQUEST_CODE = 10;
+    private static final int REQUEST_CODE = 5;
     private static final String RATIONALE = "RATIONALE";
     private static final String[] ALL_PERMS = new String[]{
             Manifest.permission.READ_SMS, Manifest.permission.ACCESS_FINE_LOCATION};

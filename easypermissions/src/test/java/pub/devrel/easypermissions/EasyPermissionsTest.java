@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
 @Config(sdk = 23)
 public class EasyPermissionsTest {
 
-    private static final int REQUEST_CODE = 10;
+    private static final int REQUEST_CODE = 5;
     private static final String RATIONALE = "RATIONALE";
     private static final String[] ONE_PERM = new String[]{Manifest.permission.READ_SMS};
     private static final String[] ALL_PERMS = new String[]{
