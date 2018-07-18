@@ -19,6 +19,7 @@ public class TestSupportFragment extends Fragment implements EasyPermissions.Per
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Support Fragments should use AppCompat or derived themes
         getContext().getTheme().applyStyle(R.style.Theme_AppCompat, true);
         return super.onCreateView(inflater, container, savedInstanceState);
     }

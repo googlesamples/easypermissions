@@ -93,7 +93,7 @@ public class EasyPermissionsTest {
     }
 
     @Test
-    public void shouldCallbackOnPermissionGranted_whenRequestAlreadyGrantedPermissionFromActivity() {
+    public void shouldCallbackOnPermissionGranted_whenRequestAlreadyGrantedPermissionsFromActivity() {
         grantPermissions(ALL_PERMS);
 
         EasyPermissions.requestPermissions(spyActivity, RATIONALE, REQUEST_CODE, ALL_PERMS);
@@ -148,7 +148,7 @@ public class EasyPermissionsTest {
     }
 
     @Test
-    public void shouldCallbackOnPermissionGranted_whenRequestAlreadyGrantedPermissionFromFragment() {
+    public void shouldCallbackOnPermissionGranted_whenRequestAlreadyGrantedPermissionsFromFragment() {
         grantPermissions(ALL_PERMS);
 
         EasyPermissions.requestPermissions(spyFragment, RATIONALE, REQUEST_CODE, ALL_PERMS);
@@ -203,7 +203,7 @@ public class EasyPermissionsTest {
     }
 
     @Test
-    public void shouldCallbackOnPermissionGranted_whenRequestAlreadyGrantedPermissionFromSupportFragment() {
+    public void shouldCallbackOnPermissionGranted_whenRequestAlreadyGrantedPermissionsFromSupportFragment() {
         grantPermissions(ALL_PERMS);
 
         EasyPermissions.requestPermissions(spySupportFragment, RATIONALE, REQUEST_CODE, ALL_PERMS);
