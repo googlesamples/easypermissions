@@ -11,10 +11,14 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import pub.devrel.easypermissions.R;
 
-public class TestSupportFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
+public class TestSupportFragment extends Fragment
+        implements EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
+
+    public static final int REQUEST_CODE = 3;
 
     @Nullable
     @Override
@@ -31,6 +35,21 @@ public class TestSupportFragment extends Fragment implements EasyPermissions.Per
 
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @AfterPermissionGranted(REQUEST_CODE)
+    public void afterPermissionGranted() {
+
+    }
+
+    @Override
+    public void onRationaleAccepted(int requestCode) {
+
+    }
+
+    @Override
+    public void onRationaleDenied(int requestCode) {
 
     }
 }
