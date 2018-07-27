@@ -1,6 +1,9 @@
 package pub.devrel.easypermissions;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
+import android.widget.Button;
 
 import org.junit.After;
 import org.junit.Before;
@@ -8,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
@@ -27,6 +31,8 @@ import pub.devrel.easypermissions.testhelper.TestFragment;
 import pub.devrel.easypermissions.testhelper.TestSupportFragment;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
@@ -47,6 +53,10 @@ public class AppSettingsDialogTest {
     private ActivityController<TestActivity> activityController;
     private FragmentController<TestFragment> fragmentController;
     private SupportFragmentController<TestSupportFragment> supportFragmentController;
+    @Mock
+    private DialogInterface.OnClickListener positiveListener;
+    @Mock
+    private DialogInterface.OnClickListener negativeListener;
     @Captor
     private ArgumentCaptor<Integer> integerCaptor;
     @Captor
@@ -67,12 +77,12 @@ public class AppSettingsDialogTest {
     // ------ From Activity ------
 
     @Test
-    public void shouldStartExpectedSettingsDialog_whenBuildingFromActivity() {
+    public void shouldShowExpectedSettingsDialog_whenBuildingFromActivity() {
         new AppSettingsDialog.Builder(spyActivity)
-                .setTitle(TITLE)
-                .setRationale(RATIONALE)
-                .setPositiveButton(POSITIVE)
-                .setNegativeButton(NEGATIVE)
+                .setTitle(android.R.string.dialog_alert_title)
+                .setRationale(android.R.string.unknownName)
+                .setPositiveButton(android.R.string.ok)
+                .setNegativeButton(android.R.string.cancel)
                 .setThemeResId(R.style.Theme_AppCompat)
                 .build()
                 .show();
@@ -88,15 +98,49 @@ public class AppSettingsDialogTest {
         assertThat(shadowIntent.getIntentClass()).isEqualTo(AppSettingsDialogHolderActivity.class);
     }
 
-    // ------ From Fragment ------
-
     @Test
-    public void shouldStartExpectedSettingsDialog_whenBuildingFromFragment() {
-        new AppSettingsDialog.Builder(spyFragment)
+    public void shouldPositiveListener_whenClickingPositiveButtonFromActivity() {
+        AlertDialog alertDialog = new AppSettingsDialog.Builder(spyActivity)
                 .setTitle(TITLE)
                 .setRationale(RATIONALE)
                 .setPositiveButton(POSITIVE)
                 .setNegativeButton(NEGATIVE)
+                .setThemeResId(R.style.Theme_AppCompat)
+                .build()
+                .showDialog(positiveListener, negativeListener);
+        Button positive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positive.performClick();
+
+        verify(positiveListener, times(1))
+                .onClick(any(DialogInterface.class), anyInt());
+    }
+
+    @Test
+    public void shouldNegativeListener_whenClickingPositiveButtonFromActivity() {
+        AlertDialog alertDialog = new AppSettingsDialog.Builder(spyActivity)
+                .setTitle(TITLE)
+                .setRationale(RATIONALE)
+                .setPositiveButton(POSITIVE)
+                .setNegativeButton(NEGATIVE)
+                .setThemeResId(R.style.Theme_AppCompat)
+                .build()
+                .showDialog(positiveListener, negativeListener);
+        Button positive = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        positive.performClick();
+
+        verify(negativeListener, times(1))
+                .onClick(any(DialogInterface.class), anyInt());
+    }
+
+    // ------ From Fragment ------
+
+    @Test
+    public void shouldShowExpectedSettingsDialog_whenBuildingFromFragment() {
+        new AppSettingsDialog.Builder(spyFragment)
+                .setTitle(android.R.string.dialog_alert_title)
+                .setRationale(android.R.string.unknownName)
+                .setPositiveButton(android.R.string.ok)
+                .setNegativeButton(android.R.string.cancel)
                 .setThemeResId(R.style.Theme_AppCompat)
                 .build()
                 .show();
@@ -112,10 +156,44 @@ public class AppSettingsDialogTest {
         assertThat(shadowIntent.getIntentClass()).isEqualTo(AppSettingsDialogHolderActivity.class);
     }
 
+    @Test
+    public void shouldPositiveListener_whenClickingPositiveButtonFromFragment() {
+        AlertDialog alertDialog = new AppSettingsDialog.Builder(spyFragment)
+                .setTitle(TITLE)
+                .setRationale(RATIONALE)
+                .setPositiveButton(POSITIVE)
+                .setNegativeButton(NEGATIVE)
+                .setThemeResId(R.style.Theme_AppCompat)
+                .build()
+                .showDialog(positiveListener, negativeListener);
+        Button positive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positive.performClick();
+
+        verify(positiveListener, times(1))
+                .onClick(any(DialogInterface.class), anyInt());
+    }
+
+    @Test
+    public void shouldNegativeListener_whenClickingPositiveButtonFromFragment() {
+        AlertDialog alertDialog = new AppSettingsDialog.Builder(spyFragment)
+                .setTitle(TITLE)
+                .setRationale(RATIONALE)
+                .setPositiveButton(POSITIVE)
+                .setNegativeButton(NEGATIVE)
+                .setThemeResId(R.style.Theme_AppCompat)
+                .build()
+                .showDialog(positiveListener, negativeListener);
+        Button positive = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        positive.performClick();
+
+        verify(negativeListener, times(1))
+                .onClick(any(DialogInterface.class), anyInt());
+    }
+
     // ------ From Support Fragment ------
 
     @Test
-    public void shouldStartExpectedSettingsDialog_whenBuildingFromSupportFragment() {
+    public void shouldShowExpectedSettingsDialog_whenBuildingFromSupportFragment() {
         new AppSettingsDialog.Builder(spySupportFragment)
                 .setTitle(android.R.string.dialog_alert_title)
                 .setRationale(android.R.string.unknownName)
@@ -134,6 +212,40 @@ public class AppSettingsDialogTest {
         Intent startedIntent = shadowApp.getNextStartedActivity();
         ShadowIntent shadowIntent = shadowOf(startedIntent);
         assertThat(shadowIntent.getIntentClass()).isEqualTo(AppSettingsDialogHolderActivity.class);
+    }
+
+    @Test
+    public void shouldPositiveListener_whenClickingPositiveButtonFromSupportFragment() {
+        AlertDialog alertDialog = new AppSettingsDialog.Builder(spySupportFragment)
+                .setTitle(TITLE)
+                .setRationale(RATIONALE)
+                .setPositiveButton(POSITIVE)
+                .setNegativeButton(NEGATIVE)
+                .setThemeResId(R.style.Theme_AppCompat)
+                .build()
+                .showDialog(positiveListener, negativeListener);
+        Button positive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positive.performClick();
+
+        verify(positiveListener, times(1))
+                .onClick(any(DialogInterface.class), anyInt());
+    }
+
+    @Test
+    public void shouldNegativeListener_whenClickingPositiveButtonFromSupportFragment() {
+        AlertDialog alertDialog = new AppSettingsDialog.Builder(spySupportFragment)
+                .setTitle(TITLE)
+                .setRationale(RATIONALE)
+                .setPositiveButton(POSITIVE)
+                .setNegativeButton(NEGATIVE)
+                .setThemeResId(R.style.Theme_AppCompat)
+                .build()
+                .showDialog(positiveListener, negativeListener);
+        Button positive = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        positive.performClick();
+
+        verify(negativeListener, times(1))
+                .onClick(any(DialogInterface.class), anyInt());
     }
 
     private void setUpActivityAndFragment() {
