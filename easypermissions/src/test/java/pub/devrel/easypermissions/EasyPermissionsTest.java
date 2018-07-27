@@ -603,7 +603,6 @@ public class EasyPermissionsTest {
         assertThat(positiveMessage.getText().toString()).isEqualTo(app.getString(positive));
         TextView negativeMessage = dialog.findViewById(android.R.id.button2);
         assertThat(negativeMessage.getText().toString()).isEqualTo(app.getString(negative));
-
     }
 
     private void assertThatHasExpectedButtonsAndRationale(Dialog dialog, String rationale,
@@ -614,7 +613,6 @@ public class EasyPermissionsTest {
         assertThat(positiveMessage.getText().toString()).isEqualTo(app.getString(positive));
         TextView negativeMessage = dialog.findViewById(android.R.id.button2);
         assertThat(negativeMessage.getText().toString()).isEqualTo(app.getString(negative));
-
     }
 
     private void assertThatHasExpectedButtonsAndRationale(Dialog dialog, String rationale,
@@ -625,7 +623,6 @@ public class EasyPermissionsTest {
         assertThat(positiveMessage.getText().toString()).isEqualTo(positive);
         TextView negativeMessage = dialog.findViewById(android.R.id.button2);
         assertThat(negativeMessage.getText().toString()).isEqualTo(negative);
-
     }
 
     private void assertThatHasExpectedRationale(Dialog dialog, String rationale) {
