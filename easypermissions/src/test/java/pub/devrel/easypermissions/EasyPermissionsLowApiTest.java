@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import pub.devrel.easypermissions.testhelper.TestActivity;
 import pub.devrel.easypermissions.testhelper.TestFragment;
+import pub.devrel.easypermissions.testhelper.TestSupportActivity;
 import pub.devrel.easypermissions.testhelper.TestSupportFragment;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -40,9 +41,11 @@ public class EasyPermissionsLowApiTest {
             Manifest.permission.READ_SMS, Manifest.permission.ACCESS_FINE_LOCATION};
 
     private TestActivity spyActivity;
+    private TestSupportActivity spySupportActivity;
     private TestFragment spyFragment;
     private TestSupportFragment spySupportFragment;
     private ActivityController<TestActivity> activityController;
+    private ActivityController<TestSupportActivity> supportActivityController;
     private FragmentController<TestFragment> fragmentController;
     private SupportFragmentController<TestSupportFragment> supportFragmentController;
     @Captor
@@ -81,6 +84,18 @@ public class EasyPermissionsLowApiTest {
         assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
     }
 
+    // ------ From Support Activity ------
+
+    @Test
+    public void shouldCallbackOnPermissionGranted_whenRequestFromSupportActivity() {
+        EasyPermissions.requestPermissions(spySupportActivity, RATIONALE, TestSupportActivity.REQUEST_CODE, ALL_PERMS);
+
+        verify(spySupportActivity, times(1))
+                .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
+        assertThat(integerCaptor.getValue()).isEqualTo(TestSupportActivity.REQUEST_CODE);
+        assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
+    }
+
     // ------ From Fragment ------
 
     @Test
@@ -108,18 +123,22 @@ public class EasyPermissionsLowApiTest {
     private void setUpActivityAndFragment() {
         activityController = Robolectric.buildActivity(TestActivity.class)
                 .create().start().resume();
+        supportActivityController = Robolectric.buildActivity(TestSupportActivity.class)
+                .create().start().resume();
         fragmentController = Robolectric.buildFragment(TestFragment.class)
                 .create().start().resume();
         supportFragmentController = SupportFragmentController.of(new TestSupportFragment())
                 .create().start().resume();
 
         spyActivity = Mockito.spy(activityController.get());
+        spySupportActivity = Mockito.spy(supportActivityController.get());
         spyFragment = Mockito.spy(fragmentController.get());
         spySupportFragment = Mockito.spy(supportFragmentController.get());
     }
 
     private void tearDownActivityAndFragment() {
         activityController.pause().stop().destroy();
+        supportActivityController.pause().stop().destroy();
         fragmentController.pause().stop().destroy();
         supportFragmentController.pause().stop().destroy();
     }
