@@ -47,6 +47,7 @@ public class AppSettingsDialog implements Parcelable {
     private final String mPositiveButtonText;
     private final String mNegativeButtonText;
     private final int mRequestCode;
+    private final int mIntentFlags;
 
     private Object mActivityOrFragment;
     private Context mContext;
@@ -58,6 +59,7 @@ public class AppSettingsDialog implements Parcelable {
         mPositiveButtonText = in.readString();
         mNegativeButtonText = in.readString();
         mRequestCode = in.readInt();
+        mIntentFlags = in.readInt();
     }
 
     private AppSettingsDialog(@NonNull final Object activityOrFragment,
@@ -66,7 +68,8 @@ public class AppSettingsDialog implements Parcelable {
                               @Nullable String title,
                               @Nullable String positiveButtonText,
                               @Nullable String negativeButtonText,
-                              int requestCode) {
+                              int requestCode,
+                              int intentFlags) {
         setActivityOrFragment(activityOrFragment);
         mThemeResId = themeResId;
         mRationale = rationale;
@@ -74,6 +77,7 @@ public class AppSettingsDialog implements Parcelable {
         mPositiveButtonText = positiveButtonText;
         mNegativeButtonText = negativeButtonText;
         mRequestCode = requestCode;
+        mIntentFlags = intentFlags;
     }
 
     static AppSettingsDialog fromIntent(Intent intent, Activity activity) {
@@ -147,6 +151,11 @@ public class AppSettingsDialog implements Parcelable {
         dest.writeString(mPositiveButtonText);
         dest.writeString(mNegativeButtonText);
         dest.writeInt(mRequestCode);
+        dest.writeInt(mIntentFlags);
+    }
+
+    int getIntentFlags() {
+        return mIntentFlags;
     }
 
     /**
@@ -163,6 +172,7 @@ public class AppSettingsDialog implements Parcelable {
         private String mPositiveButtonText;
         private String mNegativeButtonText;
         private int mRequestCode = -1;
+        private boolean mOpenInNewTask = false;
 
         /**
          * Create a new Builder for an {@link AppSettingsDialog}.
@@ -296,6 +306,17 @@ public class AppSettingsDialog implements Parcelable {
         }
 
         /**
+         * Set whether the settings screen should be opened in a separate task. This is achieved by
+         * setting {@link android.content.Intent#FLAG_ACTIVITY_NEW_TASK#FLAG_ACTIVITY_NEW_TASK} on
+         * the Intent used to open the settings screen.
+         */
+        @NonNull
+        public Builder setOpenInNewTask(boolean openInNewTask) {
+            mOpenInNewTask = openInNewTask;
+            return this;
+        }
+
+        /**
          * Build the {@link AppSettingsDialog} from the specified options. Generally followed by a
          * call to {@link AppSettingsDialog#show()}.
          */
@@ -311,6 +332,11 @@ public class AppSettingsDialog implements Parcelable {
                     mContext.getString(android.R.string.cancel) : mNegativeButtonText;
             mRequestCode = mRequestCode > 0 ? mRequestCode : DEFAULT_SETTINGS_REQ_CODE;
 
+            int intentFlags = 0;
+            if (mOpenInNewTask) {
+                intentFlags |= Intent.FLAG_ACTIVITY_NEW_TASK;
+            }
+
             return new AppSettingsDialog(
                     mActivityOrFragment,
                     mThemeResId,
@@ -318,7 +344,8 @@ public class AppSettingsDialog implements Parcelable {
                     mTitle,
                     mPositiveButtonText,
                     mNegativeButtonText,
-                    mRequestCode);
+                    mRequestCode,
+                    intentFlags);
         }
 
     }
