@@ -17,7 +17,7 @@ public class AppSettingsDialogHolderActivity extends AppCompatActivity implement
     private static final int APP_SETTINGS_RC = 7534;
 
     private AlertDialog mDialog;
-    private boolean mIsOpenInNewTask;
+    private int mIntentFlags;
 
     public static Intent createShowDialogIntent(Context context, AppSettingsDialog dialog) {
         Intent intent = new Intent(context, AppSettingsDialogHolderActivity.class);
@@ -29,7 +29,7 @@ public class AppSettingsDialogHolderActivity extends AppCompatActivity implement
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppSettingsDialog appSettingsDialog = AppSettingsDialog.fromIntent(getIntent(), this);
-        mIsOpenInNewTask = appSettingsDialog.isOpenInNewTask();
+        mIntentFlags = appSettingsDialog.getIntentFlags();
         mDialog = appSettingsDialog.showDialog(this, this);
     }
 
@@ -46,9 +46,7 @@ public class AppSettingsDialogHolderActivity extends AppCompatActivity implement
         if (which == Dialog.BUTTON_POSITIVE) {
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     .setData(Uri.fromParts("package", getPackageName(), null));
-            if (mIsOpenInNewTask) {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }
+            intent.addFlags(mIntentFlags);
             startActivityForResult(intent, APP_SETTINGS_RC);
         } else if (which == Dialog.BUTTON_NEGATIVE) {
             setResult(Activity.RESULT_CANCELED);
