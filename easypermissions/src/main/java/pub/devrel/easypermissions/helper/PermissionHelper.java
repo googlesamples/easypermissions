@@ -39,16 +39,6 @@ public abstract class PermissionHelper<T> {
         return new SupportFragmentPermissionHelper(host);
     }
 
-    @NonNull
-    @Deprecated
-    public static PermissionHelper<android.app.Fragment> newInstance(android.app.Fragment host) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return new LowApiPermissionsHelper<>(host);
-        }
-
-        return new FrameworkFragmentPermissionHelper(host);
-    }
-
     // ============================================================================
     // Public concrete methods
     // ============================================================================

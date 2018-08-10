@@ -14,7 +14,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
-import org.robolectric.android.controller.FragmentController;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.support.v4.SupportFragmentController;
 
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import pub.devrel.easypermissions.testhelper.TestActivity;
 import pub.devrel.easypermissions.testhelper.TestFragment;
 import pub.devrel.easypermissions.testhelper.TestSupportActivity;
-import pub.devrel.easypermissions.testhelper.TestSupportFragment;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.times;
@@ -43,11 +41,9 @@ public class EasyPermissionsLowApiTest {
     private TestActivity spyActivity;
     private TestSupportActivity spySupportActivity;
     private TestFragment spyFragment;
-    private TestSupportFragment spySupportFragment;
     private ActivityController<TestActivity> activityController;
     private ActivityController<TestSupportActivity> supportActivityController;
-    private FragmentController<TestFragment> fragmentController;
-    private SupportFragmentController<TestSupportFragment> supportFragmentController;
+    private SupportFragmentController<TestFragment> supportController;
     @Captor
     private ArgumentCaptor<Integer> integerCaptor;
     @Captor
@@ -96,8 +92,6 @@ public class EasyPermissionsLowApiTest {
         assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
     }
 
-    // ------ From Fragment ------
-
     @Test
     public void shouldCallbackOnPermissionGranted_whenRequestFromFragment() {
         EasyPermissions.requestPermissions(spyFragment, RATIONALE, TestFragment.REQUEST_CODE, ALL_PERMS);
@@ -108,38 +102,22 @@ public class EasyPermissionsLowApiTest {
         assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
     }
 
-    // ------ From Support Fragment ------
-
-    @Test
-    public void shouldCallbackOnPermissionGranted_whenRequestFromSupportedFragment() {
-        EasyPermissions.requestPermissions(spySupportFragment, RATIONALE, TestSupportFragment.REQUEST_CODE, ALL_PERMS);
-
-        verify(spySupportFragment, times(1))
-                .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
-        assertThat(integerCaptor.getValue()).isEqualTo(TestSupportFragment.REQUEST_CODE);
-        assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
-    }
-
     private void setUpActivityAndFragment() {
         activityController = Robolectric.buildActivity(TestActivity.class)
                 .create().start().resume();
         supportActivityController = Robolectric.buildActivity(TestSupportActivity.class)
                 .create().start().resume();
-        fragmentController = Robolectric.buildFragment(TestFragment.class)
-                .create().start().resume();
-        supportFragmentController = SupportFragmentController.of(new TestSupportFragment())
+        supportController = SupportFragmentController.of(new TestFragment())
                 .create().start().resume();
 
         spyActivity = Mockito.spy(activityController.get());
         spySupportActivity = Mockito.spy(supportActivityController.get());
-        spyFragment = Mockito.spy(fragmentController.get());
-        spySupportFragment = Mockito.spy(supportFragmentController.get());
+        spyFragment = Mockito.spy(supportController.get());
     }
 
     private void tearDownActivityAndFragment() {
         activityController.pause().stop().destroy();
         supportActivityController.pause().stop().destroy();
-        fragmentController.pause().stop().destroy();
-        supportFragmentController.pause().stop().destroy();
+        supportController.pause().stop().destroy();
     }
 }
