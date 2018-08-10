@@ -14,7 +14,6 @@ import android.support.annotation.StyleRes;
  * {@link DialogFragment} to display rationale for permission requests when the request comes from
  * a Fragment or Activity that can host a Fragment.
  */
-@Deprecated
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public class RationaleDialogFragment extends DialogFragment {
 
