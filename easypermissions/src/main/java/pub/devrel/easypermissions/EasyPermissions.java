@@ -17,7 +17,9 @@ package pub.devrel.easypermissions;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -49,7 +51,15 @@ public class EasyPermissions {
         void onPermissionsGranted(int requestCode, @NonNull List<String> perms);
 
         void onPermissionsDenied(int requestCode, @NonNull List<String> perms);
+    }
 
+    /**
+     * Callback interface to receive button clicked events of the rationale dialog
+     */
+    public interface RationaleCallbacks {
+        void onRationaleAccepted(int requestCode);
+
+        void onRationaleDenied(int requestCode);
     }
 
     private static final String TAG = "EasyPermissions";
@@ -282,6 +292,12 @@ public class EasyPermissions {
     /**
      * Check if at least one permission in the list of denied permissions has been permanently
      * denied (user clicked "Never ask again").
+     *
+     * <b>Note</b>: Due to a limitation in the information provided by the Android
+     * framework permissions API, this method only works after the permission
+     * has been denied and your app has received the onPermissionsDenied callback.
+     * Otherwise the library cannot distinguish permanent denial from the
+     * "not yet denied" case.
      *
      * @param host              context requesting permissions.
      * @param deniedPermissions list of denied permissions, usually from {@link

@@ -14,3 +14,7 @@ captures/
 
 # Misc
 .DS_Store
+.classpath
+.project
+.settings
+.vscode

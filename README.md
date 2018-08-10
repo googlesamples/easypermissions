@@ -1,4 +1,4 @@
-# EasyPermissions [![Build Status][1]][2] [![Android Weekly][3]][4]
+# EasyPermissions [![Build Status][1]][2] [![Code Coverage][3]][4] [![Android Weekly][5]][6]
 
 EasyPermissions is a wrapper library to simplify basic system permissions logic when targeting
 Android M or higher.
@@ -9,13 +9,9 @@ EasyPermissions is installed by adding the following dependency to your `build.g
 
 ```groovy
 dependencies {
-    implementation 'pub.devrel:easypermissions:1.1.3'
+    implementation 'pub.devrel:easypermissions:1.3.0'
 }
 ```
-
-Note that EasyPermissions depends on Android Support Library `27.0.2` so you will need to use
-`compileSdkVersion 27` or higher. This change should be safe as `compileSdkVersion` does not change
-app behavior.
 
 ## Usage
 
@@ -128,6 +124,12 @@ these permissions from the user and they must be changed in app settings. You ca
 method `EasyPermissions.somePermissionPermanentlyDenied(...)` to display a dialog to the
 user in this situation and direct them to the system setting screen for your app:
 
+**Note**: Due to a limitation in the information provided by the Android
+framework permissions API, the `somePermissionPermanentlyDenied` method only
+works after the permission has been denied and your app has received
+the `onPermissionsDenied` callback. Otherwise the library cannot distinguish
+permanent denial from the "not yet denied" case.
+
 ```java
 @Override
 public void onPermissionsDenied(int requestCode, List<String> perms) {
@@ -152,6 +154,26 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
+### Interacting with the rationale dialog
+
+Implement the `EasyPermissions.RationaleCallbacks` if you want to interact with the rationale dialog.
+
+```java
+@Override
+public void onRationaleAccepted(int requestCode) {
+    // Rationale accpets to request some permissions
+    // ...
+}
+
+@Override
+public void onRationaleDenied(int requestCode) {
+    // Rationale denied to request some permissions
+    // ...
+}
+```
+
+Rationale callbacks don't necessarily imply permission changes. To check for those, see the `EasyPermissions.PermissionCallbacks`.
+
 ## LICENSE
 
 ```
@@ -173,5 +195,7 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 [1]: https://travis-ci.org/googlesamples/easypermissions.svg?branch=master
 [2]: https://travis-ci.org/googlesamples/easypermissions
-[3]: https://img.shields.io/badge/Android%20Weekly-%23185-2CB3E5.svg?style=flat
-[4]: http://androidweekly.net/issues/issue-185
+[3]: https://codecov.io/gh/googlesamples/easypermissions/branch/master/graph/badge.svg
+[4]: https://codecov.io/gh/googlesamples/easypermissions
+[5]: https://img.shields.io/badge/Android%20Weekly-%23185-2CB3E5.svg?style=flat
+[6]: http://androidweekly.net/issues/issue-185
