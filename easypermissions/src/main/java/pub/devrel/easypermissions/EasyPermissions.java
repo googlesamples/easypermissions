@@ -22,7 +22,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Size;
-import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -127,51 +126,6 @@ public class EasyPermissions {
         requestPermissions(
                 new PermissionRequest.Builder(host, requestCode, perms)
                         .setRationale(rationale)
-                        .build());
-    }
-
-    /**
-     * Request a set of permissions, showing rationale if the system requests it.
-     *
-     * @param host           requesting context.
-     * @param rationale      a message explaining why the application needs this set of permissions,
-     *                       will be displayed if the user rejects the request the first time.
-     * @param positiveButton custom text for positive button
-     * @param negativeButton custom text for negative button
-     * @param requestCode    request code to track this request, must be &lt; 256.
-     * @param perms          a set of permissions to be requested.
-     * @see Manifest.permission
-     * @deprecated use {@link #requestPermissions(PermissionRequest)} instead
-     */
-    @Deprecated
-    public static void requestPermissions(
-            @NonNull Activity host, @NonNull String rationale,
-            @StringRes int positiveButton, @StringRes int negativeButton,
-            int requestCode, @Size(min = 1) @NonNull String... perms) {
-        requestPermissions(
-                new PermissionRequest.Builder(host, requestCode, perms)
-                        .setRationale(rationale)
-                        .setPositiveButtonText(positiveButton)
-                        .setNegativeButtonText(negativeButton)
-                        .build());
-    }
-
-    /**
-     * Request permissions from a Support Fragment.
-     *
-     * @see #requestPermissions(Activity, String, int, int, int, String...)
-     * @deprecated use {@link #requestPermissions(PermissionRequest)} instead
-     */
-    @Deprecated
-    public static void requestPermissions(
-            @NonNull Fragment host, @NonNull String rationale,
-            @StringRes int positiveButton, @StringRes int negativeButton,
-            int requestCode, @Size(min = 1) @NonNull String... perms) {
-        requestPermissions(
-                new PermissionRequest.Builder(host, requestCode, perms)
-                        .setRationale(rationale)
-                        .setPositiveButtonText(positiveButton)
-                        .setNegativeButtonText(negativeButton)
                         .build());
     }
 
