@@ -18,7 +18,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
-import org.robolectric.android.controller.FragmentController;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowIntent;
@@ -28,7 +27,6 @@ import java.util.Objects;
 
 import pub.devrel.easypermissions.testhelper.TestActivity;
 import pub.devrel.easypermissions.testhelper.TestFragment;
-import pub.devrel.easypermissions.testhelper.TestSupportFragment;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,10 +47,8 @@ public class AppSettingsDialogTest {
     private ShadowApplication shadowApp;
     private TestActivity spyActivity;
     private TestFragment spyFragment;
-    private TestSupportFragment spySupportFragment;
     private ActivityController<TestActivity> activityController;
-    private FragmentController<TestFragment> fragmentController;
-    private SupportFragmentController<TestSupportFragment> supportFragmentController;
+    private SupportFragmentController<TestFragment> fragmentController;
     @Mock
     private DialogInterface.OnClickListener positiveListener;
     @Mock
@@ -132,10 +128,8 @@ public class AppSettingsDialogTest {
                 .onClick(any(DialogInterface.class), anyInt());
     }
 
-    // ------ From Fragment ------
-
     @Test
-    public void shouldShowExpectedSettingsDialog_whenBuildingFromFragment() {
+    public void shouldShowExpectedSettingsDialog_whenBuildingFromSupportFragment() {
         new AppSettingsDialog.Builder(spyFragment)
                 .setTitle(android.R.string.dialog_alert_title)
                 .setRationale(android.R.string.unknownName)
@@ -157,66 +151,8 @@ public class AppSettingsDialogTest {
     }
 
     @Test
-    public void shouldPositiveListener_whenClickingPositiveButtonFromFragment() {
-        AlertDialog alertDialog = new AppSettingsDialog.Builder(spyFragment)
-                .setTitle(TITLE)
-                .setRationale(RATIONALE)
-                .setPositiveButton(POSITIVE)
-                .setNegativeButton(NEGATIVE)
-                .setThemeResId(R.style.Theme_AppCompat)
-                .build()
-                .showDialog(positiveListener, negativeListener);
-        Button positive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        positive.performClick();
-
-        verify(positiveListener, times(1))
-                .onClick(any(DialogInterface.class), anyInt());
-    }
-
-    @Test
-    public void shouldNegativeListener_whenClickingPositiveButtonFromFragment() {
-        AlertDialog alertDialog = new AppSettingsDialog.Builder(spyFragment)
-                .setTitle(TITLE)
-                .setRationale(RATIONALE)
-                .setPositiveButton(POSITIVE)
-                .setNegativeButton(NEGATIVE)
-                .setThemeResId(R.style.Theme_AppCompat)
-                .build()
-                .showDialog(positiveListener, negativeListener);
-        Button positive = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-        positive.performClick();
-
-        verify(negativeListener, times(1))
-                .onClick(any(DialogInterface.class), anyInt());
-    }
-
-    // ------ From Support Fragment ------
-
-    @Test
-    public void shouldShowExpectedSettingsDialog_whenBuildingFromSupportFragment() {
-        new AppSettingsDialog.Builder(spySupportFragment)
-                .setTitle(android.R.string.dialog_alert_title)
-                .setRationale(android.R.string.unknownName)
-                .setPositiveButton(android.R.string.ok)
-                .setNegativeButton(android.R.string.cancel)
-                .setThemeResId(R.style.Theme_AppCompat)
-                .build()
-                .show();
-
-        verify(spySupportFragment, times(1))
-                .startActivityForResult(intentCaptor.capture(), integerCaptor.capture());
-        assertThat(integerCaptor.getValue()).isEqualTo(DEFAULT_SETTINGS_REQ_CODE);
-        assertThat(Objects.requireNonNull(intentCaptor.getValue().getComponent()).getClassName())
-                .isEqualTo(AppSettingsDialogHolderActivity.class.getName());
-
-        Intent startedIntent = shadowApp.getNextStartedActivity();
-        ShadowIntent shadowIntent = shadowOf(startedIntent);
-        assertThat(shadowIntent.getIntentClass()).isEqualTo(AppSettingsDialogHolderActivity.class);
-    }
-
-    @Test
     public void shouldPositiveListener_whenClickingPositiveButtonFromSupportFragment() {
-        AlertDialog alertDialog = new AppSettingsDialog.Builder(spySupportFragment)
+        AlertDialog alertDialog = new AppSettingsDialog.Builder(spyFragment)
                 .setTitle(TITLE)
                 .setRationale(RATIONALE)
                 .setPositiveButton(POSITIVE)
@@ -233,7 +169,7 @@ public class AppSettingsDialogTest {
 
     @Test
     public void shouldNegativeListener_whenClickingPositiveButtonFromSupportFragment() {
-        AlertDialog alertDialog = new AppSettingsDialog.Builder(spySupportFragment)
+        AlertDialog alertDialog = new AppSettingsDialog.Builder(spyFragment)
                 .setTitle(TITLE)
                 .setRationale(RATIONALE)
                 .setPositiveButton(POSITIVE)
@@ -251,19 +187,15 @@ public class AppSettingsDialogTest {
     private void setUpActivityAndFragment() {
         activityController = Robolectric.buildActivity(TestActivity.class)
                 .create().start().resume();
-        fragmentController = Robolectric.buildFragment(TestFragment.class)
-                .create().start().resume();
-        supportFragmentController = SupportFragmentController.of(new TestSupportFragment())
+        fragmentController = SupportFragmentController.of(new TestFragment())
                 .create().start().resume();
 
         spyActivity = Mockito.spy(activityController.get());
         spyFragment = Mockito.spy(fragmentController.get());
-        spySupportFragment = Mockito.spy(supportFragmentController.get());
     }
 
     private void tearDownActivityAndFragment() {
         activityController.pause().stop().destroy();
         fragmentController.pause().stop().destroy();
-        supportFragmentController.pause().stop().destroy();
     }
 }
