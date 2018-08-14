@@ -189,24 +189,6 @@ public class EasyPermissionsTest {
         assertThatHasExpectedRationale(dialog, RATIONALE);
     }
 
-    @SuppressWarnings("deprecation")
-    @Test
-    public void shouldShowCorrectDialogUsingDeprecated_whenMissingPermissionsAndShowRationaleFromActivity() {
-        grantPermissions(ONE_PERM);
-        showRationale(true, ALL_PERMS);
-
-        EasyPermissions.requestPermissions(spyActivity, RATIONALE, android.R.string.ok,
-                android.R.string.cancel, TestActivity.REQUEST_CODE, ALL_PERMS);
-
-        Fragment dialogFragment = spyActivity.getFragmentManager()
-                .findFragmentByTag(RationaleDialogFragment.TAG);
-        assertThat(dialogFragment).isInstanceOf(RationaleDialogFragment.class);
-
-        Dialog dialog = ((RationaleDialogFragment) dialogFragment).getDialog();
-        assertThatHasExpectedButtonsAndRationale(dialog, RATIONALE,
-                android.R.string.ok, android.R.string.cancel);
-    }
-
     @Test
     public void shouldShowCorrectDialogUsingRequest_whenMissingPermissionsAndShowRationaleFromActivity() {
         grantPermissions(ONE_PERM);
@@ -348,24 +330,6 @@ public class EasyPermissionsTest {
         assertThatHasExpectedRationale(dialog, RATIONALE);
     }
 
-    @SuppressWarnings("deprecation")
-    @Test
-    public void shouldShowCorrectDialogUsingDeprecated_whenMissingPermissionsAndShowRationaleFromSupportActivity() {
-        grantPermissions(ONE_PERM);
-        showRationale(true, ALL_PERMS);
-
-        EasyPermissions.requestPermissions(spySupportActivity, RATIONALE, android.R.string.ok,
-                android.R.string.cancel, TestSupportActivity.REQUEST_CODE, ALL_PERMS);
-
-        android.support.v4.app.Fragment dialogFragment = spySupportActivity.getSupportFragmentManager()
-                .findFragmentByTag(RationaleDialogFragmentCompat.TAG);
-        assertThat(dialogFragment).isInstanceOf(RationaleDialogFragmentCompat.class);
-
-        Dialog dialog = ((RationaleDialogFragmentCompat) dialogFragment).getDialog();
-        assertThatHasExpectedButtonsAndRationale(dialog, RATIONALE,
-                android.R.string.ok, android.R.string.cancel);
-    }
-
     @Test
     public void shouldShowCorrectDialogUsingRequest_whenMissingPermissionsAndShowRationaleFromSupportActivity() {
         grantPermissions(ONE_PERM);
@@ -492,24 +456,6 @@ public class EasyPermissionsTest {
 
         verify(spyFragment, times(1))
                 .requestPermissions(ALL_PERMS, TestFragment.REQUEST_CODE);
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test
-    public void shouldShowCorrectDialogUsingDeprecated_whenMissingPermissionsAndShowRationaleFromFragment() {
-        grantPermissions(ONE_PERM);
-        showRationale(true, ALL_PERMS);
-
-        EasyPermissions.requestPermissions(spyFragment, RATIONALE, android.R.string.ok,
-                android.R.string.cancel, TestFragment.REQUEST_CODE, ALL_PERMS);
-
-        android.support.v4.app.Fragment dialogFragment = spyFragment.getChildFragmentManager()
-                .findFragmentByTag(RationaleDialogFragmentCompat.TAG);
-        assertThat(dialogFragment).isInstanceOf(RationaleDialogFragmentCompat.class);
-
-        Dialog dialog = ((RationaleDialogFragmentCompat) dialogFragment).getDialog();
-        assertThatHasExpectedButtonsAndRationale(dialog, RATIONALE,
-                android.R.string.ok, android.R.string.cancel);
     }
 
     @Test
