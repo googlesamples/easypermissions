@@ -30,7 +30,7 @@ ext {
 
     mavenGroup = 'pub.devrel'
     mavenArtifactId = 'easypermissions'
-    mavenVersion = '1.3.0'
+    mavenVersion = '2.0.0'
 
     bintrayOrg = 'easygoogle'
 
