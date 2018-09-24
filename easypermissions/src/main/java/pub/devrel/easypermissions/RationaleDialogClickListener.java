@@ -3,7 +3,6 @@ package pub.devrel.easypermissions;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.support.v4.app.Fragment;
 
 import java.util.Arrays;
@@ -40,13 +39,7 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
                                  EasyPermissions.PermissionCallbacks callbacks,
                                  EasyPermissions.RationaleCallbacks dialogCallback) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            mHost = dialogFragment.getParentFragment() != null ?
-                    dialogFragment.getParentFragment() :
-                    dialogFragment.getActivity();
-        } else {
-            mHost = dialogFragment.getActivity();
-        }
+        mHost = dialogFragment.getActivity();
 
         mConfig = config;
         mCallbacks = callbacks;
@@ -63,8 +56,6 @@ class RationaleDialogClickListener implements Dialog.OnClickListener {
             }
             if (mHost instanceof Fragment) {
                 PermissionHelper.newInstance((Fragment) mHost).directRequestPermissions(requestCode, permissions);
-            } else if (mHost instanceof android.app.Fragment) {
-                PermissionHelper.newInstance((android.app.Fragment) mHost).directRequestPermissions(requestCode, permissions);
             } else if (mHost instanceof Activity) {
                 PermissionHelper.newInstance((Activity) mHost).directRequestPermissions(requestCode, permissions);
             } else {

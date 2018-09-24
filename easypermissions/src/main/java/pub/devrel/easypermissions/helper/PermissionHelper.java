@@ -6,7 +6,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 
 import java.util.List;
 
@@ -23,8 +23,8 @@ public abstract class PermissionHelper<T> {
             return new LowApiPermissionsHelper<>(host);
         }
 
-        if (host instanceof AppCompatActivity)
-            return new AppCompatActivityPermissionHelper((AppCompatActivity) host);
+        if (host instanceof FragmentActivity)
+            return new FragmentActivityPermissionHelper((FragmentActivity) host);
         else {
             return new ActivityPermissionHelper(host);
         }
@@ -37,15 +37,6 @@ public abstract class PermissionHelper<T> {
         }
 
         return new SupportFragmentPermissionHelper(host);
-    }
-
-    @NonNull
-    public static PermissionHelper<android.app.Fragment> newInstance(android.app.Fragment host) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return new LowApiPermissionsHelper<>(host);
-        }
-
-        return new FrameworkFragmentPermissionHelper(host);
     }
 
     // ============================================================================

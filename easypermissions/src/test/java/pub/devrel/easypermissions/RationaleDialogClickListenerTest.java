@@ -3,8 +3,8 @@ package pub.devrel.easypermissions;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
+import android.support.v4.app.Fragment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,8 +46,6 @@ public class RationaleDialogClickListenerTest {
     private Activity activity;
     @Mock
     private Fragment fragment;
-    @Mock
-    private android.support.v4.app.Fragment supportFragment;
 
     @Before
     public void setUp() {
@@ -87,24 +85,13 @@ public class RationaleDialogClickListenerTest {
 
     @Test
     public void shouldRequestPermissions_whenPositiveButtonFromFragment() {
-        when(dialogFragment.getParentFragment()).thenReturn(fragment);
-
-        RationaleDialogClickListener listener = new RationaleDialogClickListener(dialogFragment, dialogConfig,
-                permissionCallbacks, rationaleCallbacks);
-        listener.onClick(dialogInterface, Dialog.BUTTON_POSITIVE);
-
-        verify(fragment, times(1)).requestPermissions(PERMS, REQUEST_CODE);
-    }
-
-    @Test
-    public void shouldRequestPermissions_whenPositiveButtonFromSupportFragment() {
-        when(dialogFragmentCompat.getParentFragment()).thenReturn(supportFragment);
+        when(dialogFragmentCompat.getParentFragment()).thenReturn(fragment);
 
         RationaleDialogClickListener listener = new RationaleDialogClickListener(dialogFragmentCompat, dialogConfig,
                 permissionCallbacks, rationaleCallbacks);
         listener.onClick(dialogInterface, Dialog.BUTTON_POSITIVE);
 
-        verify(supportFragment, times(1)).requestPermissions(PERMS, REQUEST_CODE);
+        verify(fragment, times(1)).requestPermissions(PERMS, REQUEST_CODE);
     }
 
     @Test

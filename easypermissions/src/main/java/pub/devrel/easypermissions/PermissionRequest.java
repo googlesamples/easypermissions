@@ -151,16 +151,6 @@ public final class PermissionRequest {
         }
 
         /**
-         * @see #Builder(Activity, int, String...)
-         */
-        public Builder(@NonNull android.app.Fragment fragment, int requestCode,
-                       @NonNull @Size(min = 1) String... perms) {
-            mHelper = PermissionHelper.newInstance(fragment);
-            mRequestCode = requestCode;
-            mPerms = perms;
-        }
-
-        /**
          * Set the rationale to display to the user if they don't allow your permissions on the
          * first try. This rationale will be shown as long as the user has denied your permissions
          * at least once, but has not yet permanently denied your permissions. Should the user
