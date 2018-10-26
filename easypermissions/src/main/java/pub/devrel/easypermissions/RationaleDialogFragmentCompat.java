@@ -2,6 +2,7 @@ package pub.devrel.easypermissions;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
@@ -17,9 +18,15 @@ import android.support.v7.app.AppCompatDialogFragment;
 public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
 
     public static final String TAG = "RationaleDialogFragmentCompat";
-
+    private boolean mStateSaved = false;
     private EasyPermissions.PermissionCallbacks mPermissionCallbacks;
     private EasyPermissions.RationaleCallbacks mRationaleCallbacks;
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        mStateSaved = true;
+        super.onSaveInstanceState(outState);
+    }
 
     public static RationaleDialogFragmentCompat newInstance(
             @NonNull String rationaleMsg,
@@ -45,7 +52,13 @@ public class RationaleDialogFragmentCompat extends AppCompatDialogFragment {
      * would otherwise occur.
      */
     public void showAllowingStateLoss(FragmentManager manager, String tag) {
-        if (manager.isStateSaved()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (manager.isStateSaved()) {
+                return;
+            }
+        }
+
+        if (mStateSaved) {
             return;
         }
 
