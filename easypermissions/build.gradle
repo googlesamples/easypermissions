@@ -28,7 +28,6 @@ android {
     }
 }
 
-// Needed in order to process Robolectric tests when running JaCoCo
 junitJacoco {
     includeNoLocationClasses = true
 }
@@ -40,9 +39,9 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.google.truth:truth:0.42'
-    testImplementation 'org.robolectric:robolectric:3.8'
-    testImplementation 'org.robolectric:shadows-supportv4:3.8'
-    testImplementation 'org.mockito:mockito-core:2.18.0'
+    testImplementation 'org.robolectric:robolectric:4.1'
+    testImplementation 'org.robolectric:shadows-supportv4:4.1'
+    testImplementation 'org.mockito:mockito-core:2.23.4'
 }
 
 apply from: 'bintray.gradle'
