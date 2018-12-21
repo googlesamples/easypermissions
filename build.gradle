@@ -2,12 +2,13 @@ buildscript {
     repositories {
         jcenter()
         google()
+        mavenCentral()
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.3'
+        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.13.0'
     }
 }
 
