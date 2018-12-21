@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'jacoco-android'
+apply plugin: "com.vanniktech.android.junit.jacoco"
 
 android {
     compileSdkVersion compileSdk
@@ -28,6 +28,10 @@ android {
     }
 }
 
+junitJacoco {
+    includeNoLocationClasses = true
+}
+
 dependencies {
     api "com.android.support:appcompat-v7:$support_library_version"
     api "com.android.support:support-compat:$support_library_version"
@@ -35,14 +39,9 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.google.truth:truth:0.42'
-    testImplementation 'org.robolectric:robolectric:3.8'
-    testImplementation 'org.robolectric:shadows-supportv4:3.8'
-    testImplementation 'org.mockito:mockito-core:2.18.0'
-}
-
-// Needed in order to process Robolectric tests when running JaCoCo
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
+    testImplementation 'org.robolectric:robolectric:4.1'
+    testImplementation 'org.robolectric:shadows-supportv4:4.1'
+    testImplementation 'org.mockito:mockito-core:2.23.4'
 }
 
 apply from: 'bintray.gradle'
