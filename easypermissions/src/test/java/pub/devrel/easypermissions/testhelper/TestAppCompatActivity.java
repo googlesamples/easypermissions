@@ -11,7 +11,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import pub.devrel.easypermissions.R;
 
-public class TestSupportActivity extends AppCompatActivity
+public class TestAppCompatActivity extends AppCompatActivity
         implements EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
 
     public static final int REQUEST_CODE = 3;
