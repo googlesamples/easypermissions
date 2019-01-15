@@ -28,8 +28,9 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import pub.devrel.easypermissions.testhelper.TestActivity;
+import pub.devrel.easypermissions.testhelper.TestAppCompatActivity;
 import pub.devrel.easypermissions.testhelper.TestFragment;
-import pub.devrel.easypermissions.testhelper.TestSupportActivity;
+import pub.devrel.easypermissions.testhelper.TestSupportFragmentActivity;
 
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.Assert.fail;
@@ -57,10 +58,12 @@ public class EasyPermissionsTest {
             PackageManager.PERMISSION_DENIED, PackageManager.PERMISSION_GRANTED};
     private Application app;
     private TestActivity spyActivity;
-    private TestSupportActivity spySupportActivity;
+    private TestSupportFragmentActivity spySupportFragmentActivity;
+    private TestAppCompatActivity spyAppCompatActivity;
     private TestFragment spyFragment;
     private ActivityController<TestActivity> activityController;
-    private ActivityController<TestSupportActivity> supportActivityController;
+    private ActivityController<TestSupportFragmentActivity> supportFragmentActivityController;
+    private ActivityController<TestAppCompatActivity> appCompatActivityController;
     private SupportFragmentController<TestFragment> fragmentController;
     @Captor
     private ArgumentCaptor<Integer> integerCaptor;
@@ -254,75 +257,75 @@ public class EasyPermissionsTest {
     }
 
     @Test
-    public void shouldCorrectlyCallback_whenOnRequestPermissionResultCalledFromSupportActivity() {
-        EasyPermissions.onRequestPermissionsResult(TestSupportActivity.REQUEST_CODE, ALL_PERMS, SMS_DENIED_RESULT, spySupportActivity);
+    public void shouldCorrectlyCallback_whenOnRequestPermissionResultCalledFromAppCompatActivity() {
+        EasyPermissions.onRequestPermissionsResult(TestAppCompatActivity.REQUEST_CODE, ALL_PERMS, SMS_DENIED_RESULT, spyAppCompatActivity);
 
-        verify(spySupportActivity, times(1))
+        verify(spyAppCompatActivity, times(1))
                 .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
-        assertThat(integerCaptor.getValue()).isEqualTo(TestSupportActivity.REQUEST_CODE);
+        assertThat(integerCaptor.getValue()).isEqualTo(TestAppCompatActivity.REQUEST_CODE);
         assertThat(listCaptor.getValue())
                 .containsAllIn(new ArrayList<>(Collections.singletonList(Manifest.permission.ACCESS_FINE_LOCATION)));
 
-        verify(spySupportActivity, times(1))
+        verify(spyAppCompatActivity, times(1))
                 .onPermissionsDenied(integerCaptor.capture(), listCaptor.capture());
-        assertThat(integerCaptor.getValue()).isEqualTo(TestSupportActivity.REQUEST_CODE);
+        assertThat(integerCaptor.getValue()).isEqualTo(TestAppCompatActivity.REQUEST_CODE);
         assertThat(listCaptor.getValue())
                 .containsAllIn(new ArrayList<>(Collections.singletonList(Manifest.permission.READ_SMS)));
 
-        verify(spySupportActivity, never()).afterPermissionGranted();
+        verify(spyAppCompatActivity, never()).afterPermissionGranted();
     }
 
     @Test
-    public void shouldCallbackOnPermissionGranted_whenRequestAlreadyGrantedPermissionsFromSupportActivity() {
+    public void shouldCallbackOnPermissionGranted_whenRequestAlreadyGrantedPermissionsFromAppCompatActivity() {
         grantPermissions(ALL_PERMS);
 
-        EasyPermissions.requestPermissions(spySupportActivity, RATIONALE, TestSupportActivity.REQUEST_CODE, ALL_PERMS);
+        EasyPermissions.requestPermissions(spyAppCompatActivity, RATIONALE, TestAppCompatActivity.REQUEST_CODE, ALL_PERMS);
 
-        verify(spySupportActivity, times(1))
+        verify(spyAppCompatActivity, times(1))
                 .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
-        verify(spySupportActivity, never()).requestPermissions(any(String[].class), anyInt());
-        assertThat(integerCaptor.getValue()).isEqualTo(TestSupportActivity.REQUEST_CODE);
+        verify(spyAppCompatActivity, never()).requestPermissions(any(String[].class), anyInt());
+        assertThat(integerCaptor.getValue()).isEqualTo(TestAppCompatActivity.REQUEST_CODE);
         assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
     }
 
     @Test
-    public void shouldCallbackAfterPermissionGranted_whenRequestAlreadyGrantedPermissionsFromSupportActivity() {
+    public void shouldCallbackAfterPermissionGranted_whenRequestAlreadyGrantedPermissionsFromAppCompatActivity() {
         grantPermissions(ALL_PERMS);
 
-        EasyPermissions.requestPermissions(spySupportActivity, RATIONALE, TestSupportActivity.REQUEST_CODE, ALL_PERMS);
+        EasyPermissions.requestPermissions(spyAppCompatActivity, RATIONALE, TestAppCompatActivity.REQUEST_CODE, ALL_PERMS);
 
         // Called 2 times because this is a spy and library implementation invokes super classes annotated methods as well
-        verify(spySupportActivity, times(2)).afterPermissionGranted();
+        verify(spyAppCompatActivity, times(2)).afterPermissionGranted();
     }
 
     @Test
-    public void shouldNotCallbackAfterPermissionGranted_whenRequestNotGrantedPermissionsFromSupportActivity() {
+    public void shouldNotCallbackAfterPermissionGranted_whenRequestNotGrantedPermissionsFromAppCompatActivity() {
         grantPermissions(ONE_PERM);
 
-        EasyPermissions.requestPermissions(spySupportActivity, RATIONALE, TestSupportActivity.REQUEST_CODE, ALL_PERMS);
+        EasyPermissions.requestPermissions(spyAppCompatActivity, RATIONALE, TestAppCompatActivity.REQUEST_CODE, ALL_PERMS);
 
-        verify(spySupportActivity, never()).afterPermissionGranted();
+        verify(spyAppCompatActivity, never()).afterPermissionGranted();
     }
 
     @Test
-    public void shouldRequestPermissions_whenMissingPermissionAndNotShowRationaleFromSupportActivity() {
+    public void shouldRequestPermissions_whenMissingPermissionAndNotShowRationaleFromAppCompatActivity() {
         grantPermissions(ONE_PERM);
         showRationale(false, ALL_PERMS);
 
-        EasyPermissions.requestPermissions(spySupportActivity, RATIONALE, TestSupportActivity.REQUEST_CODE, ALL_PERMS);
+        EasyPermissions.requestPermissions(spyAppCompatActivity, RATIONALE, TestAppCompatActivity.REQUEST_CODE, ALL_PERMS);
 
-        verify(spySupportActivity, times(1))
-                .requestPermissions(ALL_PERMS, TestSupportActivity.REQUEST_CODE);
+        verify(spyAppCompatActivity, times(1))
+                .requestPermissions(ALL_PERMS, TestAppCompatActivity.REQUEST_CODE);
     }
 
     @Test
-    public void shouldShowCorrectDialog_whenMissingPermissionsAndShowRationaleFromSupportActivity() {
+    public void shouldShowCorrectDialog_whenMissingPermissionsAndShowRationaleFromAppCompatActivity() {
         grantPermissions(ONE_PERM);
         showRationale(true, ALL_PERMS);
 
-        EasyPermissions.requestPermissions(spySupportActivity, RATIONALE, TestSupportActivity.REQUEST_CODE, ALL_PERMS);
+        EasyPermissions.requestPermissions(spyAppCompatActivity, RATIONALE, TestAppCompatActivity.REQUEST_CODE, ALL_PERMS);
 
-        android.support.v4.app.Fragment dialogFragment = spySupportActivity.getSupportFragmentManager()
+        android.support.v4.app.Fragment dialogFragment = spyAppCompatActivity.getSupportFragmentManager()
                 .findFragmentByTag(RationaleDialogFragmentCompat.TAG);
         assertThat(dialogFragment).isInstanceOf(RationaleDialogFragmentCompat.class);
 
@@ -331,11 +334,26 @@ public class EasyPermissionsTest {
     }
 
     @Test
-    public void shouldShowCorrectDialogUsingRequest_whenMissingPermissionsAndShowRationaleFromSupportActivity() {
+    public void shouldShowCorrectDialog_whenMissingPermissionsAndShowRationaleFromSupportFragmentActivity() {
         grantPermissions(ONE_PERM);
         showRationale(true, ALL_PERMS);
 
-        PermissionRequest request = new PermissionRequest.Builder(spySupportActivity, TestSupportActivity.REQUEST_CODE, ALL_PERMS)
+        EasyPermissions.requestPermissions(spySupportFragmentActivity, RATIONALE, TestSupportFragmentActivity.REQUEST_CODE, ALL_PERMS);
+
+        Fragment dialogFragment = spySupportFragmentActivity.getFragmentManager()
+                .findFragmentByTag(RationaleDialogFragment.TAG);
+        assertThat(dialogFragment).isInstanceOf(RationaleDialogFragment.class);
+
+        Dialog dialog = ((RationaleDialogFragment) dialogFragment).getDialog();
+        assertThatHasExpectedRationale(dialog, RATIONALE);
+    }
+
+    @Test
+    public void shouldShowCorrectDialogUsingRequest_whenMissingPermissionsAndShowRationaleFromAppCompatActivity() {
+        grantPermissions(ONE_PERM);
+        showRationale(true, ALL_PERMS);
+
+        PermissionRequest request = new PermissionRequest.Builder(spyAppCompatActivity, TestAppCompatActivity.REQUEST_CODE, ALL_PERMS)
                 .setPositiveButtonText(android.R.string.ok)
                 .setNegativeButtonText(android.R.string.cancel)
                 .setRationale(android.R.string.unknownName)
@@ -343,7 +361,7 @@ public class EasyPermissionsTest {
                 .build();
         EasyPermissions.requestPermissions(request);
 
-        android.support.v4.app.Fragment dialogFragment = spySupportActivity.getSupportFragmentManager()
+        android.support.v4.app.Fragment dialogFragment = spyAppCompatActivity.getSupportFragmentManager()
                 .findFragmentByTag(RationaleDialogFragmentCompat.TAG);
         assertThat(dialogFragment).isInstanceOf(RationaleDialogFragmentCompat.class);
 
@@ -353,45 +371,45 @@ public class EasyPermissionsTest {
     }
 
     @Test
-    public void shouldHaveSomePermissionDenied_whenShowRationaleFromSupportActivity() {
+    public void shouldHaveSomePermissionDenied_whenShowRationaleFromAppCompatActivity() {
         showRationale(true, ALL_PERMS);
 
-        assertThat(EasyPermissions.somePermissionDenied(spySupportActivity, ALL_PERMS)).isTrue();
+        assertThat(EasyPermissions.somePermissionDenied(spyAppCompatActivity, ALL_PERMS)).isTrue();
     }
 
     @Test
-    public void shouldNotHaveSomePermissionDenied_whenNotShowRationaleFromSupportActivity() {
+    public void shouldNotHaveSomePermissionDenied_whenNotShowRationaleFromAppCompatActivity() {
         showRationale(false, ALL_PERMS);
 
-        assertThat(EasyPermissions.somePermissionDenied(spySupportActivity, ALL_PERMS)).isFalse();
+        assertThat(EasyPermissions.somePermissionDenied(spyAppCompatActivity, ALL_PERMS)).isFalse();
     }
 
     @Test
-    public void shouldHaveSomePermissionPermanentlyDenied_whenNotShowRationaleFromSupportActivity() {
+    public void shouldHaveSomePermissionPermanentlyDenied_whenNotShowRationaleFromAppCompatActivity() {
         showRationale(false, ALL_PERMS);
 
-        assertThat(EasyPermissions.somePermissionPermanentlyDenied(spySupportActivity, Arrays.asList(ALL_PERMS))).isTrue();
+        assertThat(EasyPermissions.somePermissionPermanentlyDenied(spyAppCompatActivity, Arrays.asList(ALL_PERMS))).isTrue();
     }
 
     @Test
-    public void shouldNotHaveSomePermissionPermanentlyDenied_whenShowRationaleFromSupportActivity() {
+    public void shouldNotHaveSomePermissionPermanentlyDenied_whenShowRationaleFromAppCompatActivity() {
         showRationale(true, ALL_PERMS);
 
-        assertThat(EasyPermissions.somePermissionPermanentlyDenied(spySupportActivity, Arrays.asList(ALL_PERMS))).isFalse();
+        assertThat(EasyPermissions.somePermissionPermanentlyDenied(spyAppCompatActivity, Arrays.asList(ALL_PERMS))).isFalse();
     }
 
     @Test
-    public void shouldHavePermissionPermanentlyDenied_whenNotShowRationaleFromSupportActivity() {
+    public void shouldHavePermissionPermanentlyDenied_whenNotShowRationaleFromAppCompatActivity() {
         showRationale(false, Manifest.permission.READ_SMS);
 
-        assertThat(EasyPermissions.permissionPermanentlyDenied(spySupportActivity, Manifest.permission.READ_SMS)).isTrue();
+        assertThat(EasyPermissions.permissionPermanentlyDenied(spyAppCompatActivity, Manifest.permission.READ_SMS)).isTrue();
     }
 
     @Test
-    public void shouldNotHavePermissionPermanentlyDenied_whenShowRationaleFromSupportActivity() {
+    public void shouldNotHavePermissionPermanentlyDenied_whenShowRationaleFromAppCompatActivity() {
         showRationale(true, Manifest.permission.READ_SMS);
 
-        assertThat(EasyPermissions.permissionPermanentlyDenied(spySupportActivity, Manifest.permission.READ_SMS)).isFalse();
+        assertThat(EasyPermissions.permissionPermanentlyDenied(spyAppCompatActivity, Manifest.permission.READ_SMS)).isFalse();
     }
 
     @Test
@@ -575,19 +593,23 @@ public class EasyPermissionsTest {
     private void setUpActivityAndFragment() {
         activityController = Robolectric.buildActivity(TestActivity.class)
                 .create().start().resume();
-        supportActivityController = Robolectric.buildActivity(TestSupportActivity.class)
+        supportFragmentActivityController = Robolectric.buildActivity(TestSupportFragmentActivity.class)
+                .create().start().resume();
+        appCompatActivityController = Robolectric.buildActivity(TestAppCompatActivity.class)
                 .create().start().resume();
         fragmentController = SupportFragmentController.of(new TestFragment())
                 .create().start().resume();
 
         spyActivity = Mockito.spy(activityController.get());
-        spySupportActivity = Mockito.spy(supportActivityController.get());
+        spySupportFragmentActivity = Mockito.spy(supportFragmentActivityController.get());
+        spyAppCompatActivity = Mockito.spy(appCompatActivityController.get());
         spyFragment = Mockito.spy(fragmentController.get());
     }
 
     private void tearDownActivityAndFragment() {
         activityController.pause().stop().destroy();
-        supportActivityController.pause().stop().destroy();
+        supportFragmentActivityController.pause().stop().destroy();
+        appCompatActivityController.pause().stop().destroy();
         fragmentController.pause().stop().destroy();
     }
 
@@ -598,7 +620,8 @@ public class EasyPermissionsTest {
     private void showRationale(boolean show, String... perms) {
         for (String perm : perms) {
             when(spyActivity.shouldShowRequestPermissionRationale(perm)).thenReturn(show);
-            when(spySupportActivity.shouldShowRequestPermissionRationale(perm)).thenReturn(show);
+            when(spySupportFragmentActivity.shouldShowRequestPermissionRationale(perm)).thenReturn(show);
+            when(spyAppCompatActivity.shouldShowRequestPermissionRationale(perm)).thenReturn(show);
             when(spyFragment.shouldShowRequestPermissionRationale(perm)).thenReturn(show);
         }
     }

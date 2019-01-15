@@ -21,7 +21,8 @@ import java.util.ArrayList;
 
 import pub.devrel.easypermissions.testhelper.TestActivity;
 import pub.devrel.easypermissions.testhelper.TestFragment;
-import pub.devrel.easypermissions.testhelper.TestSupportActivity;
+import pub.devrel.easypermissions.testhelper.TestAppCompatActivity;
+import pub.devrel.easypermissions.testhelper.TestSupportFragmentActivity;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.times;
@@ -39,10 +40,12 @@ public class EasyPermissionsLowApiTest {
             Manifest.permission.READ_SMS, Manifest.permission.ACCESS_FINE_LOCATION};
 
     private TestActivity spyActivity;
-    private TestSupportActivity spySupportActivity;
+    private TestSupportFragmentActivity spySupportFragmentActivity;
+    private TestAppCompatActivity spyAppCompatActivity;
     private TestFragment spyFragment;
     private ActivityController<TestActivity> activityController;
-    private ActivityController<TestSupportActivity> supportActivityController;
+    private ActivityController<TestSupportFragmentActivity> supportFragmentActivityController;
+    private ActivityController<TestAppCompatActivity> appCompatActivityController;
     private SupportFragmentController<TestFragment> supportController;
     @Captor
     private ArgumentCaptor<Integer> integerCaptor;
@@ -83,12 +86,23 @@ public class EasyPermissionsLowApiTest {
     // ------ From Support Activity ------
 
     @Test
-    public void shouldCallbackOnPermissionGranted_whenRequestFromSupportActivity() {
-        EasyPermissions.requestPermissions(spySupportActivity, RATIONALE, TestSupportActivity.REQUEST_CODE, ALL_PERMS);
+    public void shouldCallbackOnPermissionGranted_whenRequestFromSupportFragmentActivity() {
+        EasyPermissions.requestPermissions(spySupportFragmentActivity, RATIONALE, TestSupportFragmentActivity.REQUEST_CODE, ALL_PERMS);
 
-        verify(spySupportActivity, times(1))
+        verify(spySupportFragmentActivity, times(1))
                 .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
-        assertThat(integerCaptor.getValue()).isEqualTo(TestSupportActivity.REQUEST_CODE);
+        assertThat(integerCaptor.getValue()).isEqualTo(TestSupportFragmentActivity.REQUEST_CODE);
+        assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
+    }
+
+
+    @Test
+    public void shouldCallbackOnPermissionGranted_whenRequestFromAppCompatActivity() {
+        EasyPermissions.requestPermissions(spyAppCompatActivity, RATIONALE, TestAppCompatActivity.REQUEST_CODE, ALL_PERMS);
+
+        verify(spyAppCompatActivity, times(1))
+                .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
+        assertThat(integerCaptor.getValue()).isEqualTo(TestAppCompatActivity.REQUEST_CODE);
         assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
     }
 
@@ -105,19 +119,22 @@ public class EasyPermissionsLowApiTest {
     private void setUpActivityAndFragment() {
         activityController = Robolectric.buildActivity(TestActivity.class)
                 .create().start().resume();
-        supportActivityController = Robolectric.buildActivity(TestSupportActivity.class)
+        supportFragmentActivityController = Robolectric.buildActivity(TestSupportFragmentActivity.class)
+                .create().start().resume();
+        appCompatActivityController = Robolectric.buildActivity(TestAppCompatActivity.class)
                 .create().start().resume();
         supportController = SupportFragmentController.of(new TestFragment())
                 .create().start().resume();
 
         spyActivity = Mockito.spy(activityController.get());
-        spySupportActivity = Mockito.spy(supportActivityController.get());
+        spySupportFragmentActivity = Mockito.spy(supportFragmentActivityController.get());
+        spyAppCompatActivity = Mockito.spy(appCompatActivityController.get());
         spyFragment = Mockito.spy(supportController.get());
     }
 
     private void tearDownActivityAndFragment() {
         activityController.pause().stop().destroy();
-        supportActivityController.pause().stop().destroy();
+        appCompatActivityController.pause().stop().destroy();
         supportController.pause().stop().destroy();
     }
 }
