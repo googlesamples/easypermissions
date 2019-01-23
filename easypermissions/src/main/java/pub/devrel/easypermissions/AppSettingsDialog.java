@@ -120,7 +120,7 @@ public class AppSettingsDialog implements Parcelable {
     AlertDialog showDialog(DialogInterface.OnClickListener positiveListener,
                            DialogInterface.OnClickListener negativeListener) {
         AlertDialog.Builder builder;
-        if (mThemeResId > 0) {
+        if (mThemeResId != -1) {
             builder = new AlertDialog.Builder(mContext, mThemeResId);
         } else {
             builder = new AlertDialog.Builder(mContext);
