@@ -7,7 +7,6 @@ import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.widget.TextView;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,10 +14,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
 
@@ -26,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import androidx.test.core.app.ApplicationProvider;
+import pub.devrel.easypermissions.testhelper.ActivityController;
 import pub.devrel.easypermissions.testhelper.FragmentController;
 import pub.devrel.easypermissions.testhelper.TestActivity;
 import pub.devrel.easypermissions.testhelper.TestAppCompatActivity;
@@ -40,6 +38,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.robolectric.Shadows.shadowOf;
 
 /**
  * Basic Robolectric tests for {@link pub.devrel.easypermissions.EasyPermissions}.
@@ -56,6 +55,8 @@ public class EasyPermissionsTest {
             Manifest.permission.READ_SMS, Manifest.permission.ACCESS_FINE_LOCATION};
     private static final int[] SMS_DENIED_RESULT = new int[]{
             PackageManager.PERMISSION_DENIED, PackageManager.PERMISSION_GRANTED};
+
+    private ShadowApplication shadowApp;
     private Application app;
     private TestActivity spyActivity;
     private TestSupportFragmentActivity spySupportFragmentActivity;
@@ -73,13 +74,18 @@ public class EasyPermissionsTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        setUpActivityAndFragment();
-        app = RuntimeEnvironment.application;
-    }
+        app = ApplicationProvider.getApplicationContext();
+        shadowApp = shadowOf(app);
 
-    @After
-    public void tearDown() {
-        tearDownActivityAndFragment();
+        activityController = new ActivityController<>(TestActivity.class);
+        supportFragmentActivityController = new ActivityController<>(TestSupportFragmentActivity.class);
+        appCompatActivityController = new ActivityController<>(TestAppCompatActivity.class);
+        fragmentController = new FragmentController<>(TestFragment.class);
+
+        spyActivity = Mockito.spy(activityController.resume());
+        spySupportFragmentActivity = Mockito.spy(supportFragmentActivityController.resume());
+        spyAppCompatActivity = Mockito.spy(appCompatActivityController.resume());
+        spyFragment = Mockito.spy(fragmentController.resume());
     }
 
     // ------ General tests ------
@@ -91,13 +97,13 @@ public class EasyPermissionsTest {
 
     @Test
     public void shouldNotHavePermissions_whenNotAllPermissionsGranted() {
-        ShadowApplication.getInstance().grantPermissions(ONE_PERM);
+        shadowApp.grantPermissions(ONE_PERM);
         assertThat(EasyPermissions.hasPermissions(app, ALL_PERMS)).isFalse();
     }
 
     @Test
     public void shouldHavePermissions_whenAllPermissionsGranted() {
-        ShadowApplication.getInstance().grantPermissions(ALL_PERMS);
+        shadowApp.grantPermissions(ALL_PERMS);
         assertThat(EasyPermissions.hasPermissions(app, ALL_PERMS)).isTrue();
     }
 
@@ -590,31 +596,8 @@ public class EasyPermissionsTest {
         assertThat(dialogMessage.getText().toString()).isEqualTo(rationale);
     }
 
-    private void setUpActivityAndFragment() {
-        activityController = Robolectric.buildActivity(TestActivity.class)
-                .create().start().resume();
-        supportFragmentActivityController = Robolectric.buildActivity(TestSupportFragmentActivity.class)
-                .create().start().resume();
-        appCompatActivityController = Robolectric.buildActivity(TestAppCompatActivity.class)
-                .create().start().resume();
-        fragmentController = new FragmentController<>(TestFragment.class);
-
-
-        spyActivity = Mockito.spy(activityController.get());
-        spySupportFragmentActivity = Mockito.spy(supportFragmentActivityController.get());
-        spyAppCompatActivity = Mockito.spy(appCompatActivityController.get());
-        spyFragment = Mockito.spy(fragmentController.resume());
-    }
-
-    private void tearDownActivityAndFragment() {
-        activityController.pause().stop().destroy();
-        supportFragmentActivityController.pause().stop().destroy();
-        appCompatActivityController.pause().stop().destroy();
-        fragmentController.reset();
-    }
-
     private void grantPermissions(String[] perms) {
-        ShadowApplication.getInstance().grantPermissions(perms);
+        shadowApp.grantPermissions(perms);
     }
 
     private void showRationale(boolean show, String... perms) {
