@@ -4,7 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import org.junit.Before;
 import org.junit.Test;

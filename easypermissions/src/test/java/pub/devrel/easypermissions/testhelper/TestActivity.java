@@ -1,10 +1,10 @@
 package pub.devrel.easypermissions.testhelper;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 

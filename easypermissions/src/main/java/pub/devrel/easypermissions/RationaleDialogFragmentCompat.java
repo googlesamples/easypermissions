@@ -3,11 +3,11 @@ package pub.devrel.easypermissions;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
-import android.support.annotation.StyleRes;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatDialogFragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.StyleRes;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AppCompatDialogFragment;
 
 /**
  * {@link AppCompatDialogFragment} to display rationale for permission requests when the request

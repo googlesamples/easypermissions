@@ -6,9 +6,9 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
-import android.support.annotation.StyleRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.StyleRes;
 
 /**
  * {@link DialogFragment} to display rationale for permission requests when the request comes from

@@ -21,12 +21,12 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
-import org.robolectric.shadows.support.v4.SupportFragmentController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import pub.devrel.easypermissions.testhelper.FragmentController;
 import pub.devrel.easypermissions.testhelper.TestActivity;
 import pub.devrel.easypermissions.testhelper.TestAppCompatActivity;
 import pub.devrel.easypermissions.testhelper.TestFragment;
@@ -61,10 +61,10 @@ public class EasyPermissionsTest {
     private TestSupportFragmentActivity spySupportFragmentActivity;
     private TestAppCompatActivity spyAppCompatActivity;
     private TestFragment spyFragment;
+    private FragmentController<TestFragment> fragmentController;
     private ActivityController<TestActivity> activityController;
     private ActivityController<TestSupportFragmentActivity> supportFragmentActivityController;
     private ActivityController<TestAppCompatActivity> appCompatActivityController;
-    private SupportFragmentController<TestFragment> fragmentController;
     @Captor
     private ArgumentCaptor<Integer> integerCaptor;
     @Captor
@@ -325,7 +325,7 @@ public class EasyPermissionsTest {
 
         EasyPermissions.requestPermissions(spyAppCompatActivity, RATIONALE, TestAppCompatActivity.REQUEST_CODE, ALL_PERMS);
 
-        android.support.v4.app.Fragment dialogFragment = spyAppCompatActivity.getSupportFragmentManager()
+        androidx.fragment.app.Fragment dialogFragment = spyAppCompatActivity.getSupportFragmentManager()
                 .findFragmentByTag(RationaleDialogFragmentCompat.TAG);
         assertThat(dialogFragment).isInstanceOf(RationaleDialogFragmentCompat.class);
 
@@ -361,7 +361,7 @@ public class EasyPermissionsTest {
                 .build();
         EasyPermissions.requestPermissions(request);
 
-        android.support.v4.app.Fragment dialogFragment = spyAppCompatActivity.getSupportFragmentManager()
+        androidx.fragment.app.Fragment dialogFragment = spyAppCompatActivity.getSupportFragmentManager()
                 .findFragmentByTag(RationaleDialogFragmentCompat.TAG);
         assertThat(dialogFragment).isInstanceOf(RationaleDialogFragmentCompat.class);
 
@@ -483,7 +483,7 @@ public class EasyPermissionsTest {
 
         EasyPermissions.requestPermissions(spyFragment, RATIONALE, TestFragment.REQUEST_CODE, ALL_PERMS);
 
-        android.support.v4.app.Fragment dialogFragment = spyFragment.getChildFragmentManager()
+        androidx.fragment.app.Fragment dialogFragment = spyFragment.getChildFragmentManager()
                 .findFragmentByTag(RationaleDialogFragmentCompat.TAG);
         assertThat(dialogFragment).isInstanceOf(RationaleDialogFragmentCompat.class);
 
@@ -504,7 +504,7 @@ public class EasyPermissionsTest {
                 .build();
         EasyPermissions.requestPermissions(request);
 
-        android.support.v4.app.Fragment dialogFragment = spyFragment.getChildFragmentManager()
+        androidx.fragment.app.Fragment dialogFragment = spyFragment.getChildFragmentManager()
                 .findFragmentByTag(RationaleDialogFragmentCompat.TAG);
         assertThat(dialogFragment).isInstanceOf(RationaleDialogFragmentCompat.class);
 
@@ -597,20 +597,20 @@ public class EasyPermissionsTest {
                 .create().start().resume();
         appCompatActivityController = Robolectric.buildActivity(TestAppCompatActivity.class)
                 .create().start().resume();
-        fragmentController = SupportFragmentController.of(new TestFragment())
-                .create().start().resume();
+        fragmentController = new FragmentController<>(TestFragment.class);
+
 
         spyActivity = Mockito.spy(activityController.get());
         spySupportFragmentActivity = Mockito.spy(supportFragmentActivityController.get());
         spyAppCompatActivity = Mockito.spy(appCompatActivityController.get());
-        spyFragment = Mockito.spy(fragmentController.get());
+        spyFragment = Mockito.spy(fragmentController.resume());
     }
 
     private void tearDownActivityAndFragment() {
         activityController.pause().stop().destroy();
         supportFragmentActivityController.pause().stop().destroy();
         appCompatActivityController.pause().stop().destroy();
-        fragmentController.pause().stop().destroy();
+        fragmentController.reset();
     }
 
     private void grantPermissions(String[] perms) {

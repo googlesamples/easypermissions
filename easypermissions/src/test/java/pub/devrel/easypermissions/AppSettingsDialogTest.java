@@ -2,7 +2,6 @@ package pub.devrel.easypermissions;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.widget.Button;
 
 import org.junit.After;
@@ -21,10 +20,11 @@ import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowIntent;
-import org.robolectric.shadows.support.v4.SupportFragmentController;
 
 import java.util.Objects;
 
+import androidx.appcompat.app.AlertDialog;
+import pub.devrel.easypermissions.testhelper.FragmentController;
 import pub.devrel.easypermissions.testhelper.TestActivity;
 import pub.devrel.easypermissions.testhelper.TestFragment;
 
@@ -47,8 +47,8 @@ public class AppSettingsDialogTest {
     private ShadowApplication shadowApp;
     private TestActivity spyActivity;
     private TestFragment spyFragment;
+    private FragmentController<TestFragment> fragmentController;
     private ActivityController<TestActivity> activityController;
-    private SupportFragmentController<TestFragment> fragmentController;
     @Mock
     private DialogInterface.OnClickListener positiveListener;
     @Mock
@@ -187,15 +187,14 @@ public class AppSettingsDialogTest {
     private void setUpActivityAndFragment() {
         activityController = Robolectric.buildActivity(TestActivity.class)
                 .create().start().resume();
-        fragmentController = SupportFragmentController.of(new TestFragment())
-                .create().start().resume();
+        fragmentController = new FragmentController<>(TestFragment.class);
 
         spyActivity = Mockito.spy(activityController.get());
-        spyFragment = Mockito.spy(fragmentController.get());
+        spyFragment = Mockito.spy(fragmentController.resume());
     }
 
     private void tearDownActivityAndFragment() {
         activityController.pause().stop().destroy();
-        fragmentController.pause().stop().destroy();
+//        fragmentController.pause().stop().destroy();
     }
 }
