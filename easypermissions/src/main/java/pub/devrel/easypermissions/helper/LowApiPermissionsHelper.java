@@ -2,9 +2,9 @@ package pub.devrel.easypermissions.helper;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.StyleRes;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
+import androidx.fragment.app.Fragment;
 
 /**
  * Permissions helper for apps built against API < 23, which do not need runtime permissions.

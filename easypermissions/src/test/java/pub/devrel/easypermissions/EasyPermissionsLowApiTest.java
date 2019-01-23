@@ -2,7 +2,6 @@ package pub.devrel.easypermissions;
 
 import android.Manifest;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,18 +9,17 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.support.v4.SupportFragmentController;
 
 import java.util.ArrayList;
 
+import androidx.test.core.app.ApplicationProvider;
+import pub.devrel.easypermissions.testhelper.ActivityController;
+import pub.devrel.easypermissions.testhelper.FragmentController;
 import pub.devrel.easypermissions.testhelper.TestActivity;
-import pub.devrel.easypermissions.testhelper.TestFragment;
 import pub.devrel.easypermissions.testhelper.TestAppCompatActivity;
+import pub.devrel.easypermissions.testhelper.TestFragment;
 import pub.devrel.easypermissions.testhelper.TestSupportFragmentActivity;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -43,10 +41,10 @@ public class EasyPermissionsLowApiTest {
     private TestSupportFragmentActivity spySupportFragmentActivity;
     private TestAppCompatActivity spyAppCompatActivity;
     private TestFragment spyFragment;
+    private FragmentController<TestFragment> fragmentController;
     private ActivityController<TestActivity> activityController;
     private ActivityController<TestSupportFragmentActivity> supportFragmentActivityController;
     private ActivityController<TestAppCompatActivity> appCompatActivityController;
-    private SupportFragmentController<TestFragment> supportController;
     @Captor
     private ArgumentCaptor<Integer> integerCaptor;
     @Captor
@@ -55,19 +53,23 @@ public class EasyPermissionsLowApiTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        setUpActivityAndFragment();
-    }
 
-    @After
-    public void tearDown() {
-        tearDownActivityAndFragment();
+        activityController = new ActivityController<>(TestActivity.class);
+        supportFragmentActivityController = new ActivityController<>(TestSupportFragmentActivity.class);
+        appCompatActivityController = new ActivityController<>(TestAppCompatActivity.class);
+        fragmentController = new FragmentController<>(TestFragment.class);
+
+        spyActivity = Mockito.spy(activityController.resume());
+        spySupportFragmentActivity = Mockito.spy(supportFragmentActivityController.resume());
+        spyAppCompatActivity = Mockito.spy(appCompatActivityController.resume());
+        spyFragment = Mockito.spy(fragmentController.resume());
     }
 
     // ------ General tests ------
 
     @Test
     public void shouldHavePermission_whenHasPermissionsBeforeMarshmallow() {
-        assertThat(EasyPermissions.hasPermissions(RuntimeEnvironment.application,
+        assertThat(EasyPermissions.hasPermissions(ApplicationProvider.getApplicationContext(),
                 Manifest.permission.ACCESS_COARSE_LOCATION)).isTrue();
     }
 
@@ -116,25 +118,4 @@ public class EasyPermissionsLowApiTest {
         assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
     }
 
-    private void setUpActivityAndFragment() {
-        activityController = Robolectric.buildActivity(TestActivity.class)
-                .create().start().resume();
-        supportFragmentActivityController = Robolectric.buildActivity(TestSupportFragmentActivity.class)
-                .create().start().resume();
-        appCompatActivityController = Robolectric.buildActivity(TestAppCompatActivity.class)
-                .create().start().resume();
-        supportController = SupportFragmentController.of(new TestFragment())
-                .create().start().resume();
-
-        spyActivity = Mockito.spy(activityController.get());
-        spySupportFragmentActivity = Mockito.spy(supportFragmentActivityController.get());
-        spyAppCompatActivity = Mockito.spy(appCompatActivityController.get());
-        spyFragment = Mockito.spy(supportController.get());
-    }
-
-    private void tearDownActivityAndFragment() {
-        activityController.pause().stop().destroy();
-        appCompatActivityController.pause().stop().destroy();
-        supportController.pause().stop().destroy();
-    }
 }

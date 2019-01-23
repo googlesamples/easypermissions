@@ -1,11 +1,10 @@
 package pub.devrel.easypermissions;
 
+import android.app.Application;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.widget.Button;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,17 +13,17 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowIntent;
-import org.robolectric.shadows.support.v4.SupportFragmentController;
 
 import java.util.Objects;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.test.core.app.ApplicationProvider;
+import pub.devrel.easypermissions.testhelper.ActivityController;
+import pub.devrel.easypermissions.testhelper.FragmentController;
 import pub.devrel.easypermissions.testhelper.TestActivity;
 import pub.devrel.easypermissions.testhelper.TestFragment;
 
@@ -47,8 +46,8 @@ public class AppSettingsDialogTest {
     private ShadowApplication shadowApp;
     private TestActivity spyActivity;
     private TestFragment spyFragment;
+    private FragmentController<TestFragment> fragmentController;
     private ActivityController<TestActivity> activityController;
-    private SupportFragmentController<TestFragment> fragmentController;
     @Mock
     private DialogInterface.OnClickListener positiveListener;
     @Mock
@@ -61,13 +60,13 @@ public class AppSettingsDialogTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        shadowApp = shadowOf(RuntimeEnvironment.application);
-        setUpActivityAndFragment();
-    }
+        shadowApp = shadowOf((Application) ApplicationProvider.getApplicationContext());
 
-    @After
-    public void tearDown() {
-        tearDownActivityAndFragment();
+        activityController = new ActivityController<>(TestActivity.class);
+        fragmentController = new FragmentController<>(TestFragment.class);
+
+        spyActivity = Mockito.spy(activityController.resume());
+        spyFragment = Mockito.spy(fragmentController.resume());
     }
 
     // ------ From Activity ------
@@ -184,18 +183,4 @@ public class AppSettingsDialogTest {
                 .onClick(any(DialogInterface.class), anyInt());
     }
 
-    private void setUpActivityAndFragment() {
-        activityController = Robolectric.buildActivity(TestActivity.class)
-                .create().start().resume();
-        fragmentController = SupportFragmentController.of(new TestFragment())
-                .create().start().resume();
-
-        spyActivity = Mockito.spy(activityController.get());
-        spyFragment = Mockito.spy(fragmentController.get());
-    }
-
-    private void tearDownActivityAndFragment() {
-        activityController.pause().stop().destroy();
-        fragmentController.pause().stop().destroy();
-    }
 }

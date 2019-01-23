@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.13.0'
     }
@@ -31,11 +31,9 @@ ext {
 
     mavenGroup = 'pub.devrel'
     mavenArtifactId = 'easypermissions'
-    mavenVersion = '2.0.1'
+    mavenVersion = '3.0.0'
 
     bintrayOrg = 'easygoogle'
-
-    support_library_version = '28.0.0'
 
     compileSdk = 28
     targetSdk = 28
