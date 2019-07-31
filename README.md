@@ -165,7 +165,7 @@ Implement the `EasyPermissions.RationaleCallbacks` if you want to interact with 
 ```java
 @Override
 public void onRationaleAccepted(int requestCode) {
-    // Rationale accpets to request some permissions
+    // Rationale accepted to request some permissions
     // ...
 }
 
