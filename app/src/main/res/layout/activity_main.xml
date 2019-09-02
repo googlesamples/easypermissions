@@ -14,13 +14,19 @@
         android:id="@+id/button_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/camera" />
+        android:text="@string/permission_camera_text" />
+
+    <Button
+        android:id="@+id/button_storage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/permission_storage_text" />
 
     <Button
         android:id="@+id/button_location_and_contacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/location_and_contacts" />
+        android:text="@string/permission_location_and_contacts_text" />
 
     <fragment
         android:id="@+id/fragment"
