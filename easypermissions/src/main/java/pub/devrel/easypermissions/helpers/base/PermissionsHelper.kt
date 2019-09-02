@@ -12,7 +12,7 @@ import pub.devrel.easypermissions.helpers.FragmentPermissionsHelper
 /**
  * Delegate class to make permission calls based on the 'host' (Fragment, Activity, etc).
  */
-abstract class BasePermissionsHelper<T>(val host: T) {
+abstract class PermissionsHelper<T>(val host: T) {
 
     abstract fun getContext(): Context?
 
@@ -79,13 +79,13 @@ abstract class BasePermissionsHelper<T>(val host: T) {
 
     companion object {
 
-        fun newInstance(host: Activity): BasePermissionsHelper<out Activity> {
+        fun newInstance(host: Activity): PermissionsHelper<out Activity> {
             return (host as? AppCompatActivity)?.let {
                 AppCompatActivityPermissionsHelper(it)
             } ?: ActivityPermissionsHelper(host)
         }
 
-        fun newInstance(host: Fragment): BasePermissionsHelper<Fragment> {
+        fun newInstance(host: Fragment): PermissionsHelper<Fragment> {
             return FragmentPermissionsHelper(host)
         }
     }

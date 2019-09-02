@@ -1,4 +1,4 @@
-# EasyPermissions [![Build Status][1]][2] [![Code Coverage][3]][4] [![Android Weekly][5]][6]
+# EasyPermissions [![Build Status][1]][2] [![Code Coverage][3]][4] [![Android API][5]][6] [![Apache License][7]][8]
 
 EasyPermissions is a wrapper library to simplify basic system permissions logic when targeting
 Android M or higher.

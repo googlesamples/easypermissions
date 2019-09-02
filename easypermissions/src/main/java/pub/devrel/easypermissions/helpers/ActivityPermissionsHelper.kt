@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.annotation.StyleRes
 import androidx.core.app.ActivityCompat
 import pub.devrel.easypermissions.RationaleDialogFragment
-import pub.devrel.easypermissions.helpers.base.BasePermissionsHelper
+import pub.devrel.easypermissions.helpers.base.PermissionsHelper
 
 private const val TAG = "ActivityPH"
 
@@ -15,7 +15,7 @@ private const val TAG = "ActivityPH"
  */
 internal class ActivityPermissionsHelper(
     host: Activity
-): BasePermissionsHelper<Activity>(host) {
+): PermissionsHelper<Activity>(host) {
 
     override fun directRequestPermissions(requestCode: Int, vararg perms: String) {
         ActivityCompat.requestPermissions(host, perms, requestCode)
