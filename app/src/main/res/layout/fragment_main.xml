@@ -8,6 +8,7 @@
         android:id="@+id/button_sms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/permission_sms_text" />
+        android:text="@string/permission_sms_text"
+        android:onClick="onClickRequestPermissionSMSButton"/>
 
 </FrameLayout>

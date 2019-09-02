@@ -20,35 +20,32 @@ import android.Manifest.permission.*
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
 private const val TAG = "MainActivity"
-private const val RC_CAMERA_PERM = 123
-private const val RC_LOCATION_CONTACTS_PERM = 124
+private const val REQUEST_CODE_CAMERA_PERMISSION = 123
+private const val REQUEST_CODE_STORAGE_PERMISSION = 124
+private const val REQUEST_CODE_LOCATION_AND_CONTACTS_PERMISSION = 125
 
 private val LOCATION_AND_CONTACTS = arrayOf(ACCESS_FINE_LOCATION, READ_CONTACTS)
 
-class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
+@Suppress("UNUSED_PARAMETER")
+class MainActivity : AppCompatActivity(),
+    EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
+
+    // ============================================================================================
+    //  Activity Lifecycle
+    // ============================================================================================
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        // Button click listener that will request one permission.
-        button_camera.setOnClickListener {
-            cameraTask()
-        }
-
-        // Button click listener that will request two permissions.
-        button_location_and_contacts.setOnClickListener {
-            locationAndContactsTask()
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -61,19 +58,23 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, E
             // Do something after user returned from app settings screen, like showing a Toast.
             Toast.makeText(
                 this,
-                getString(R.string.returned_from_app_settings_to_activity,
+                getString(
+                    R.string.returned_from_app_settings_to_activity,
                     if (hasCameraPermission()) yes else no,
                     if (hasLocationAndContactsPermissions()) yes else no,
                     if (hasSmsPermission()) yes else no,
-                    if (hasStoragePermission()) yes else no),
+                    if (hasStoragePermission()) yes else no
+                ),
                 LENGTH_LONG
             ).show()
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         // EasyPermissions handles the request result.
@@ -110,41 +111,55 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, E
         Log.d(TAG, getString(R.string.log_permission_rationale_denied, requestCode))
     }
 
-    @AfterPermissionGranted(RC_CAMERA_PERM)
-    fun cameraTask() {
+    // ============================================================================================
+    //  Implementation OnClick
+    // ============================================================================================
+
+    @AfterPermissionGranted(REQUEST_CODE_CAMERA_PERMISSION)
+    fun onClickRequestPermissionCameraButton(view: View) {
         if (hasCameraPermission()) {
-            // Have permission, do the thing!
-            Toast.makeText(
-                this,
-                "TODO: Camera things",
-                LENGTH_LONG
-            ).show()
+            // Have permission, do things!
+            Toast.makeText(this, "TODO: Camera things", LENGTH_LONG).show()
         } else {
             // Ask for one permission
             EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.permission_camera_rationale_message),
-                    RC_CAMERA_PERM,
-                    CAMERA)
+                this,
+                getString(R.string.permission_camera_rationale_message),
+                REQUEST_CODE_CAMERA_PERMISSION,
+                CAMERA
+            )
         }
     }
 
-    @AfterPermissionGranted(RC_LOCATION_CONTACTS_PERM)
-    fun locationAndContactsTask() {
-        if (hasLocationAndContactsPermissions()) {
-            // Have permissions, do the thing!
-            Toast.makeText(
+    @AfterPermissionGranted(REQUEST_CODE_STORAGE_PERMISSION)
+    fun onClickRequestPermissionStorageButton(view: View) {
+        if (hasCameraPermission()) {
+            // Have permission, do things!
+            Toast.makeText(this, "TODO: Storage things", LENGTH_LONG).show()
+        } else {
+            // Ask for one permission
+            EasyPermissions.requestPermissions(
                 this,
-                "TODO: Location and Contacts things",
-                LENGTH_LONG
-            ).show()
+                getString(R.string.permission_storage_rationale_message),
+                REQUEST_CODE_STORAGE_PERMISSION,
+                WRITE_EXTERNAL_STORAGE
+            )
+        }
+    }
+
+    @AfterPermissionGranted(REQUEST_CODE_LOCATION_AND_CONTACTS_PERMISSION)
+    fun onClickRequestPermissionLocationAndContactsButton(view: View) {
+        if (hasLocationAndContactsPermissions()) {
+            // Have permissions, do things!
+            Toast.makeText(this, "TODO: Location and Contacts things", LENGTH_LONG).show()
         } else {
             // Ask for both permissions
             EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.permission_location_and_contacts_rationale_message),
-                RC_LOCATION_CONTACTS_PERM,
-                *LOCATION_AND_CONTACTS)
+                REQUEST_CODE_LOCATION_AND_CONTACTS_PERMISSION,
+                *LOCATION_AND_CONTACTS
+            )
         }
     }
 

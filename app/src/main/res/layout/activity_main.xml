@@ -14,19 +14,22 @@
         android:id="@+id/button_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/permission_camera_text" />
+        android:text="@string/permission_camera_text"
+        android:onClick="onClickRequestPermissionCameraButton"/>
 
     <Button
         android:id="@+id/button_storage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/permission_storage_text" />
+        android:text="@string/permission_storage_text"
+        android:onClick="onClickRequestPermissionStorageButton"/>
 
     <Button
         android:id="@+id/button_location_and_contacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/permission_location_and_contacts_text" />
+        android:text="@string/permission_location_and_contacts_text"
+        android:onClick="onClickRequestPermissionLocationAndContactsButton"/>
 
     <fragment
         android:id="@+id/fragment"

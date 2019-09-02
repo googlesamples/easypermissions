@@ -24,31 +24,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_main.view.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
 private const val TAG = "MainFragment"
-private const val RC_SMS_PERM = 122
+private const val REQUEST_CODE_SMS_PERMISSION = 126
 
 class MainFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater.inflate(R.layout.fragment_main, container)
+    // ============================================================================================
+    //  Fragment Lifecycle
+    // ============================================================================================
 
-        // Button click listener
-        view.button_sms.setOnClickListener {
-            smsTask()
-        }
-        return view
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        return inflater.inflate(R.layout.fragment_main, container)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         // EasyPermissions handles the request result.
@@ -64,15 +65,15 @@ class MainFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
-        Log.d(TAG,  getString(R.string.log_permissions_denied, requestCode, perms.size))
+        Log.d(TAG, getString(R.string.log_permissions_denied, requestCode, perms.size))
     }
 
     // ============================================================================================
-    //  Private Methods
+    //  Implementation OnClick
     // ============================================================================================
 
-    @AfterPermissionGranted(RC_SMS_PERM)
-    private fun smsTask() {
+    @AfterPermissionGranted(REQUEST_CODE_SMS_PERMISSION)
+    fun onClickRequestPermissionSMSButton(view: View) {
         if (EasyPermissions.hasPermissions(context!!, Manifest.permission.READ_SMS)) {
             // Have permission, do the thing!
             Toast.makeText(activity, "TODO: SMS things", Toast.LENGTH_LONG).show()
@@ -81,7 +82,7 @@ class MainFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.permission_sms_rationale_message),
-                RC_SMS_PERM,
+                REQUEST_CODE_SMS_PERMISSION,
                 Manifest.permission.READ_SMS
             )
         }
