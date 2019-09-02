@@ -1,11 +1,13 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.vanniktech.android.junit.jacoco'
 
 android {
     compileSdkVersion compileSdk
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 23
         targetSdkVersion targetSdk
         versionCode 1
         versionName mavenVersion
@@ -34,6 +36,9 @@ dependencies {
     api "androidx.core:core:1.0.2"
     api "androidx.fragment:fragment:1.0.0"
 
+    implementation "androidx.core:core-ktx:1.0.2"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.google.truth:truth:1.0'
     testImplementation 'androidx.test:core:1.2.0'
@@ -45,3 +50,6 @@ dependencies {
 }
 
 apply from: 'bintray.gradle'
+repositories {
+    mavenCentral()
+}
