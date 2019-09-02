@@ -318,10 +318,7 @@ public class EasyPermissions {
                     // Check for annotated methods with matching request code.
                     if (ann.value() == requestCode) {
                         // Method must be void so that we can invoke it
-                        if (method.getParameterTypes().length > 0) {
-                            throw new RuntimeException(
-                                    "Cannot execute method " + method.getName() + " because it is non-void method and/or has input parameters.");
-                        }
+
 
                         try {
                             // Make method accessible if private

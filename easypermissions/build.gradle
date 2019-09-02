@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'jacoco'
+apply plugin: 'com.vanniktech.android.junit.jacoco'
 
 android {
     compileSdkVersion compileSdk
@@ -9,6 +9,7 @@ android {
         targetSdkVersion targetSdk
         versionCode 1
         versionName mavenVersion
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -34,11 +35,13 @@ dependencies {
     api "androidx.fragment:fragment:1.0.0"
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'com.google.truth:truth:0.45'
+    testImplementation 'com.google.truth:truth:1.0'
     testImplementation 'androidx.test:core:1.2.0'
     testImplementation 'androidx.fragment:fragment-testing:1.2.0-alpha02'
     testImplementation 'org.robolectric:robolectric:4.3'
     testImplementation 'org.mockito:mockito-core:3.0.0'
+
+    testAnnotationProcessor 'com.google.auto.service:auto-service:1.0-rc4'
 }
 
 apply from: 'bintray.gradle'

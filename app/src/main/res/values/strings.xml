@@ -24,9 +24,9 @@
     <string name="permission_location_and_contacts_rationale_message">This app needs access to your location and contacts to know where and who you are.</string>
 
     <!-- Logs -->
-    <string name="log_permissions_granted">onPermissionsGranted:%s:%i</string>
-    <string name="log_permissions_denied">onPermissionsDenied::%s:%i</string>
-    <string name="log_permission_rationale_accepted">onPermissionRationaleAccepted:%i"</string>
-    <string name="log_permission_rationale_denied">onPermissionRationaleDenied:%i"</string>
+    <string name="log_permissions_granted">onPermissionsGranted:%d:%d</string>
+    <string name="log_permissions_denied">onPermissionsDenied::%d:%d</string>
+    <string name="log_permission_rationale_accepted">onPermissionRationaleAccepted:%d"</string>
+    <string name="log_permission_rationale_denied">onPermissionRationaleDenied:%d"</string>
 
 </resources>

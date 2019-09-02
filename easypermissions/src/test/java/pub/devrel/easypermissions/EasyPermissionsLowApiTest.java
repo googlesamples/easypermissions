@@ -82,7 +82,7 @@ public class EasyPermissionsLowApiTest {
         verify(spyActivity, times(1))
                 .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
         assertThat(integerCaptor.getValue()).isEqualTo(TestActivity.REQUEST_CODE);
-        assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
+        assertThat(listCaptor.getValue()).containsAtLeastElementsIn(ALL_PERMS);
     }
 
     // ------ From Support Activity ------
@@ -94,7 +94,7 @@ public class EasyPermissionsLowApiTest {
         verify(spySupportFragmentActivity, times(1))
                 .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
         assertThat(integerCaptor.getValue()).isEqualTo(TestSupportFragmentActivity.REQUEST_CODE);
-        assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
+        assertThat(listCaptor.getValue()).containsAtLeastElementsIn(ALL_PERMS);
     }
 
 
@@ -105,7 +105,7 @@ public class EasyPermissionsLowApiTest {
         verify(spyAppCompatActivity, times(1))
                 .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
         assertThat(integerCaptor.getValue()).isEqualTo(TestAppCompatActivity.REQUEST_CODE);
-        assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
+        assertThat(listCaptor.getValue()).containsAtLeastElementsIn(ALL_PERMS);
     }
 
     @Test
@@ -115,7 +115,7 @@ public class EasyPermissionsLowApiTest {
         verify(spyFragment, times(1))
                 .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
         assertThat(integerCaptor.getValue()).isEqualTo(TestFragment.REQUEST_CODE);
-        assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
+        assertThat(listCaptor.getValue()).containsAtLeastElementsIn(ALL_PERMS);
     }
 
 }

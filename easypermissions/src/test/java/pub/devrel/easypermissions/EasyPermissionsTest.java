@@ -129,13 +129,13 @@ public class EasyPermissionsTest {
                 .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
         assertThat(integerCaptor.getValue()).isEqualTo(TestActivity.REQUEST_CODE);
         assertThat(listCaptor.getValue())
-                .containsAllIn(new ArrayList<>(Collections.singletonList(Manifest.permission.ACCESS_FINE_LOCATION)));
+                .containsAtLeastElementsIn(new ArrayList<>(Collections.singletonList(Manifest.permission.ACCESS_FINE_LOCATION)));
 
         verify(spyActivity, times(1))
                 .onPermissionsDenied(integerCaptor.capture(), listCaptor.capture());
         assertThat(integerCaptor.getValue()).isEqualTo(TestActivity.REQUEST_CODE);
         assertThat(listCaptor.getValue())
-                .containsAllIn(new ArrayList<>(Collections.singletonList(Manifest.permission.READ_SMS)));
+                .containsAtLeastElementsIn(new ArrayList<>(Collections.singletonList(Manifest.permission.READ_SMS)));
 
         verify(spyActivity, never()).afterPermissionGranted();
     }
@@ -150,7 +150,7 @@ public class EasyPermissionsTest {
                 .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
         verify(spyActivity, never()).requestPermissions(any(String[].class), anyInt());
         assertThat(integerCaptor.getValue()).isEqualTo(TestActivity.REQUEST_CODE);
-        assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
+        assertThat(listCaptor.getValue()).containsAtLeastElementsIn(ALL_PERMS);
     }
 
     @Test
@@ -270,13 +270,13 @@ public class EasyPermissionsTest {
                 .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
         assertThat(integerCaptor.getValue()).isEqualTo(TestAppCompatActivity.REQUEST_CODE);
         assertThat(listCaptor.getValue())
-                .containsAllIn(new ArrayList<>(Collections.singletonList(Manifest.permission.ACCESS_FINE_LOCATION)));
+                .containsAtLeastElementsIn(new ArrayList<>(Collections.singletonList(Manifest.permission.ACCESS_FINE_LOCATION)));
 
         verify(spyAppCompatActivity, times(1))
                 .onPermissionsDenied(integerCaptor.capture(), listCaptor.capture());
         assertThat(integerCaptor.getValue()).isEqualTo(TestAppCompatActivity.REQUEST_CODE);
         assertThat(listCaptor.getValue())
-                .containsAllIn(new ArrayList<>(Collections.singletonList(Manifest.permission.READ_SMS)));
+                .containsAtLeastElementsIn(new ArrayList<>(Collections.singletonList(Manifest.permission.READ_SMS)));
 
         verify(spyAppCompatActivity, never()).afterPermissionGranted();
     }
@@ -291,7 +291,7 @@ public class EasyPermissionsTest {
                 .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
         verify(spyAppCompatActivity, never()).requestPermissions(any(String[].class), anyInt());
         assertThat(integerCaptor.getValue()).isEqualTo(TestAppCompatActivity.REQUEST_CODE);
-        assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
+        assertThat(listCaptor.getValue()).containsAtLeastElementsIn(ALL_PERMS);
     }
 
     @Test
@@ -427,13 +427,13 @@ public class EasyPermissionsTest {
                 .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
         assertThat(integerCaptor.getValue()).isEqualTo(TestFragment.REQUEST_CODE);
         assertThat(listCaptor.getValue())
-                .containsAllIn(new ArrayList<>(Collections.singletonList(Manifest.permission.ACCESS_FINE_LOCATION)));
+                .containsAtLeastElementsIn(new ArrayList<>(Collections.singletonList(Manifest.permission.ACCESS_FINE_LOCATION)));
 
         verify(spyFragment, times(1))
                 .onPermissionsDenied(integerCaptor.capture(), listCaptor.capture());
         assertThat(integerCaptor.getValue()).isEqualTo(TestFragment.REQUEST_CODE);
         assertThat(listCaptor.getValue())
-                .containsAllIn(new ArrayList<>(Collections.singletonList(Manifest.permission.READ_SMS)));
+                .containsAtLeastElementsIn(new ArrayList<>(Collections.singletonList(Manifest.permission.READ_SMS)));
 
         verify(spyFragment, never()).afterPermissionGranted();
     }
@@ -449,7 +449,7 @@ public class EasyPermissionsTest {
                 .onPermissionsGranted(integerCaptor.capture(), listCaptor.capture());
         verify(spyFragment, never()).requestPermissions(any(String[].class), anyInt());
         assertThat(integerCaptor.getValue()).isEqualTo(TestFragment.REQUEST_CODE);
-        assertThat(listCaptor.getValue()).containsAllIn(ALL_PERMS);
+        assertThat(listCaptor.getValue()).containsAtLeastElementsIn(ALL_PERMS);
     }
 
     @Test

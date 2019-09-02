@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.fragment_main.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -43,6 +44,13 @@ class MainFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_main, container)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        button_sms.setOnClickListener {
+            onClickRequestPermissionSMSButton()
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -69,11 +77,11 @@ class MainFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     // ============================================================================================
-    //  Implementation OnClick
+    //  Private Methods
     // ============================================================================================
 
     @AfterPermissionGranted(REQUEST_CODE_SMS_PERMISSION)
-    fun onClickRequestPermissionSMSButton(view: View) {
+    private fun onClickRequestPermissionSMSButton() {
         if (EasyPermissions.hasPermissions(context!!, Manifest.permission.READ_SMS)) {
             // Have permission, do the thing!
             Toast.makeText(activity, "TODO: SMS things", Toast.LENGTH_LONG).show()

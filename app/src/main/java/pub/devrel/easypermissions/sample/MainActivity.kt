@@ -20,10 +20,10 @@ import android.Manifest.permission.*
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -32,8 +32,6 @@ private const val TAG = "MainActivity"
 private const val REQUEST_CODE_CAMERA_PERMISSION = 123
 private const val REQUEST_CODE_STORAGE_PERMISSION = 124
 private const val REQUEST_CODE_LOCATION_AND_CONTACTS_PERMISSION = 125
-
-private val LOCATION_AND_CONTACTS = arrayOf(ACCESS_FINE_LOCATION, READ_CONTACTS)
 
 @Suppress("UNUSED_PARAMETER")
 class MainActivity : AppCompatActivity(),
@@ -46,6 +44,16 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        button_camera.setOnClickListener {
+            onClickRequestPermissionCameraButton()
+        }
+        button_storage.setOnClickListener {
+            onClickRequestPermissionStorageButton()
+        }
+        button_location_and_contacts.setOnClickListener {
+            onClickRequestPermissionLocationAndContactsButton()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -112,11 +120,11 @@ class MainActivity : AppCompatActivity(),
     }
 
     // ============================================================================================
-    //  Implementation OnClick
+    //  Private Methods
     // ============================================================================================
 
     @AfterPermissionGranted(REQUEST_CODE_CAMERA_PERMISSION)
-    fun onClickRequestPermissionCameraButton(view: View) {
+    private fun onClickRequestPermissionCameraButton() {
         if (hasCameraPermission()) {
             // Have permission, do things!
             Toast.makeText(this, "TODO: Camera things", LENGTH_LONG).show()
@@ -132,7 +140,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     @AfterPermissionGranted(REQUEST_CODE_STORAGE_PERMISSION)
-    fun onClickRequestPermissionStorageButton(view: View) {
+    private fun onClickRequestPermissionStorageButton() {
         if (hasCameraPermission()) {
             // Have permission, do things!
             Toast.makeText(this, "TODO: Storage things", LENGTH_LONG).show()
@@ -148,7 +156,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     @AfterPermissionGranted(REQUEST_CODE_LOCATION_AND_CONTACTS_PERMISSION)
-    fun onClickRequestPermissionLocationAndContactsButton(view: View) {
+    private fun onClickRequestPermissionLocationAndContactsButton() {
         if (hasLocationAndContactsPermissions()) {
             // Have permissions, do things!
             Toast.makeText(this, "TODO: Location and Contacts things", LENGTH_LONG).show()
@@ -158,21 +166,17 @@ class MainActivity : AppCompatActivity(),
                 this,
                 getString(R.string.permission_location_and_contacts_rationale_message),
                 REQUEST_CODE_LOCATION_AND_CONTACTS_PERMISSION,
-                *LOCATION_AND_CONTACTS
+                ACCESS_FINE_LOCATION, READ_CONTACTS
             )
         }
     }
-
-    // ============================================================================================
-    //  Private Methods
-    // ============================================================================================
 
     private fun hasCameraPermission(): Boolean {
         return EasyPermissions.hasPermissions(this, CAMERA)
     }
 
     private fun hasLocationAndContactsPermissions(): Boolean {
-        return EasyPermissions.hasPermissions(this, *LOCATION_AND_CONTACTS)
+        return EasyPermissions.hasPermissions(this, ACCESS_FINE_LOCATION, READ_CONTACTS)
     }
 
     private fun hasSmsPermission(): Boolean {
