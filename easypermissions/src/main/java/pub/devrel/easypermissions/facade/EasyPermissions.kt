@@ -13,19 +13,17 @@ import androidx.fragment.app.Fragment
 import pub.devrel.easypermissions.annotations.AfterPermissionGranted
 import pub.devrel.easypermissions.helpers.base.PermissionsHelper
 import pub.devrel.easypermissions.models.PermissionRequest
-import java.lang.reflect.InvocationTargetException
-import java.util.ArrayList
+import pub.devrel.easypermissions.utils.AnnotationsUtils
+
+private const val TAG = "EasyPermissions"
 
 /**
  * Utility to request and check System permissions for apps targeting Android M (API &gt;= 23).
  */
 object EasyPermissions {
 
-    private const val TAG = "EasyPermissions"
-
     /**
-     * Callback interface to receive the results of `EasyPermissions.requestPermissions()`
-     * calls.
+     * Callback interface to receive the results of `EasyPermissions.requestPermissions()` calls.
      */
     interface PermissionCallbacks : ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -52,35 +50,24 @@ object EasyPermissions {
      * yet granted.
      * @see Manifest.permission
      */
+    @JvmStatic
     fun hasPermissions(
-        context: Context,
+        context: Context?,
         @Size(min = 1) vararg perms: String
     ): Boolean {
         // Always return true for SDK < M, let the system deal with the permissions
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             Log.w(TAG, "hasPermissions: API version < M, returning true by default")
-
-            // DANGER ZONE!!! Changing this will break the library.
             return true
         }
 
-        // Null context may be passed if we have detected Low API (less than M) so getting
-        // to this point with a null context should not be possible.
-        if (context == null) {
+        context?.let {
+            return perms.all { perm ->
+                ContextCompat.checkSelfPermission(it, perm) == PackageManager.PERMISSION_GRANTED
+            }
+        } ?: run {
             throw IllegalArgumentException("Can't check permissions for null context")
         }
-
-        for (perm in perms) {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    perm
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return false
-            }
-        }
-
-        return true
     }
 
     /**
@@ -93,15 +80,19 @@ object EasyPermissions {
      * @param perms       a set of permissions to be requested.
      * @see Manifest.permission
      */
+    @JvmStatic
     fun requestPermissions(
-        host: Activity, rationale: String,
-        requestCode: Int, @Size(min = 1) vararg perms: String
+        host: Activity,
+        rationale: String,
+        requestCode: Int,
+        @Size(min = 1) vararg perms: String
     ) {
-        requestPermissions(
-            PermissionRequest.Builder(host, requestCode, *perms)
-                .setRationale(rationale)
-                .build()
-        )
+        val request = PermissionRequest.Builder(host)
+            .code(requestCode)
+            .perms(perms)
+            .rationale(rationale)
+            .build()
+        requestPermissions(host, request)
     }
 
     /**
@@ -109,94 +100,104 @@ object EasyPermissions {
      *
      * @see .requestPermissions
      */
+    @JvmStatic
     fun requestPermissions(
-        host: Fragment, rationale: String,
-        requestCode: Int, @Size(min = 1) vararg perms: String
+        host: Fragment,
+        rationale: String,
+        requestCode: Int,
+        @Size(min = 1) vararg perms: String
     ) {
-        requestPermissions(
-            PermissionRequest.Builder(host, requestCode, *perms)
-                .setRationale(rationale)
-                .build()
-        )
+        val request = PermissionRequest.Builder(host.context)
+            .code(requestCode)
+            .perms(perms)
+            .rationale(rationale)
+            .build()
+        requestPermissions(host, request)
     }
 
     /**
      * Request a set of permissions.
      *
-     * @param context the application context
+     * @param host        requesting context.
      * @param request the permission request
      * @see PermissionRequest
      */
-    fun requestPermissions(context: Context, request: PermissionRequest) {
-
+    @JvmStatic
+    fun requestPermissions(
+        host: Fragment,
+        request: PermissionRequest
+    ) {
         // Check for permissions before dispatching the request
-        if (hasPermissions(context, request.perms.toString())) {
-            notifyAlreadyHasPermissions(request.helper.host, request.requestCode, request.perms)
-            return
+        if (hasPermissions(host.context, request.perms.toString())) {
+            notifyAlreadyHasPermissions(host, request.code, request.perms)
+        } else {
+            PermissionsHelper.newInstance(host).requestPermissions(request)
         }
-
-
-
-        // Request permissions
-        request.helper.requestPermissions(
-            request.rationale,
-            request.positiveButtonText,
-            request.negativeButtonText,
-            request.theme,
-            request.requestCode,
-            request.perms
-        )
     }
 
     /**
-     * Handle the result of a permission request, should be called from the calling [ ]'s [ActivityCompat.OnRequestPermissionsResultCallback.onRequestPermissionsResult] method.
+     * Request a set of permissions.
      *
+     * @param host        requesting context.
+     * @param request the permission request
+     * @see PermissionRequest
+     */
+    @JvmStatic
+    fun requestPermissions(
+        host: Activity,
+        request: PermissionRequest
+    ) {
+        // Check for permissions before dispatching the request
+        if (hasPermissions(host, request.perms.toString())) {
+            notifyAlreadyHasPermissions(host, request.code, request.perms)
+        } else {
+            PermissionsHelper.newInstance(host).requestPermissions(request)
+        }
+    }
+
+    /**
+     * Handle the result of a permission request, should be called from the calling [Activity]'s
+     * [ActivityCompat.OnRequestPermissionsResultCallback.onRequestPermissionsResult] method.
      *
      * If any permissions were granted or denied, the `object` will receive the appropriate
-     * callbacks through [PermissionCallbacks] and methods annotated with [ ] will be run if appropriate.
+     * callbacks through [PermissionCallbacks] and methods annotated with [AfterPermissionGranted]
+     * will be run if appropriate.
      *
      * @param requestCode  requestCode argument to permission result callback.
      * @param permissions  permissions argument to permission result callback.
      * @param grantResults grantResults argument to permission result callback.
-     * @param receivers    an array of objects that have a method annotated with [                     ] or implement [PermissionCallbacks].
+     * @param receivers    an array of objects that have a method annotated with
+     * [AfterPermissionGranted] or implement [PermissionCallbacks].
      */
+    @JvmStatic
     fun onRequestPermissionsResult(
         requestCode: Int,
-        permissions: Array<String>,
+        permissions: Array<out String>,
         grantResults: IntArray,
         vararg receivers: Any
     ) {
-        // Make a collection of granted and denied permissions from the request.
-        val granted = ArrayList<String>()
-        val denied = ArrayList<String>()
-        for (i in permissions.indices) {
-            val perm = permissions[i]
-            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                granted.add(perm)
-            } else {
-                denied.add(perm)
-            }
-        }
+        val groupedPermissionsResult = grantResults
+            .zip(permissions)
+            .groupBy({ it.first }, { it.second })
 
-        // iterate through all receivers
-        for (`object` in receivers) {
-            // Report granted permissions, if any.
-            if (!granted.isEmpty()) {
-                if (`object` is PermissionCallbacks) {
-                    `object`.onPermissionsGranted(requestCode, granted)
+        val grantedList = groupedPermissionsResult[PackageManager.PERMISSION_GRANTED] ?: emptyList()
+        val deniedList = groupedPermissionsResult[PackageManager.PERMISSION_GRANTED] ?: emptyList()
+
+        receivers.forEach { receiver ->
+            if (receiver is PermissionCallbacks) {
+                if (grantedList.isNotEmpty()) {
+                    receiver.onPermissionsGranted(requestCode, grantedList)
+                }
+
+                if (deniedList.isNotEmpty()) {
+                    receiver.onPermissionsDenied(requestCode, deniedList)
                 }
             }
 
-            // Report denied permissions, if any.
-            if (!denied.isEmpty()) {
-                if (`object` is PermissionCallbacks) {
-                    `object`.onPermissionsDenied(requestCode, denied)
+            if (grantedList.isNotEmpty() && deniedList.isEmpty()) {
+                AnnotationsUtils.notifyAnnotatedMethods(receiver, AfterPermissionGranted::class) {
+                    it.value == requestCode
                 }
-            }
-
-            // If 100% successful, call annotated methods
-            if (!granted.isEmpty() && denied.isEmpty()) {
-                runAnnotatedMethods(`object`, requestCode)
             }
         }
     }
@@ -212,50 +213,27 @@ object EasyPermissions {
      * "not yet denied" case.
      *
      * @param host              context requesting permissions.
-     * @param deniedPermissions list of denied permissions, usually from [                          ][PermissionCallbacks.onPermissionsDenied]
+     * @param deniedPerms list of denied permissions, usually from
+     * [PermissionCallbacks.onPermissionsDenied]
      * @return `true` if at least one permission in the list was permanently denied.
      */
+    @JvmStatic
     fun somePermissionPermanentlyDenied(
         host: Activity,
-        deniedPermissions: List<String>
+        @Size(min = 1) vararg deniedPerms: String
     ): Boolean {
-        return PermissionsHelper.newInstance(host)
-            .somePermissionPermanentlyDenied(deniedPermissions)
+        return PermissionsHelper.newInstance(host).somePermissionPermanentlyDenied(deniedPerms)
     }
 
     /**
      * @see .somePermissionPermanentlyDenied
      */
+    @JvmStatic
     fun somePermissionPermanentlyDenied(
         host: Fragment,
-        deniedPermissions: List<String>
+        @Size(min = 1) vararg deniedPerms: String
     ): Boolean {
-        return PermissionsHelper.newInstance(host)
-            .somePermissionPermanentlyDenied(deniedPermissions)
-    }
-
-    /**
-     * Check if a permission has been permanently denied (user clicked "Never ask again").
-     *
-     * @param host             context requesting permissions.
-     * @param deniedPermission denied permission.
-     * @return `true` if the permissions has been permanently denied.
-     */
-    fun permissionPermanentlyDenied(
-        host: Activity,
-        deniedPermission: String
-    ): Boolean {
-        return PermissionsHelper.newInstance(host).permissionPermanentlyDenied(deniedPermission)
-    }
-
-    /**
-     * @see .permissionPermanentlyDenied
-     */
-    fun permissionPermanentlyDenied(
-        host: Fragment,
-        deniedPermission: String
-    ): Boolean {
-        return PermissionsHelper.newInstance(host).permissionPermanentlyDenied(deniedPermission)
+        return PermissionsHelper.newInstance(host).somePermissionPermanentlyDenied(deniedPerms)
     }
 
     /**
@@ -266,99 +244,69 @@ object EasyPermissions {
      * @return true if the user has previously denied any of the `perms` and we should show a
      * rationale, false otherwise.
      */
+    @JvmStatic
     fun somePermissionDenied(
         host: Activity,
-        vararg perms: String
+        @Size(min = 1) vararg perms: String
     ): Boolean {
-        return PermissionsHelper.newInstance(host).somePermissionDenied(*perms)
+        return PermissionsHelper.newInstance(host).somePermissionDenied(perms)
     }
 
     /**
      * @see .somePermissionDenied
      */
+    @JvmStatic
     fun somePermissionDenied(
         host: Fragment,
-        vararg perms: String
+        @Size(min = 1) vararg perms: String
     ): Boolean {
-        return PermissionsHelper.newInstance(host).somePermissionDenied(*perms)
+        return PermissionsHelper.newInstance(host).somePermissionDenied(perms)
     }
+
+    /**
+     * Check if a permission has been permanently denied (user clicked "Never ask again").
+     *
+     * @param host             context requesting permissions.
+     * @param deniedPerms denied permission.
+     * @return `true` if the permissions has been permanently denied.
+     */
+    @JvmStatic
+    fun permissionPermanentlyDenied(
+        host: Activity,
+        deniedPerms: String
+    ): Boolean {
+        return PermissionsHelper.newInstance(host).permissionPermanentlyDenied(deniedPerms)
+    }
+
+    /**
+     * @see .permissionPermanentlyDenied
+     */
+    @JvmStatic
+    fun permissionPermanentlyDenied(
+        host: Fragment,
+        deniedPerms: String
+    ): Boolean {
+        return PermissionsHelper.newInstance(host).permissionPermanentlyDenied(deniedPerms)
+    }
+
+    // ============================================================================================
+    //  Private Methods
+    // ============================================================================================
 
     /**
      * Run permission callbacks on an object that requested permissions but already has them by
      * simulating [PackageManager.PERMISSION_GRANTED].
      *
-     * @param object      the object requesting permissions.
+     * @param receiver    the object requesting permissions.
      * @param requestCode the permission request code.
      * @param perms       a list of permissions requested.
      */
     private fun notifyAlreadyHasPermissions(
-        `object`: Any,
+        receiver: Any,
         requestCode: Int,
-        perms: Array<String>
+        perms: Array<out String>
     ) {
-        val grantResults = IntArray(perms.size)
-        for (i in perms.indices) {
-            grantResults[i] = PackageManager.PERMISSION_GRANTED
-        }
-
-        onRequestPermissionsResult(requestCode, perms, grantResults, `object`)
-    }
-
-    /**
-     * Find all methods annotated with [AfterPermissionGranted] on a given object with the
-     * correct requestCode argument.
-     *
-     * @param object      the object with annotated methods.
-     * @param requestCode the requestCode passed to the annotation.
-     */
-    private fun runAnnotatedMethods(`object`: Any, requestCode: Int) {
-        var clazz: Class<*>? = `object`.javaClass
-        if (isUsingAndroidAnnotations(`object`)) {
-            clazz = clazz!!.superclass
-        }
-
-        while (clazz != null) {
-            for (method in clazz.declaredMethods) {
-                val ann = method.getAnnotation(AfterPermissionGranted::class.java)
-                if (ann != null) {
-                    // Check for annotated methods with matching request code.
-                    if (ann.value == requestCode) {
-                        // Method must be void so that we can invoke it
-
-
-                        try {
-                            // Make method accessible if private
-                            if (!method.isAccessible) {
-                                method.isAccessible = true
-                            }
-                            method.invoke(`object`)
-                        } catch (e: IllegalAccessException) {
-                            Log.e(TAG, "runDefaultMethod:IllegalAccessException", e)
-                        } catch (e: InvocationTargetException) {
-                            Log.e(TAG, "runDefaultMethod:InvocationTargetException", e)
-                        }
-
-                    }
-                }
-            }
-
-            clazz = clazz.superclass
-        }
-    }
-
-    /**
-     * Determine if the project is using the AndroidAnnotations library.
-     */
-    private fun isUsingAndroidAnnotations(`object`: Any): Boolean {
-        if (!`object`.javaClass.simpleName.endsWith("_")) {
-            return false
-        }
-        return try {
-            val clazz = Class.forName("org.androidannotations.api.view.HasViews")
-            clazz.isInstance(`object`)
-        } catch (e: ClassNotFoundException) {
-            false
-        }
-
+        val grantResults = IntArray(perms.size) { PackageManager.PERMISSION_GRANTED }
+        onRequestPermissionsResult(requestCode, perms, grantResults, receiver)
     }
 }

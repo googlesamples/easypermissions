@@ -7,7 +7,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RestrictTo
-import androidx.annotation.StyleRes
 import pub.devrel.easypermissions.facade.EasyPermissions
 import pub.devrel.easypermissions.models.PermissionRequest
 

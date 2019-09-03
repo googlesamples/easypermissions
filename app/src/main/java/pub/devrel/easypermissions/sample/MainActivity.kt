@@ -24,9 +24,9 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import pub.devrel.easypermissions.AfterPermissionGranted
-import pub.devrel.easypermissions.AppSettingsDialog
-import pub.devrel.easypermissions.EasyPermissions
+import pub.devrel.easypermissions.annotations.AfterPermissionGranted
+import pub.devrel.easypermissions.dialogs.settings.AppSettingsDialog
+import pub.devrel.easypermissions.facade.EasyPermissions
 
 private const val TAG = "MainActivity"
 private const val REQUEST_CODE_CAMERA_PERMISSION = 123

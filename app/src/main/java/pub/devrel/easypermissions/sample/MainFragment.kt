@@ -25,8 +25,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_main.*
-import pub.devrel.easypermissions.AfterPermissionGranted
-import pub.devrel.easypermissions.EasyPermissions
+import pub.devrel.easypermissions.annotations.AfterPermissionGranted
+import pub.devrel.easypermissions.facade.EasyPermissions
 
 private const val TAG = "MainFragment"
 private const val REQUEST_CODE_SMS_PERMISSION = 126

@@ -18,8 +18,8 @@ internal class FragmentPermissionsHelper(
 
     override var context: Context? = host.activity
 
-    override fun directRequestPermissions(requestCode: Int, perms: List<String>) {
-        host.requestPermissions(perms.toTypedArray(), requestCode)
+    override fun directRequestPermissions(requestCode: Int, perms: Array<out String>) {
+        host.requestPermissions(perms, requestCode)
     }
 
     override fun shouldShowRequestPermissionRationale(perm: String): Boolean {

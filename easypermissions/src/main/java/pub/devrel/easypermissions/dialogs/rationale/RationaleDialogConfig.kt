@@ -3,7 +3,6 @@ package pub.devrel.easypermissions.dialogs.rationale
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
 import pub.devrel.easypermissions.models.PermissionRequest
 import java.util.ArrayList
@@ -76,11 +75,10 @@ internal class RationaleDialogConfig {
         context: Context,
         listener: DialogInterface.OnClickListener
     ): android.app.AlertDialog {
-        val builder: android.app.AlertDialog.Builder
-        if (theme > 0) {
-            builder = android.app.AlertDialog.Builder(context, theme)
+        val builder = if (theme > 0) {
+            android.app.AlertDialog.Builder(context, theme)
         } else {
-            builder = android.app.AlertDialog.Builder(context)
+            android.app.AlertDialog.Builder(context)
         }
         return builder
             .setCancelable(false)

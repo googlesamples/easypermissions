@@ -1,5 +1,5 @@
 package pub.devrel.easypermissions.annotations
 
-@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
-@kotlin.annotation.Target
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FUNCTION)
 annotation class AfterPermissionGranted(val value: Int)

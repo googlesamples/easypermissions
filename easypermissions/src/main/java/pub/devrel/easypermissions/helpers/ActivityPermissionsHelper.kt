@@ -15,12 +15,12 @@ private const val TAG = "ActivityPH"
  */
 internal class ActivityPermissionsHelper(
     host: Activity
-): PermissionsHelper<Activity>(host) {
+) : PermissionsHelper<Activity>(host) {
 
     override var context: Context? = host
 
-    override fun directRequestPermissions(requestCode: Int, perms: List<String>) {
-        ActivityCompat.requestPermissions(host, perms.toTypedArray(), requestCode)
+    override fun directRequestPermissions(requestCode: Int, perms: Array<out String>) {
+        ActivityCompat.requestPermissions(host, perms, requestCode)
     }
 
     override fun shouldShowRequestPermissionRationale(perm: String): Boolean {
