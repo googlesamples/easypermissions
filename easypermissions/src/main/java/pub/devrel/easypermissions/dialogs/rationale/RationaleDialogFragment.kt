@@ -9,6 +9,7 @@ import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.annotation.StyleRes
 import pub.devrel.easypermissions.facade.EasyPermissions
+import pub.devrel.easypermissions.models.PermissionRequest
 
 /**
  * [DialogFragment] to display rationale for permission requests when the request comes from
@@ -88,22 +89,13 @@ class RationaleDialogFragment : DialogFragment() {
 
         val TAG = "RationaleDialogFragment"
 
-        fun newInstance(
-            positiveButton: String,
-            negativeButton: String,
-            rationaleMsg: String,
-            @StyleRes theme: Int,
-            requestCode: Int,
-            permissions: Array<String>
-        ): RationaleDialogFragment {
+        fun newInstance(permissionRequest: PermissionRequest): RationaleDialogFragment {
 
             // Create new Fragment
             val dialogFragment = RationaleDialogFragment()
 
             // Initialize configuration as arguments
-            val config = RationaleDialogConfig(
-                positiveButton, negativeButton, rationaleMsg, theme, requestCode, permissions
-            )
+            val config = RationaleDialogConfig(permissionRequest)
             dialogFragment.arguments = config.toBundle()
 
             return dialogFragment

@@ -5,6 +5,15 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
+import pub.devrel.easypermissions.models.PermissionRequest
+import java.util.ArrayList
+
+private const val KEY_POSITIVE_BUTTON = "positiveButton"
+private const val KEY_NEGATIVE_BUTTON = "negativeButton"
+private const val KEY_RATIONALE_MESSAGE = "rationaleMsg"
+private const val KEY_THEME = "theme"
+private const val KEY_REQUEST_CODE = "requestCode"
+private const val KEY_PERMISSIONS = "permissions"
 
 /**
  * Configuration for either [RationaleDialogFragment] or [RationaleDialogFragmentCompat].
@@ -16,23 +25,15 @@ internal class RationaleDialogConfig {
     var theme: Int = 0
     var requestCode: Int = 0
     var rationaleMsg: String? = null
-    var permissions: Array<String>? = null
+    var permissions: List<String>? = null
 
-    constructor(
-        positiveButton: String,
-        negativeButton: String,
-        rationaleMsg: String,
-        @StyleRes theme: Int,
-        requestCode: Int,
-        permissions: Array<String>
-    ) {
-
-        this.positiveButton = positiveButton
-        this.negativeButton = negativeButton
-        this.rationaleMsg = rationaleMsg
-        this.theme = theme
-        this.requestCode = requestCode
-        this.permissions = permissions
+    constructor(permissionRequest: PermissionRequest) {
+        this.positiveButton = permissionRequest.positiveButtonText
+        this.negativeButton = permissionRequest.negativeButtonText
+        this.rationaleMsg = permissionRequest.rationale
+        this.theme = permissionRequest.theme
+        this.requestCode = permissionRequest.code
+        this.permissions = permissionRequest.perms
     }
 
     constructor(bundle: Bundle) {
@@ -41,7 +42,7 @@ internal class RationaleDialogConfig {
         rationaleMsg = bundle.getString(KEY_RATIONALE_MESSAGE)
         theme = bundle.getInt(KEY_THEME)
         requestCode = bundle.getInt(KEY_REQUEST_CODE)
-        permissions = bundle.getStringArray(KEY_PERMISSIONS)
+        permissions = bundle.getStringArrayList(KEY_PERMISSIONS)
     }
 
     fun toBundle(): Bundle {
@@ -51,7 +52,7 @@ internal class RationaleDialogConfig {
         bundle.putString(KEY_RATIONALE_MESSAGE, rationaleMsg)
         bundle.putInt(KEY_THEME, theme)
         bundle.putInt(KEY_REQUEST_CODE, requestCode)
-        bundle.putStringArray(KEY_PERMISSIONS, permissions)
+        bundle.putStringArrayList(KEY_PERMISSIONS, permissions as ArrayList<String>?)
 
         return bundle
     }
@@ -88,15 +89,4 @@ internal class RationaleDialogConfig {
             .setMessage(rationaleMsg)
             .create()
     }
-
-    companion object {
-
-        private val KEY_POSITIVE_BUTTON = "positiveButton"
-        private val KEY_NEGATIVE_BUTTON = "negativeButton"
-        private val KEY_RATIONALE_MESSAGE = "rationaleMsg"
-        private val KEY_THEME = "theme"
-        private val KEY_REQUEST_CODE = "requestCode"
-        private val KEY_PERMISSIONS = "permissions"
-    }
-
 }

@@ -2,11 +2,11 @@ package pub.devrel.easypermissions.helpers
 
 import android.content.Context
 import android.util.Log
-import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import pub.devrel.easypermissions.dialogs.rationale.RationaleDialogFragmentCompat
 import pub.devrel.easypermissions.helpers.base.PermissionsHelper
+import pub.devrel.easypermissions.models.PermissionRequest
 
 private const val TAG = "AppCompatActivityPH"
 
@@ -17,26 +17,17 @@ internal class AppCompatActivityPermissionsHelper(
     host: AppCompatActivity
 ) : PermissionsHelper<AppCompatActivity>(host) {
 
-    override fun directRequestPermissions(requestCode: Int, vararg perms: String) {
-        ActivityCompat.requestPermissions(host, perms, requestCode)
+    override var context: Context? = host
+
+    override fun directRequestPermissions(requestCode: Int, perms: List<String>) {
+        ActivityCompat.requestPermissions(host, perms.toTypedArray(), requestCode)
     }
 
     override fun shouldShowRequestPermissionRationale(perm: String): Boolean {
         return ActivityCompat.shouldShowRequestPermissionRationale(host, perm)
     }
 
-    override fun getContext(): Context {
-        return host
-    }
-
-    override fun showRequestPermissionRationale(
-        rationale: String,
-        positiveButton: String,
-        negativeButton: String,
-        @StyleRes theme: Int,
-        requestCode: Int,
-        vararg perms: String
-    ) {
+    override fun showRequestPermissionRationale(permissionRequest: PermissionRequest) {
         val fm = host.supportFragmentManager
 
         // Check if fragment is already showing
@@ -47,7 +38,7 @@ internal class AppCompatActivityPermissionsHelper(
         }
 
         RationaleDialogFragmentCompat
-            .newInstance(rationale, positiveButton, negativeButton, theme, requestCode, perms)
+            .newInstance(permissionRequest)
             .showAllowingStateLoss(fm, RationaleDialogFragmentCompat.TAG)
     }
 }

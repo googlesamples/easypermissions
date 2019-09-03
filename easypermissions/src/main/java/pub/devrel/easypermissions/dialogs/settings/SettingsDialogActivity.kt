@@ -11,7 +11,8 @@ import android.provider.Settings
 import androidx.annotation.RestrictTo
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import pub.devrel.easypermissions.AppSettingsDialog
+
+private const val APP_SETTINGS_RC = 7534
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AppSettingsDialogHolderActivity : AppCompatActivity(), DialogInterface.OnClickListener {
@@ -22,7 +23,7 @@ class AppSettingsDialogHolderActivity : AppCompatActivity(), DialogInterface.OnC
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val appSettingsDialog = AppSettingsDialog.fromIntent(intent, this)
-        mIntentFlags = appSettingsDialog.getIntentFlags()
+        mIntentFlags = appSettingsDialog.intentFlags
         mDialog = appSettingsDialog.showDialog(this, this)
     }
 
@@ -54,8 +55,6 @@ class AppSettingsDialogHolderActivity : AppCompatActivity(), DialogInterface.OnC
     }
 
     companion object {
-        private val APP_SETTINGS_RC = 7534
-
         fun createShowDialogIntent(context: Context, dialog: AppSettingsDialog): Intent {
             val intent = Intent(context, AppSettingsDialogHolderActivity::class.java)
             intent.putExtra(AppSettingsDialog.EXTRA_APP_SETTINGS, dialog)

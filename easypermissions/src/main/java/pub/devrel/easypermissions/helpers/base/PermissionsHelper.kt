@@ -8,37 +8,24 @@ import androidx.fragment.app.Fragment
 import pub.devrel.easypermissions.helpers.ActivityPermissionsHelper
 import pub.devrel.easypermissions.helpers.AppCompatActivityPermissionsHelper
 import pub.devrel.easypermissions.helpers.FragmentPermissionsHelper
+import pub.devrel.easypermissions.models.PermissionRequest
 
 /**
  * Delegate class to make permission calls based on the 'host' (Fragment, Activity, etc).
  */
 abstract class PermissionsHelper<T>(val host: T) {
 
-    abstract fun getContext(): Context?
+    abstract var context: Context?
 
-    private fun shouldShowRationale(vararg perms: String): Boolean {
-        for (perm in perms) {
-            if (shouldShowRequestPermissionRationale(perm)) {
-                return true
-            }
-        }
-        return false
+    private fun shouldShowRationale(perms: List<String>): Boolean {
+        return perms.any { shouldShowRequestPermissionRationale(it) }
     }
 
-    fun requestPermissions(
-        rationale: String,
-        positiveButton: String,
-        negativeButton: String,
-        @StyleRes theme: Int,
-        requestCode: Int,
-        vararg perms: String
-    ) {
-        if (shouldShowRationale(*perms)) {
-            showRequestPermissionRationale(
-                rationale, positiveButton, negativeButton, theme, requestCode, *perms
-            )
+    fun requestPermissions(permissionRequest: PermissionRequest) {
+        if (shouldShowRationale(permissionRequest.perms)) {
+            showRequestPermissionRationale(permissionRequest)
         } else {
-            directRequestPermissions(requestCode, *perms)
+            directRequestPermissions(permissionRequest.code, permissionRequest.perms)
         }
     }
 
@@ -52,30 +39,23 @@ abstract class PermissionsHelper<T>(val host: T) {
         return false
     }
 
-    fun permissionPermanentlyDenied(perms: String): Boolean {
-        return !shouldShowRequestPermissionRationale(perms)
+    fun permissionPermanentlyDenied(perm: String): Boolean {
+        return !shouldShowRequestPermissionRationale(perm)
     }
 
-    fun somePermissionDenied(vararg perms: String): Boolean {
-        return shouldShowRationale(*perms)
+    fun somePermissionDenied(perms: List<String>): Boolean {
+        return shouldShowRationale(perms)
     }
 
     // ============================================================================
     // Public abstract methods
     // ============================================================================
 
-    abstract fun directRequestPermissions(requestCode: Int, vararg perms: String)
+    abstract fun directRequestPermissions(requestCode: Int, perms: List<String>)
 
     abstract fun shouldShowRequestPermissionRationale(perm: String): Boolean
 
-    abstract fun showRequestPermissionRationale(
-        rationale: String,
-        positiveButton: String,
-        negativeButton: String,
-        @StyleRes theme: Int,
-        requestCode: Int,
-        vararg perms: String
-    )
+    abstract fun showRequestPermissionRationale(permissionRequest: PermissionRequest)
 
     companion object {
 

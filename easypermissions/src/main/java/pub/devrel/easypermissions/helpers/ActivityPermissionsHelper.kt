@@ -3,10 +3,10 @@ package pub.devrel.easypermissions.helpers
 import android.app.Activity
 import android.content.Context
 import android.util.Log
-import androidx.annotation.StyleRes
 import androidx.core.app.ActivityCompat
-import pub.devrel.easypermissions.RationaleDialogFragment
+import pub.devrel.easypermissions.dialogs.rationale.RationaleDialogFragment
 import pub.devrel.easypermissions.helpers.base.PermissionsHelper
+import pub.devrel.easypermissions.models.PermissionRequest
 
 private const val TAG = "ActivityPH"
 
@@ -17,26 +17,17 @@ internal class ActivityPermissionsHelper(
     host: Activity
 ): PermissionsHelper<Activity>(host) {
 
-    override fun directRequestPermissions(requestCode: Int, vararg perms: String) {
-        ActivityCompat.requestPermissions(host, perms, requestCode)
+    override var context: Context? = host
+
+    override fun directRequestPermissions(requestCode: Int, perms: List<String>) {
+        ActivityCompat.requestPermissions(host, perms.toTypedArray(), requestCode)
     }
 
     override fun shouldShowRequestPermissionRationale(perm: String): Boolean {
         return ActivityCompat.shouldShowRequestPermissionRationale(host, perm)
     }
 
-    override fun getContext(): Context {
-        return host
-    }
-
-    override fun showRequestPermissionRationale(
-        rationale: String,
-        positiveButton: String,
-        negativeButton: String,
-        @StyleRes theme: Int,
-        requestCode: Int,
-        vararg perms: String
-    ) {
+    override fun showRequestPermissionRationale(permissionRequest: PermissionRequest) {
         val fm = host.fragmentManager
 
         // Check if fragment is already showing
@@ -47,7 +38,7 @@ internal class ActivityPermissionsHelper(
         }
 
         RationaleDialogFragment
-            .newInstance(positiveButton, negativeButton, rationale, theme, requestCode, perms)
+            .newInstance(permissionRequest)
             .showAllowingStateLoss(fm, RationaleDialogFragment.TAG)
     }
 }

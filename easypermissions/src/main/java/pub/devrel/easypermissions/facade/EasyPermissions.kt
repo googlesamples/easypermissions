@@ -21,7 +21,7 @@ import java.util.ArrayList
  */
 object EasyPermissions {
 
-    private val TAG = "EasyPermissions"
+    private const val TAG = "EasyPermissions"
 
     /**
      * Callback interface to receive the results of `EasyPermissions.requestPermissions()`
@@ -123,18 +123,19 @@ object EasyPermissions {
     /**
      * Request a set of permissions.
      *
+     * @param context the application context
      * @param request the permission request
      * @see PermissionRequest
      */
-    fun requestPermissions(request: PermissionRequest) {
+    fun requestPermissions(context: Context, request: PermissionRequest) {
 
         // Check for permissions before dispatching the request
-        if (hasPermissions(request.helper.context, *request.perms)) {
-            notifyAlreadyHasPermissions(
-                request.helper.host, request.requestCode, request.perms
-            )
+        if (hasPermissions(context, request.perms.toString())) {
+            notifyAlreadyHasPermissions(request.helper.host, request.requestCode, request.perms)
             return
         }
+
+
 
         // Request permissions
         request.helper.requestPermissions(
@@ -143,7 +144,7 @@ object EasyPermissions {
             request.negativeButtonText,
             request.theme,
             request.requestCode,
-            *request.perms
+            request.perms
         )
     }
 
@@ -352,11 +353,11 @@ object EasyPermissions {
         if (!`object`.javaClass.simpleName.endsWith("_")) {
             return false
         }
-        try {
+        return try {
             val clazz = Class.forName("org.androidannotations.api.view.HasViews")
-            return clazz.isInstance(`object`)
+            clazz.isInstance(`object`)
         } catch (e: ClassNotFoundException) {
-            return false
+            false
         }
 
     }

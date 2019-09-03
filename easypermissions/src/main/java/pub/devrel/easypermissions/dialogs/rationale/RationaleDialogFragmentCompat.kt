@@ -8,6 +8,7 @@ import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import pub.devrel.easypermissions.facade.EasyPermissions
+import pub.devrel.easypermissions.models.PermissionRequest
 
 /**
  * [AppCompatDialogFragment] to display rationale for permission requests when the request
@@ -74,22 +75,13 @@ class RationaleDialogFragmentCompat : AppCompatDialogFragment() {
 
         val TAG = "RationaleDialogFragmentCompat"
 
-        fun newInstance(
-            rationaleMsg: String,
-            positiveButton: String,
-            negativeButton: String,
-            @StyleRes theme: Int,
-            requestCode: Int,
-            permissions: Array<String>
-        ): RationaleDialogFragmentCompat {
+        fun newInstance(permissionRequest: PermissionRequest): RationaleDialogFragmentCompat {
 
             // Create new Fragment
             val dialogFragment = RationaleDialogFragmentCompat()
 
             // Initialize configuration as arguments
-            val config = RationaleDialogConfig(
-                positiveButton, negativeButton, rationaleMsg, theme, requestCode, permissions
-            )
+            val config = RationaleDialogConfig(permissionRequest)
             dialogFragment.arguments = config.toBundle()
 
             return dialogFragment

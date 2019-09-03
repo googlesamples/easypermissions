@@ -13,8 +13,6 @@ import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import pub.devrel.easypermissions.AppSettingsDialogHolderActivity
-import pub.devrel.easypermissions.EasyPermissions
 import pub.devrel.easypermissions.R
 
 /**
