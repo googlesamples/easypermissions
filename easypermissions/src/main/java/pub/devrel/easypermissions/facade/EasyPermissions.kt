@@ -20,6 +20,7 @@ private const val TAG = "EasyPermissions"
 /**
  * Utility to request and check System permissions for apps targeting Android M (API &gt;= 23).
  */
+@Suppress("UNUSED")
 object EasyPermissions {
 
     /**

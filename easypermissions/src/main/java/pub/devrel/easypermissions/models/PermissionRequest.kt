@@ -12,7 +12,7 @@ import pub.devrel.easypermissions.R
  * @see PermissionRequest.Builder
  */
 data class PermissionRequest(
-    @get:StyleRes
+    @StyleRes
     var theme: Int,
     var code: Int,
     var perms: Array<out String>,
@@ -53,8 +53,9 @@ data class PermissionRequest(
      * @see PermissionRequest
      */
     class Builder(var context: Context?) {
-        private var theme = -1
-        private var code = -1
+        @StyleRes
+        private var theme = 0
+        private var code = 0
         private var perms:Array<out String> = emptyArray()
         private var rationale = context?.getString(R.string.rationale_ask)
         private var positiveButtonText = context?.getString(android.R.string.ok)

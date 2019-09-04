@@ -4,12 +4,6 @@
     package="pub.devrel.easypermissions">
 
     <application>
-        <activity
-            android:name="pub.devrel.easypermissions.AppSettingsDialogHolderActivity"
-            android:exported="false"
-            android:label=""
-            android:theme="@style/EasyPermissions.Transparent"/>
-
         <activity android:name=".testhelper.TestActivity"/>
         <activity android:name=".testhelper.TestAppCompatActivity"/>
         <activity android:name=".testhelper.TestSupportFragmentActivity"/>
