@@ -1,3 +1,18 @@
+/*
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package pub.devrel.easypermissions.utils
 
 import android.util.Log
@@ -13,11 +28,11 @@ object AnnotationsUtils {
      * Find all methods annotated with [AfterPermissionGranted] on a given object with the
      * correct requestCode argument.
      *
-     * @param receiver      the object with annotated methods.
+     * @param receiver the object with annotated methods.
      * @param annotationClass the annotated class what we want to invoke
-     * @param predicate  execute annotated method that matches with condition
+     * @param predicate execute annotated method that matches with condition
      */
-    internal fun <T: Annotation> notifyAnnotatedMethods(
+    internal fun <T : Annotation> notifyAnnotatedMethods(
         receiver: Any,
         annotationClass: KClass<T>,
         predicate: (T) -> (Boolean)
@@ -53,7 +68,7 @@ object AnnotationsUtils {
     /**
      * Determine if the project is using the AndroidAnnotations library.
      *
-     * @param receiver      the object with annotated methods.
+     * @param receiver the object with annotated methods.
      */
     private fun isUsingAndroidAnnotations(receiver: Any): Boolean {
         if (!receiver.javaClass.simpleName.endsWith("_")) {

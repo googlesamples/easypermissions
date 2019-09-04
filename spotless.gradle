@@ -1,0 +1,8 @@
+apply plugin: 'com.diffplug.gradle.spotless'
+
+spotless {
+  kotlin {
+    target '**/*.kt'
+    licenseHeaderFile rootProject.file('COPYRIGHT')
+  }
+}

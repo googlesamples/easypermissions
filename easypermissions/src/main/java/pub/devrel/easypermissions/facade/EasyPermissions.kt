@@ -1,3 +1,18 @@
+/*
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package pub.devrel.easypermissions.facade
 
 import android.Manifest
@@ -46,7 +61,7 @@ object EasyPermissions {
      * Check if the calling context has a set of permissions.
      *
      * @param context the calling context.
-     * @param perms   one ore more permissions, such as [Manifest.permission.CAMERA].
+     * @param perms one ore more permissions, such as [Manifest.permission.CAMERA].
      * @return true if all permissions are already granted, false if at least one permission is not
      * yet granted.
      * @see Manifest.permission
@@ -74,11 +89,11 @@ object EasyPermissions {
     /**
      * Request a set of permissions, showing a rationale if the system requests it.
      *
-     * @param host        requesting context.
-     * @param rationale   a message explaining why the application needs this set of permissions;
+     * @param host requesting context.
+     * @param rationale a message explaining why the application needs this set of permissions;
      * will be displayed if the user rejects the request the first time.
      * @param requestCode request code to track this request, must be &lt; 256.
-     * @param perms       a set of permissions to be requested.
+     * @param perms a set of permissions to be requested.
      * @see Manifest.permission
      */
     @JvmStatic
@@ -119,7 +134,7 @@ object EasyPermissions {
     /**
      * Request a set of permissions.
      *
-     * @param host        requesting context.
+     * @param host requesting context.
      * @param request the permission request
      * @see PermissionRequest
      */
@@ -139,7 +154,7 @@ object EasyPermissions {
     /**
      * Request a set of permissions.
      *
-     * @param host        requesting context.
+     * @param host requesting context.
      * @param request the permission request
      * @see PermissionRequest
      */
@@ -164,10 +179,10 @@ object EasyPermissions {
      * callbacks through [PermissionCallbacks] and methods annotated with [AfterPermissionGranted]
      * will be run if appropriate.
      *
-     * @param requestCode  requestCode argument to permission result callback.
-     * @param permissions  permissions argument to permission result callback.
+     * @param requestCode requestCode argument to permission result callback.
+     * @param permissions permissions argument to permission result callback.
      * @param grantResults grantResults argument to permission result callback.
-     * @param receivers    an array of objects that have a method annotated with
+     * @param receivers an array of objects that have a method annotated with
      * [AfterPermissionGranted] or implement [PermissionCallbacks].
      */
     @JvmStatic
@@ -213,7 +228,7 @@ object EasyPermissions {
      * Otherwise the library cannot distinguish permanent denial from the
      * "not yet denied" case.
      *
-     * @param host              context requesting permissions.
+     * @param host context requesting permissions.
      * @param deniedPerms list of denied permissions, usually from
      * [PermissionCallbacks.onPermissionsDenied]
      * @return `true` if at least one permission in the list was permanently denied.
@@ -240,7 +255,7 @@ object EasyPermissions {
     /**
      * See if some denied permission has been permanently denied.
      *
-     * @param host  requesting context.
+     * @param host requesting context.
      * @param perms array of permissions.
      * @return true if the user has previously denied any of the `perms` and we should show a
      * rationale, false otherwise.
@@ -267,7 +282,7 @@ object EasyPermissions {
     /**
      * Check if a permission has been permanently denied (user clicked "Never ask again").
      *
-     * @param host             context requesting permissions.
+     * @param host context requesting permissions.
      * @param deniedPerms denied permission.
      * @return `true` if the permissions has been permanently denied.
      */
@@ -298,9 +313,9 @@ object EasyPermissions {
      * Run permission callbacks on an object that requested permissions but already has them by
      * simulating [PackageManager.PERMISSION_GRANTED].
      *
-     * @param receiver    the object requesting permissions.
+     * @param receiver the object requesting permissions.
      * @param requestCode the permission request code.
-     * @param perms       a list of permissions requested.
+     * @param perms a list of permissions requested.
      */
     private fun notifyAlreadyHasPermissions(
         receiver: Any,

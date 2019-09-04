@@ -3,7 +3,6 @@ buildscript {
     repositories {
         google()
         jcenter()
-        mavenCentral()
     }
 
     dependencies {
@@ -14,15 +13,21 @@ buildscript {
     }
 }
 
+plugins {
+    id 'com.diffplug.gradle.spotless' version '3.24.1'
+    id 'io.gitlab.arturbosch.detekt' version '1.0.0'
+    id 'org.jlleitschuh.gradle.ktlint' version '8.2.0'
+}
+
 allprojects {
+    apply from: rootProject.file('detekt.gradle')
+    apply from: rootProject.file('ktlint.gradle')
+    apply from: rootProject.file('spotless.gradle')
+
     repositories {
         google()
         jcenter()
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
 
 ext {

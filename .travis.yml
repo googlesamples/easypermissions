@@ -21,7 +21,7 @@ android:
     - tools
 
 before_script: echo y | ${ANDROID_HOME}tools/bin/sdkmanager --channel=3 "tools" "platform-tools" "platforms;android-27"
-script: ./gradlew build jacocoTestReportRelease :easypermissions:test
+script: ./gradlew build spotlessCheck :easypermissions:spotlessCheck :easypermissions:ktlintCheck :easypermissions:detekt :easypermissions:test jacocoTestReportRelease
 
 after_failure:
   - cat app/build/reports/tests/testDebugUnitTest/index.html
