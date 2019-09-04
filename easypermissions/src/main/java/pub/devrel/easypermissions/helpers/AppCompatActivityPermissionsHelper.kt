@@ -1,10 +1,9 @@
 package pub.devrel.easypermissions.helpers
 
 import android.content.Context
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import pub.devrel.easypermissions.dialogs.rationale.RationaleDialogFragmentCompat
+import pub.devrel.easypermissions.dialogs.rationale.RationaleDialog
 import pub.devrel.easypermissions.helpers.base.PermissionsHelper
 import pub.devrel.easypermissions.models.PermissionRequest
 
@@ -28,17 +27,6 @@ internal class AppCompatActivityPermissionsHelper(
     }
 
     override fun showRequestPermissionRationale(permissionRequest: PermissionRequest) {
-        val fm = host.supportFragmentManager
-
-        // Check if fragment is already showing
-        val fragment = fm.findFragmentByTag(RationaleDialogFragmentCompat.TAG)
-        if (fragment is RationaleDialogFragmentCompat) {
-            Log.d(TAG, "Found existing fragment, not showing rationale.")
-            return
-        }
-
-        RationaleDialogFragmentCompat
-            .newInstance(permissionRequest)
-            .showAllowingStateLoss(fm, RationaleDialogFragmentCompat.TAG)
+        RationaleDialog(host, permissionRequest).show()
     }
 }
