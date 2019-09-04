@@ -52,6 +52,7 @@ data class PermissionRequest(
      *
      * @see PermissionRequest
      */
+    @Suppress("UNUSED")
     class Builder(var context: Context?) {
         @StyleRes
         private var theme = 0

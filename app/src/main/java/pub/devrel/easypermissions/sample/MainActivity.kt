@@ -25,7 +25,8 @@ import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.annotations.AfterPermissionGranted
-import pub.devrel.easypermissions.dialogs.settings.AppSettingsDialog
+import pub.devrel.easypermissions.dialogs.settings.DEFAULT_SETTINGS_REQ_CODE
+import pub.devrel.easypermissions.dialogs.settings.SettingsDialog
 import pub.devrel.easypermissions.facade.EasyPermissions
 
 private const val TAG = "MainActivity"
@@ -59,7 +60,7 @@ class MainActivity : AppCompatActivity(),
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+        if (requestCode == DEFAULT_SETTINGS_REQ_CODE) {
             val yes = getString(R.string.yes)
             val no = getString(R.string.no)
 
@@ -102,8 +103,8 @@ class MainActivity : AppCompatActivity(),
 
         // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
         // This will display a dialog directing them to enable the permission in app settings.
-        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            AppSettingsDialog.Builder(this).build().show()
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms.toString())) {
+            SettingsDialog.Builder(this).build().show()
         }
     }
 

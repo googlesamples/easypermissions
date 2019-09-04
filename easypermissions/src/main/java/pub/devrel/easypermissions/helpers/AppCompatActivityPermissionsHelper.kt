@@ -7,8 +7,6 @@ import pub.devrel.easypermissions.dialogs.rationale.RationaleDialog
 import pub.devrel.easypermissions.helpers.base.PermissionsHelper
 import pub.devrel.easypermissions.models.PermissionRequest
 
-private const val TAG = "AppCompatActivityPH"
-
 /**
  * Permissions helper for [AppCompatActivity].
  */
