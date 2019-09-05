@@ -3,6 +3,10 @@
 EasyPermissions is a wrapper library to simplify basic system permissions logic when targeting
 Android M or higher.
 
+![](art/logo.png)
+
+This library lifts the burden that comes with writing a bunch of check statements whether a permission has been granted or not from you, in order to keep your code clean and safe.
+
 ## Installation
 
 EasyPermissions is installed by adding the following dependency to your `build.gradle` file:
@@ -10,7 +14,7 @@ EasyPermissions is installed by adding the following dependency to your `build.g
 ```groovy
 dependencies {
     // For developers using AndroidX in their applications
-    implementation 'pub.devrel:easypermissions:3.0.0'
+    implementation 'pub.devrel:easypermissions:3.1.0'
  
     // For developers using the Android Support Library
     implementation 'pub.devrel:easypermissions:2.0.1'
@@ -205,4 +209,3 @@ Rationale callbacks don't necessarily imply permission changes. To check for tho
 [6]: https://android-arsenal.com/api?level=14
 [7]: https://img.shields.io/badge/License-Apache%202.0-lightgrey.svg
 [8]: http://www.apache.org/licenses/LICENSE-2.0
-
