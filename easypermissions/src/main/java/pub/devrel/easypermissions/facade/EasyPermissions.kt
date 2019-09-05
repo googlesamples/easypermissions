@@ -144,7 +144,7 @@ object EasyPermissions {
         request: PermissionRequest
     ) {
         // Check for permissions before dispatching the request
-        if (hasPermissions(host.context, request.perms.toString())) {
+        if (hasPermissions(host.context, *request.perms)) {
             notifyAlreadyHasPermissions(host, request.code, request.perms)
         } else {
             PermissionsHelper.newInstance(host).requestPermissions(request)
@@ -164,7 +164,7 @@ object EasyPermissions {
         request: PermissionRequest
     ) {
         // Check for permissions before dispatching the request
-        if (hasPermissions(host, request.perms.toString())) {
+        if (hasPermissions(host, *request.perms)) {
             notifyAlreadyHasPermissions(host, request.code, request.perms)
         } else {
             PermissionsHelper.newInstance(host).requestPermissions(request)
@@ -197,7 +197,7 @@ object EasyPermissions {
             .groupBy({ it.first }, { it.second })
 
         val grantedList = groupedPermissionsResult[PackageManager.PERMISSION_GRANTED] ?: emptyList()
-        val deniedList = groupedPermissionsResult[PackageManager.PERMISSION_GRANTED] ?: emptyList()
+        val deniedList = groupedPermissionsResult[PackageManager.PERMISSION_DENIED] ?: emptyList()
 
         receivers.forEach { receiver ->
             if (receiver is PermissionCallbacks) {

@@ -17,11 +17,13 @@ package pub.devrel.easypermissions.controllers
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.testing.FragmentScenario
+import pub.devrel.easypermissions.annotations.Mockable
 import java.util.concurrent.CompletableFuture
 
 /**
  * Controller class to allow starting Fragments, similar to the old SupportFragmentController.
  */
+@Mockable
 class FragmentController<T : Fragment>(clazz: Class<T>) {
 
     private val scenario: FragmentScenario<T> = FragmentScenario.launch(clazz)

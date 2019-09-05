@@ -4,9 +4,9 @@
     package="pub.devrel.easypermissions">
 
     <application>
-        <activity android:name=".testhelper.TestActivity"/>
-        <activity android:name=".testhelper.TestAppCompatActivity"/>
-        <activity android:name=".testhelper.TestSupportFragmentActivity"/>
+        <activity android:name=".components.TestActivity"/>
+        <activity android:name=".components.TestAppCompatActivity"/>
+        <activity android:name=".components.TestSupportFragmentActivity"/>
     </application>
 
 </manifest>

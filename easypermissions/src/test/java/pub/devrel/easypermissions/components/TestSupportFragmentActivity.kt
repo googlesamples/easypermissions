@@ -17,14 +17,18 @@ package pub.devrel.easypermissions.components
 
 import androidx.fragment.app.FragmentActivity
 import pub.devrel.easypermissions.annotations.AfterPermissionGranted
+import pub.devrel.easypermissions.annotations.Mockable
 import pub.devrel.easypermissions.facade.EasyPermissions
 
-private const val REQUEST_CODE = 4
-
+@Mockable
 class TestSupportFragmentActivity :
     FragmentActivity(),
     EasyPermissions.PermissionCallbacks,
     EasyPermissions.RationaleCallbacks {
+
+    companion object {
+        const val REQUEST_CODE = 4
+    }
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {}
 

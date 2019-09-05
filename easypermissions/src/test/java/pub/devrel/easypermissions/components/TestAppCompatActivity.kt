@@ -19,14 +19,18 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import pub.devrel.easypermissions.R
 import pub.devrel.easypermissions.annotations.AfterPermissionGranted
+import pub.devrel.easypermissions.annotations.Mockable
 import pub.devrel.easypermissions.facade.EasyPermissions
 
-private const val REQUEST_CODE = 2
-
+@Mockable
 class TestAppCompatActivity :
     AppCompatActivity(),
     EasyPermissions.PermissionCallbacks,
     EasyPermissions.RationaleCallbacks {
+
+    companion object {
+        const val REQUEST_CODE = 2
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         theme.applyStyle(R.style.Theme_AppCompat, true)

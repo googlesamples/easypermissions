@@ -17,11 +17,13 @@ package pub.devrel.easypermissions.controllers
 
 import android.app.Activity
 import androidx.test.core.app.ActivityScenario
+import pub.devrel.easypermissions.annotations.Mockable
 import java.util.concurrent.CompletableFuture
 
 /**
  * Controller class to allow starting Activity, similar to the Robolectric ActivityConroller.
  */
+@Mockable
 class ActivityController<T : Activity>(clazz: Class<T>) {
 
     private val scenario: ActivityScenario<T> = ActivityScenario.launch(clazz)

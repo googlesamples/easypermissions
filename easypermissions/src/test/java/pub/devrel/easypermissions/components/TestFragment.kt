@@ -22,14 +22,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import pub.devrel.easypermissions.R
 import pub.devrel.easypermissions.annotations.AfterPermissionGranted
+import pub.devrel.easypermissions.annotations.Mockable
 import pub.devrel.easypermissions.facade.EasyPermissions
 
-private const val REQUEST_CODE = 3
-
+@Mockable
 class TestFragment :
     Fragment(),
     EasyPermissions.PermissionCallbacks,
     EasyPermissions.RationaleCallbacks {
+
+    companion object {
+        const val REQUEST_CODE = 3
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
