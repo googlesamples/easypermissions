@@ -22,6 +22,9 @@ import kotlin.reflect.KClass
 
 private const val TAG = "AnnotationsUtils"
 
+/**
+ * Utils for notify things related permissions like declined, granted via annotations
+ */
 object AnnotationsUtils {
 
     /**

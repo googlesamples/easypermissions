@@ -40,6 +40,6 @@ internal class AppCompatActivityPermissionsHelper(
     }
 
     override fun showRequestPermissionRationale(permissionRequest: PermissionRequest) {
-        RationaleDialog(host, permissionRequest).show()
+        RationaleDialog(host, permissionRequest).showCompatDialog()
     }
 }

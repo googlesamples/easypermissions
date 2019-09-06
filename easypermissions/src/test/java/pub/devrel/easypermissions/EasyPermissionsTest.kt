@@ -15,11 +15,13 @@
  */
 package pub.devrel.easypermissions
 
-import android.Manifest
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.Manifest.permission.READ_SMS
 import android.app.Application
 import android.app.Dialog
-import android.content.pm.PackageManager
 import android.widget.TextView
+import androidx.core.content.PermissionChecker.PERMISSION_DENIED
+import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import androidx.test.core.app.ApplicationProvider
 import org.junit.Before
 import org.junit.Test
@@ -39,21 +41,24 @@ import pub.devrel.easypermissions.controllers.FragmentController
 import java.util.*
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.capture
-import junit.framework.Assert.fail
+import org.junit.Assert.fail
 import org.mockito.Mockito.*
 import org.robolectric.Shadows.shadowOf
+import org.robolectric.shadows.ShadowAlertDialog
 import pub.devrel.easypermissions.facade.EasyPermissions
+import pub.devrel.easypermissions.models.PermissionRequest
 
 private const val RATIONALE = "RATIONALE"
+private const val POSITIVE = "POSITIVE"
 private const val NEGATIVE = "NEGATIVE"
-private val ONE_PERM = arrayOf(Manifest.permission.READ_SMS)
-private val ALL_PERMS =
-    arrayOf(Manifest.permission.READ_SMS, Manifest.permission.ACCESS_FINE_LOCATION)
-private val SMS_DENIED_RESULT =
-    intArrayOf(PackageManager.PERMISSION_DENIED, PackageManager.PERMISSION_GRANTED)
+
+private val ONE_PERM = arrayOf(READ_SMS)
+private val ALL_PERMS = arrayOf(READ_SMS, ACCESS_FINE_LOCATION)
+private val SMS_DENIED_RESULT = intArrayOf(PERMISSION_DENIED, PERMISSION_GRANTED)
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
+@SuppressWarnings("SameParameterValue")
 class EasyPermissionsTest {
 
     private var shadowApp: ShadowApplication? = null
@@ -137,13 +142,13 @@ class EasyPermissionsTest {
             .onPermissionsGranted(capture(integerCaptor), capture(listCaptor))
         assertThat(integerCaptor.value).isEqualTo(TestActivity.REQUEST_CODE)
         assertThat(listCaptor.value)
-            .containsAtLeastElementsIn(ArrayList(listOf(Manifest.permission.ACCESS_FINE_LOCATION)))
+            .containsAtLeastElementsIn(ArrayList(listOf(ACCESS_FINE_LOCATION)))
 
         verify<TestActivity>(spyActivity)
             .onPermissionsDenied(capture(integerCaptor), capture(listCaptor))
         assertThat(integerCaptor.value).isEqualTo(TestActivity.REQUEST_CODE)
         assertThat(listCaptor.value)
-            .containsAtLeastElementsIn(ArrayList(listOf(Manifest.permission.READ_SMS)))
+            .containsAtLeastElementsIn(ArrayList(listOf(READ_SMS)))
 
         verify<TestActivity>(spyActivity, never()).afterPermissionGranted()
     }
@@ -215,46 +220,42 @@ class EasyPermissionsTest {
 
     @Test
     fun shouldShowCorrectDialog_whenMissingPermissionsAndShowRationaleFromActivity() {
-//        grantPermissions(ONE_PERM)
-//        showRationale(true, *ALL_PERMS)
-//
-//        EasyPermissions.requestPermissions(
-//            spyActivity,
-//            RATIONALE,
-//            TestActivity.REQUEST_CODE,
-//            *ALL_PERMS
-//        )
-//
-//        val dialogFragment = spyActivity!!.getFragmentManager()
-//            .findFragmentByTag(RationaleDialogFragment.TAG)
-//        assertThat(dialogFragment).isInstanceOf(RationaleDialogFragment::class.java!!)
-//
-//        val dialog = (dialogFragment as RationaleDialogFragment).getDialog()
-//        assertThatHasExpectedRationale(dialog, RATIONALE)
+        grantPermissions(ONE_PERM)
+        showRationale(true, *ALL_PERMS)
+
+        EasyPermissions.requestPermissions(
+            spyActivity,
+            RATIONALE,
+            TestActivity.REQUEST_CODE,
+            *ALL_PERMS
+        )
+
+        assertThat(ShadowAlertDialog.getShownDialogs().size).isEqualTo(1)
+        assertThatHasExpectedRationale(ShadowAlertDialog.getLatestDialog(), RATIONALE)
     }
 
     @Test
     fun shouldShowCorrectDialogUsingRequest_whenMissingPermissionsAndShowRationaleFromActivity() {
-//        grantPermissions(ONE_PERM)
-//        showRationale(true, *ALL_PERMS)
-//
-//        val request = PermissionRequest.Builder(spyActivity, TestActivity.REQUEST_CODE, ALL_PERMS)
-//            .setPositiveButtonText(android.R.string.ok)
-//            .setNegativeButtonText(android.R.string.cancel)
-//            .setRationale(android.R.string.unknownName)
-//            .setTheme(R.style.Theme_AppCompat)
-//            .build()
-//        EasyPermissions.requestPermissions(request)
-//
-//        val dialogFragment = spyActivity!!.getFragmentManager()
-//            .findFragmentByTag(RationaleDialogFragment.TAG)
-//        assertThat(dialogFragment).isInstanceOf(RationaleDialogFragment::class.java!!)
-//
-//        val dialog = (dialogFragment as RationaleDialogFragment).getDialog()
-//        assertThatHasExpectedButtonsAndRationale(
-//            dialog, android.R.string.unknownName,
-//            android.R.string.ok, android.R.string.cancel
-//        )
+        grantPermissions(ONE_PERM)
+        showRationale(true, *ALL_PERMS)
+
+        val request = PermissionRequest.Builder(spyActivity)
+            .theme(R.style.Theme_AppCompat)
+            .code(TestActivity.REQUEST_CODE)
+            .perms(ALL_PERMS)
+            .rationale(android.R.string.unknownName)
+            .positiveButtonText(android.R.string.ok)
+            .negativeButtonText(android.R.string.cancel)
+            .build()
+        EasyPermissions.requestPermissions(spyActivity, request)
+
+        assertThat(ShadowAlertDialog.getShownDialogs().size).isEqualTo(1)
+        assertThatHasExpectedButtonsAndRationale(
+            ShadowAlertDialog.getLatestDialog(),
+            android.R.string.unknownName,
+            android.R.string.ok,
+            android.R.string.cancel
+        )
     }
 
     @Test
@@ -297,24 +298,24 @@ class EasyPermissionsTest {
 
     @Test
     fun shouldHavePermissionPermanentlyDenied_whenNotShowRationaleFromActivity() {
-        showRationale(false, Manifest.permission.READ_SMS)
+        showRationale(false, READ_SMS)
 
         assertThat(
             EasyPermissions.permissionPermanentlyDenied(
                 spyActivity,
-                Manifest.permission.READ_SMS
+                READ_SMS
             )
         ).isTrue()
     }
 
     @Test
     fun shouldNotHavePermissionPermanentlyDenied_whenShowRationaleFromActivity() {
-        showRationale(true, Manifest.permission.READ_SMS)
+        showRationale(true, READ_SMS)
 
         assertThat(
             EasyPermissions.permissionPermanentlyDenied(
                 spyActivity,
-                Manifest.permission.READ_SMS
+                READ_SMS
             )
         ).isFalse()
     }
@@ -332,13 +333,13 @@ class EasyPermissionsTest {
             .onPermissionsGranted(capture(integerCaptor), capture(listCaptor))
         assertThat(integerCaptor.value).isEqualTo(TestAppCompatActivity.REQUEST_CODE)
         assertThat(listCaptor.value)
-            .containsAtLeastElementsIn(ArrayList(listOf(Manifest.permission.ACCESS_FINE_LOCATION)))
+            .containsAtLeastElementsIn(ArrayList(listOf(ACCESS_FINE_LOCATION)))
 
         verify<TestAppCompatActivity>(spyAppCompatActivity)
             .onPermissionsDenied(capture(integerCaptor), capture(listCaptor))
         assertThat(integerCaptor.value).isEqualTo(TestAppCompatActivity.REQUEST_CODE)
         assertThat(listCaptor.value)
-            .containsAtLeastElementsIn(ArrayList(listOf(Manifest.permission.READ_SMS)))
+            .containsAtLeastElementsIn(ArrayList(listOf(READ_SMS)))
 
         verify<TestAppCompatActivity>(spyAppCompatActivity, never()).afterPermissionGranted()
     }
@@ -412,70 +413,58 @@ class EasyPermissionsTest {
 
     @Test
     fun shouldShowCorrectDialog_whenMissingPermissionsAndShowRationaleFromAppCompatActivity() {
-//        grantPermissions(ONE_PERM)
-//        showRationale(true, *ALL_PERMS)
-//
-//        EasyPermissions.requestPermissions(
-//            spyAppCompatActivity,
-//            RATIONALE,
-//            TestAppCompatActivity.REQUEST_CODE,
-//            ALL_PERMS
-//        )
-//
-//        val dialogFragment = spyAppCompatActivity!!.getSupportFragmentManager()
-//            .findFragmentByTag(RationaleDialogFragmentCompat.TAG)
-//        assertThat(dialogFragment).isInstanceOf(RationaleDialogFragmentCompat::class.java!!)
-//
-//        val dialog = (dialogFragment as RationaleDialogFragmentCompat).getDialog()
-//        assertThatHasExpectedRationale(dialog, RATIONALE)
+        grantPermissions(ONE_PERM)
+        showRationale(true, *ALL_PERMS)
+
+        EasyPermissions.requestPermissions(
+            spyAppCompatActivity,
+            RATIONALE,
+            TestAppCompatActivity.REQUEST_CODE,
+            *ALL_PERMS
+        )
+
+        assertThat(ShadowAlertDialog.getShownDialogs().size).isEqualTo(1)
+        assertThatHasExpectedRationale(ShadowAlertDialog.getLatestDialog(), RATIONALE)
     }
 
     @Test
     fun shouldShowCorrectDialog_whenMissingPermissionsAndShowRationaleFromSupportFragmentActivity() {
-//        grantPermissions(ONE_PERM)
-//        showRationale(true, *ALL_PERMS)
-//
-//        EasyPermissions.requestPermissions(
-//            spyFragmentActivity,
-//            RATIONALE,
-//            TestSupportFragmentActivity.REQUEST_CODE,
-//            ALL_PERMS
-//        )
-//
-//        val dialogFragment = spyFragmentActivity!!.getFragmentManager()
-//            .findFragmentByTag(RationaleDialogFragment.TAG)
-//        assertThat(dialogFragment).isInstanceOf(RationaleDialogFragment::class.java!!)
-//
-//        val dialog = (dialogFragment as RationaleDialogFragment).getDialog()
-//        assertThatHasExpectedRationale(dialog, RATIONALE)
+        grantPermissions(ONE_PERM)
+        showRationale(true, *ALL_PERMS)
+
+        EasyPermissions.requestPermissions(
+            spyFragmentActivity,
+            RATIONALE,
+            TestSupportFragmentActivity.REQUEST_CODE,
+            *ALL_PERMS
+        )
+
+        assertThat(ShadowAlertDialog.getShownDialogs().size).isEqualTo(1)
+        assertThatHasExpectedRationale(ShadowAlertDialog.getLatestDialog(), RATIONALE)
     }
 
     @Test
     fun shouldShowCorrectDialogUsingRequest_whenMissingPermissionsAndShowRationaleFromAppCompatActivity() {
-//        grantPermissions(ONE_PERM)
-//        showRationale(true, *ALL_PERMS)
-//
-//        val request = PermissionRequest.Builder(
-//            spyAppCompatActivity,
-//            TestAppCompatActivity.REQUEST_CODE,
-//            ALL_PERMS
-//        )
-//            .setPositiveButtonText(android.R.string.ok)
-//            .setNegativeButtonText(android.R.string.cancel)
-//            .setRationale(android.R.string.unknownName)
-//            .setTheme(R.style.Theme_AppCompat)
-//            .build()
-//        EasyPermissions.requestPermissions(request)
-//
-//        val dialogFragment = spyAppCompatActivity!!.getSupportFragmentManager()
-//            .findFragmentByTag(RationaleDialogFragmentCompat.TAG)
-//        assertThat(dialogFragment).isInstanceOf(RationaleDialogFragmentCompat::class.java!!)
-//
-//        val dialog = (dialogFragment as RationaleDialogFragmentCompat).getDialog()
-//        assertThatHasExpectedButtonsAndRationale(
-//            dialog, android.R.string.unknownName,
-//            android.R.string.ok, android.R.string.cancel
-//        )
+        grantPermissions(ONE_PERM)
+        showRationale(true, *ALL_PERMS)
+
+        val request = PermissionRequest.Builder(spyAppCompatActivity)
+            .theme(R.style.Theme_AppCompat)
+            .code(TestAppCompatActivity.REQUEST_CODE)
+            .perms(ALL_PERMS)
+            .rationale(android.R.string.unknownName)
+            .positiveButtonText(android.R.string.ok)
+            .negativeButtonText(android.R.string.cancel)
+            .build()
+        EasyPermissions.requestPermissions(spyAppCompatActivity, request)
+
+        assertThat(ShadowAlertDialog.getShownDialogs().size).isEqualTo(1)
+        assertThatHasExpectedButtonsAndRationale(
+            ShadowAlertDialog.getLatestDialog(),
+            android.R.string.unknownName,
+            android.R.string.ok,
+            android.R.string.cancel
+        )
     }
 
     @Test
@@ -528,24 +517,24 @@ class EasyPermissionsTest {
 
     @Test
     fun shouldHavePermissionPermanentlyDenied_whenNotShowRationaleFromAppCompatActivity() {
-        showRationale(false, Manifest.permission.READ_SMS)
+        showRationale(false, READ_SMS)
 
         assertThat(
             EasyPermissions.permissionPermanentlyDenied(
                 spyAppCompatActivity,
-                Manifest.permission.READ_SMS
+                READ_SMS
             )
         ).isTrue()
     }
 
     @Test
     fun shouldNotHavePermissionPermanentlyDenied_whenShowRationaleFromAppCompatActivity() {
-        showRationale(true, Manifest.permission.READ_SMS)
+        showRationale(true, READ_SMS)
 
         assertThat(
             EasyPermissions.permissionPermanentlyDenied(
                 spyAppCompatActivity,
-                Manifest.permission.READ_SMS
+                READ_SMS
             )
         ).isFalse()
     }
@@ -563,13 +552,13 @@ class EasyPermissionsTest {
             .onPermissionsGranted(capture(integerCaptor), capture(listCaptor))
         assertThat(integerCaptor.value).isEqualTo(TestFragment.REQUEST_CODE)
         assertThat(listCaptor.value)
-            .containsAtLeastElementsIn(ArrayList(listOf(Manifest.permission.ACCESS_FINE_LOCATION)))
+            .containsAtLeastElementsIn(ArrayList(listOf(ACCESS_FINE_LOCATION)))
 
         verify<TestFragment>(spyFragment)
             .onPermissionsDenied(capture(integerCaptor), capture(listCaptor))
         assertThat(integerCaptor.value).isEqualTo(TestFragment.REQUEST_CODE)
         assertThat(listCaptor.value)
-            .containsAtLeastElementsIn(ArrayList(listOf(Manifest.permission.READ_SMS)))
+            .containsAtLeastElementsIn(ArrayList(listOf(READ_SMS)))
 
         verify<TestFragment>(spyFragment, never()).afterPermissionGranted()
     }
@@ -641,48 +630,42 @@ class EasyPermissionsTest {
 
     @Test
     fun shouldShowCorrectDialog_whenMissingPermissionsAndShowRationaleFromFragment() {
-        // TODO
+        grantPermissions(ONE_PERM)
+        showRationale(true, *ALL_PERMS)
 
-//        grantPermissions(ONE_PERM)
-//        showRationale(true, *ALL_PERMS)
-//
-//        EasyPermissions.requestPermissions(
-//            spyFragment,
-//            RATIONALE,
-//            TestFragment.REQUEST_CODE,
-//            *ALL_PERMS
-//        )
-//        
-//
-//        val dialogFragment = spyFragment.childFragmentManager
-//            .findFragmentByTag(RationaleDialogFragmentCompat.TAG)
-//        assertThat(dialogFragment).isInstanceOf(RationaleDialogFragmentCompat::class.java!!)
-//
-//        val dialog = (dialogFragment as RationaleDialogFragmentCompat).getDialog()
-//        assertThatHasExpectedRationale(dialog, RATIONALE)
+        EasyPermissions.requestPermissions(
+            spyFragment,
+            RATIONALE,
+            TestFragment.REQUEST_CODE,
+            *ALL_PERMS
+        )
+
+        assertThat(ShadowAlertDialog.getShownDialogs().size).isEqualTo(1)
+        assertThatHasExpectedRationale(ShadowAlertDialog.getLatestDialog(), RATIONALE)
     }
 
     @Test
     fun shouldShowCorrectDialogUsingRequest_whenMissingPermissionsAndShowRationaleFromFragment() {
-        // TODO
+        grantPermissions(ONE_PERM)
+        showRationale(true, *ALL_PERMS)
 
-//        grantPermissions(ONE_PERM)
-//        showRationale(true, *ALL_PERMS)
-//
-//        val request = PermissionRequest.Builder(spyFragment, TestFragment.REQUEST_CODE, ALL_PERMS)
-//            .setPositiveButtonText(POSITIVE)
-//            .setNegativeButtonText(NEGATIVE)
-//            .setRationale(RATIONALE)
-//            .setTheme(R.style.Theme_AppCompat)
-//            .build()
-//        EasyPermissions.requestPermissions(request)
-//
-//        val dialogFragment = spyFragment!!.getChildFragmentManager()
-//            .findFragmentByTag(RationaleDialogFragmentCompat.TAG)
-//        assertThat(dialogFragment).isInstanceOf(RationaleDialogFragmentCompat::class.java!!)
-//
-//        val dialog = (dialogFragment as RationaleDialogFragmentCompat).getDialog()
-//        assertThatHasExpectedButtonsAndRationale(dialog, RATIONALE, POSITIVE, NEGATIVE)
+        val request = PermissionRequest.Builder(spyFragment.context)
+            .theme(R.style.Theme_AppCompat)
+            .code(TestFragment.REQUEST_CODE)
+            .perms(ALL_PERMS)
+            .rationale(RATIONALE)
+            .positiveButtonText(POSITIVE)
+            .negativeButtonText(NEGATIVE)
+            .build()
+        EasyPermissions.requestPermissions(spyFragment, request)
+
+        assertThat(ShadowAlertDialog.getShownDialogs().size).isEqualTo(1)
+        assertThatHasExpectedButtonsAndRationale(
+            ShadowAlertDialog.getLatestDialog(),
+            RATIONALE,
+            POSITIVE,
+            NEGATIVE
+        )
     }
 
     @Test
@@ -735,24 +718,24 @@ class EasyPermissionsTest {
 
     @Test
     fun shouldHavePermissionPermanentlyDenied_whenNotShowRationaleFromFragment() {
-        showRationale(false, Manifest.permission.READ_SMS)
+        showRationale(false, READ_SMS)
 
         assertThat(
             EasyPermissions.permissionPermanentlyDenied(
                 spyFragment,
-                Manifest.permission.READ_SMS
+                READ_SMS
             )
         ).isTrue()
     }
 
     @Test
     fun shouldNotHavePermissionPermanentlyDenied_whenShowRationaleFromFragment() {
-        showRationale(true, Manifest.permission.READ_SMS)
+        showRationale(true, READ_SMS)
 
         assertThat(
             EasyPermissions.permissionPermanentlyDenied(
                 spyFragment,
-                Manifest.permission.READ_SMS
+                READ_SMS
             )
         ).isFalse()
     }
@@ -768,25 +751,11 @@ class EasyPermissionsTest {
         negative: Int
     ) {
         val dialogMessage = dialog.findViewById<TextView>(android.R.id.message)
-        assertThat(dialogMessage.text.toString()).isEqualTo(app!!.getString(rationale))
+        assertThat(dialogMessage.text.toString()).isEqualTo(app?.getString(rationale))
         val positiveMessage = dialog.findViewById<TextView>(android.R.id.button1)
-        assertThat(positiveMessage.text.toString()).isEqualTo(app!!.getString(positive))
+        assertThat(positiveMessage.text.toString()).isEqualTo(app?.getString(positive))
         val negativeMessage = dialog.findViewById<TextView>(android.R.id.button2)
-        assertThat(negativeMessage.text.toString()).isEqualTo(app!!.getString(negative))
-    }
-
-    private fun assertThatHasExpectedButtonsAndRationale(
-        dialog: Dialog,
-        rationale: String,
-        positive: Int,
-        negative: Int
-    ) {
-        val dialogMessage = dialog.findViewById<TextView>(android.R.id.message)
-        assertThat(dialogMessage.text.toString()).isEqualTo(rationale)
-        val positiveMessage = dialog.findViewById<TextView>(android.R.id.button1)
-        assertThat(positiveMessage.text.toString()).isEqualTo(app!!.getString(positive))
-        val negativeMessage = dialog.findViewById<TextView>(android.R.id.button2)
-        assertThat(negativeMessage.text.toString()).isEqualTo(app!!.getString(negative))
+        assertThat(negativeMessage.text.toString()).isEqualTo(app?.getString(negative))
     }
 
     private fun assertThatHasExpectedButtonsAndRationale(

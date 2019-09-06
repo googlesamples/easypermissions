@@ -40,7 +40,7 @@ internal class FragmentPermissionsHelper(
 
     override fun showRequestPermissionRationale(permissionRequest: PermissionRequest) {
         context?.let {
-            RationaleDialog(it, permissionRequest).show()
+            RationaleDialog(it, permissionRequest).showCompatDialog()
         }
     }
 }
