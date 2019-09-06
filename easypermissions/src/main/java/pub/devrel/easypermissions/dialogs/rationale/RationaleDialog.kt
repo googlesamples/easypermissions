@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.DialogInterface
 import androidx.annotation.RestrictTo
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import pub.devrel.easypermissions.facade.EasyPermissions
 import pub.devrel.easypermissions.helpers.base.PermissionsHelper
@@ -46,7 +47,7 @@ class RationaleDialog(
      * Display the dialog.
      */
     fun showCompatDialog() {
-         AlertDialog.Builder(context, model.theme)
+        AlertDialog.Builder(context, model.theme)
             .setCancelable(false)
             .setMessage(model.rationale)
             .setPositiveButton(model.positiveButtonText, this)
@@ -55,7 +56,7 @@ class RationaleDialog(
     }
 
     fun showDialog() {
-         android.app.AlertDialog.Builder(context, model.theme)
+        android.app.AlertDialog.Builder(context, model.theme)
             .setCancelable(false)
             .setMessage(model.rationale)
             .setPositiveButton(model.positiveButtonText, this)
@@ -70,15 +71,19 @@ class RationaleDialog(
                 when (context) {
                     is Fragment ->
                         PermissionsHelper
-                        .newInstance(context)
-                        .directRequestPermissions(model.code, model.perms)
+                            .newInstance(context)
+                            .directRequestPermissions(model.code, model.perms)
                     is Activity ->
+                        PermissionsHelper
+                            .newInstance(context)
+                            .directRequestPermissions(model.code, model.perms)
+                    is AppCompatActivity ->
                         PermissionsHelper
                             .newInstance(context)
                             .directRequestPermissions(model.code, model.perms)
                 }
             }
-            Dialog.BUTTON_NEGATIVE, Dialog.BUTTON_NEUTRAL -> {
+            Dialog.BUTTON_NEGATIVE -> {
                 rationaleCallbacks?.onRationaleDenied(model.code)
                 permissionCallbacks?.onPermissionsDenied(model.code, model.perms.toList())
             }

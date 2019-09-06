@@ -75,7 +75,7 @@ class SettingsDialog(
                     is Fragment -> context.startActivityForResult(intent, requestCode)
                 }
             }
-            Dialog.BUTTON_NEGATIVE, Dialog.BUTTON_NEUTRAL -> {
+            Dialog.BUTTON_NEGATIVE -> {
                 when (context) {
                     is Activity -> context.setResult(Activity.RESULT_CANCELED)
                     is Fragment -> context.activity?.setResult(Activity.RESULT_CANCELED)
