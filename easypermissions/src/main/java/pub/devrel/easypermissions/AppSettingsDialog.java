@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,11 +20,14 @@ import androidx.fragment.app.Fragment;
 /**
  * Dialog to prompt the user to go to the app's settings screen and enable permissions. If the user
  * clicks 'OK' on the dialog, they are sent to the settings screen. The result is returned to the
- * Activity via {@link Activity#onActivityResult(int, int, Intent)}.
+ * Activity via {@see Activity#onActivityResult(int, int, Intent)}.
  * <p>
  * Use the {@link Builder} to create and display a dialog.
  */
 public class AppSettingsDialog implements Parcelable {
+
+    private static final String TAG = "EasyPermissions";
+
     public static final int DEFAULT_SETTINGS_REQ_CODE = 16061;
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -83,6 +87,19 @@ public class AppSettingsDialog implements Parcelable {
 
     static AppSettingsDialog fromIntent(Intent intent, Activity activity) {
         AppSettingsDialog dialog = intent.getParcelableExtra(AppSettingsDialog.EXTRA_APP_SETTINGS);
+
+        // It's not clear how this could happen, but in the case that it does we should try
+        // to avoid a runtime crash and just use the default dialog.
+        // https://github.com/googlesamples/easypermissions/issues/278
+        if (dialog == null) {
+            Log.e(TAG, "Intent contains null value for EXTRA_APP_SETTINGS: "
+                    + "intent=" + intent
+                    + ", "
+                    + "extras=" + intent.getExtras());
+
+            dialog = new AppSettingsDialog.Builder(activity).build();
+        }
+
         dialog.setActivityOrFragment(activity);
         return dialog;
     }
@@ -261,7 +278,7 @@ public class AppSettingsDialog implements Parcelable {
          * Set the negative button text, default is {@link android.R.string#cancel}.
          * <p>
          * To know if a user cancelled the request, check if your permissions were given with {@link
-         * EasyPermissions#hasPermissions(Context, String...)} in {@link
+         * EasyPermissions#hasPermissions(Context, String...)} in {@see
          * Activity#onActivityResult(int, int, Intent)}. If you still don't have the right
          * permissions, then the request was cancelled.
          */
@@ -282,7 +299,7 @@ public class AppSettingsDialog implements Parcelable {
 
         /**
          * Set the request code use when launching the Settings screen for result, can be retrieved
-         * in the calling Activity's {@link Activity#onActivityResult(int, int, Intent)} method.
+         * in the calling Activity's {@see Activity#onActivityResult(int, int, Intent)} method.
          * Default is {@link #DEFAULT_SETTINGS_REQ_CODE}.
          */
         @NonNull
