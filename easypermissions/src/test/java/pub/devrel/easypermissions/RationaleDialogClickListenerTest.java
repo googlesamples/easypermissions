@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+
 import androidx.fragment.app.Fragment;
 
 import org.junit.Before;
@@ -128,6 +129,6 @@ public class RationaleDialogClickListenerTest {
                 null, rationaleCallbacks);
         listener.onClick(dialogInterface, Dialog.BUTTON_NEGATIVE);
 
-        verify(permissionCallbacks, never()).onPermissionsDenied(anyInt(), ArgumentMatchers.<String>anyList());
+        verify(permissionCallbacks, never()).onPermissionsDenied(anyInt(), ArgumentMatchers.anyList());
     }
 }

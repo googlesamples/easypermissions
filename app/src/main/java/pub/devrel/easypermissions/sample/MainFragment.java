@@ -8,10 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import java.util.List;
+
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -33,12 +34,7 @@ public class MainFragment extends Fragment implements EasyPermissions.Permission
         View v = inflater.inflate(R.layout.fragment_main, container);
 
         // Button click listener
-        v.findViewById(R.id.button_sms).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                smsTask();
-            }
-        });
+        v.findViewById(R.id.button_sms).setOnClickListener(v1 -> smsTask());
 
         return v;
     }
