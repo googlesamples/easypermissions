@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion compileSdk
+    testOptions.unitTests.includeAndroidResources = true
 
     defaultConfig {
         applicationId "pub.devrel.easypermissions.sample"
