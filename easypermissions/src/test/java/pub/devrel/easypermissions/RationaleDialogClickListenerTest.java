@@ -129,6 +129,6 @@ public class RationaleDialogClickListenerTest {
                 null, rationaleCallbacks);
         listener.onClick(dialogInterface, Dialog.BUTTON_NEGATIVE);
 
-        verify(permissionCallbacks, never()).onPermissionsDenied(anyInt(), ArgumentMatchers.anyList());
+        verify(permissionCallbacks, never()).onPermissionsDenied(anyInt(), ArgumentMatchers.<String>anyList());
     }
 }

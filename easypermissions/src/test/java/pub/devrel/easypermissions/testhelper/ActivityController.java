@@ -24,8 +24,8 @@ public class ActivityController<T extends Activity> {
 
         scenario.onActivity(new ActivityScenario.ActivityAction<T>() {
             @Override
-            public void perform(@NonNull T value) {
-                ActivityFuture.complete(value);
+            public void perform(@NonNull T activity) {
+                ActivityFuture.complete(activity);
             }
         });
 
