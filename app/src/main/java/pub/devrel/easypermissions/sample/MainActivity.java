@@ -18,11 +18,11 @@ package pub.devrel.easypermissions.sample;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -46,20 +46,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         setContentView(R.layout.activity_main);
 
         // Button click listener that will request one permission.
-        findViewById(R.id.button_camera).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cameraTask();
-            }
-        });
+        findViewById(R.id.button_camera).setOnClickListener(v -> cameraTask());
 
         // Button click listener that will request two permissions.
-        findViewById(R.id.button_location_and_contacts).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                locationAndContactsTask();
-            }
-        });
+        findViewById(R.id.button_location_and_contacts).setOnClickListener(v -> locationAndContactsTask());
     }
 
     private boolean hasCameraPermission() {

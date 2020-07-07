@@ -1,11 +1,11 @@
 package pub.devrel.easypermissions.testhelper;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.testing.FragmentScenario;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Helper class to allow starting Fragments, similar to the old SupportFragmentController.
@@ -23,8 +23,8 @@ public class FragmentController<T extends Fragment> {
 
         scenario.onFragment(new FragmentScenario.FragmentAction<T>() {
             @Override
-            public void perform(@NonNull T fragment) {
-                fragmentFuture.complete(fragment);
+            public void perform(@NonNull T value) {
+                fragmentFuture.complete(value);
             }
         });
 

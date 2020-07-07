@@ -27,6 +27,7 @@ android {
             includeAndroidResources = true
         }
     }
+
 }
 
 junitJacoco {
