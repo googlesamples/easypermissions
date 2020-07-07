@@ -2,6 +2,7 @@ package pub.devrel.easypermissions.testhelper;
 
 import android.app.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.test.core.app.ActivityScenario;
 
 import java.util.concurrent.CompletableFuture;
@@ -23,7 +24,7 @@ public class ActivityController<T extends Activity> {
 
         scenario.onActivity(new ActivityScenario.ActivityAction<T>() {
             @Override
-            public void perform(T value) {
+            public void perform(@NonNull T value) {
                 ActivityFuture.complete(value);
             }
         });

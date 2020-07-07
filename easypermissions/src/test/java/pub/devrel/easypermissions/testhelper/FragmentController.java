@@ -23,8 +23,8 @@ public class FragmentController<T extends Fragment> {
 
         scenario.onFragment(new FragmentScenario.FragmentAction<T>() {
             @Override
-            public void perform(@NonNull T value) {
-                fragmentFuture.complete(value);
+            public void perform(@NonNull T fragment) {
+                fragmentFuture.complete(fragment);
             }
         });
 
