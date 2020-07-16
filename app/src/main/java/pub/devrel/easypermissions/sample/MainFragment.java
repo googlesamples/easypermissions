@@ -25,7 +25,7 @@ public class MainFragment extends Fragment implements EasyPermissions.Permission
     private static final int RC_SMS_PERM = 122;
 
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -51,7 +51,7 @@ public class MainFragment extends Fragment implements EasyPermissions.Permission
 
     @AfterPermissionGranted(RC_SMS_PERM)
     private void smsTask() {
-        if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.READ_SMS)) {
+        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.READ_SMS)) {
             // Have permission, do the thing!
             Toast.makeText(getActivity(), "TODO: SMS things", Toast.LENGTH_LONG).show();
         } else {
