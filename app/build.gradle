@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion compileSdk
+    testOptions.unitTests.includeAndroidResources = true
 
     defaultConfig {
         applicationId "pub.devrel.easypermissions.sample"
@@ -21,5 +22,6 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.annotation:annotation:1.1.0"
     implementation project(':easypermissions')
 }
