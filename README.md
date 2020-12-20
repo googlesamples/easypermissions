@@ -1,6 +1,6 @@
-# EasyPermissions [![Build Status][1]][2] [![Code Coverage][3]][4] [![Android API][5]][6] [![Apache License][7]][8]
+# EasyPermissions-ktx [![Build Status][1]][2] [![Code Coverage][3]][4] [![Android API][5]][6] [![Apache License][7]][8]
 
-EasyPermissions is a wrapper library to simplify basic system permissions logic when targeting
+EasyPermissions-ktx is a wrapper library to simplify basic system permissions logic when targeting
 Android M or higher.
 
 ![](art/logo.png)
@@ -9,15 +9,11 @@ This library lifts the burden that comes with writing a bunch of check statement
 
 ## Installation
 
-EasyPermissions is installed by adding the following dependency to your `build.gradle` file:
+EasyPermissions-ktx is installed by adding the following dependency to your `build.gradle` file:
 
 ```groovy
 dependencies {
-    // For developers using AndroidX in their applications
-    implementation 'pub.devrel:easypermissions:3.1.0'
- 
-    // For developers using the Android Support Library
-    implementation 'pub.devrel:easypermissions:2.0.1'
+    implementation 'mvalceleanu:easypermissions-ktx:0.1.0'
 }
 ```
 
@@ -25,22 +21,16 @@ dependencies {
 
 ### Basic
 
-To begin using EasyPermissions, have your `Activity` (or `Fragment`) override the `onRequestPermissionsResult` method:
+To begin using EasyPermissions-ktx, have your `Activity` (or `Fragment`) override the `onRequestPermissionsResult` method:
 
-```java
-public class MainActivity extends AppCompatActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
+```kotlin
+class MainActivity : AppCompatActivity() {
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+        // EasyPermissions handles the request result.
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 }
 ```
@@ -63,61 +53,56 @@ The example below shows how to request permissions for a method that requires bo
     flow of needing to run the requesting method after all of its permissions have been granted.
     This can also be achieved by adding logic on the `onPermissionsGranted` callback.
 
-```java
-@AfterPermissionGranted(RC_CAMERA_AND_LOCATION)
+```kotlin
+@AfterPermissionGranted(REQUEST_CODE_LOCATION_AND_CONTACTS_PERMISSION)
 private void methodRequiresTwoPermission() {
-    String[] perms = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION};
-    if (EasyPermissions.hasPermissions(this, perms)) {
+    if (EasyPermissions.hasPermissions(this, ACCESS_FINE_LOCATION, READ_CONTACTS)) {
         // Already have permission, do the thing
         // ...
     } else {
         // Do not have permissions, request them now
-        EasyPermissions.requestPermissions(this, getString(R.string.camera_and_location_rationale),
-                RC_CAMERA_AND_LOCATION, perms);
+        EasyPermissions.requestPermissions(
+            host = this,
+            rationale = getString(R.string.permission_location_and_contacts_rationale_message),
+            requestCode = REQUEST_CODE_LOCATION_AND_CONTACTS_PERMISSION,
+            perms = ACCESS_FINE_LOCATION, READ_CONTACTS
+        )
     }
 }
 ```
 
 Or for finer control over the rationale dialog, use a `PermissionRequest`:
 
-```java
-EasyPermissions.requestPermissions(
-        new PermissionRequest.Builder(this, RC_CAMERA_AND_LOCATION, perms)
-                .setRationale(R.string.camera_and_location_rationale)
-                .setPositiveButtonText(R.string.rationale_ask_ok)
-                .setNegativeButtonText(R.string.rationale_ask_cancel)
-                .setTheme(R.style.my_fancy_style)
-                .build());
-```
+```kotlin
+val request = PermissionRequest.Builder(spyActivity)
+    .code(REQUEST_CODE)
+    .perms(REQUEST_CODE_LOCATION_AND_CONTACTS_PERMISSION)
+    .theme(R.style.my_fancy_style)
+    .rationale(R.string.camera_and_location_rationale)
+    .positiveButtonText(R.string.rationale_ask_ok)
+    .negativeButtonText(R.string.rationale_ask_cancel)
+    .build()
+EasyPermissions.requestPermissions(spyActivity, request)
 
 Optionally, for a finer control, you can have your `Activity` / `Fragment` implement
 the `PermissionCallbacks` interface.
 
-```java
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+```kotlin
+class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        // EasyPermissions handles the request result.
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
-    @Override
-    public void onPermissionsGranted(int requestCode, List<String> list) {
+    override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
         // Some permissions have been granted
         // ...
     }
 
-    @Override
-    public void onPermissionsDenied(int requestCode, List<String> list) {
+    override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
         // Some permissions have been denied
         // ...
     }
@@ -138,26 +123,35 @@ works after the permission has been denied and your app has received
 the `onPermissionsDenied` callback. Otherwise the library cannot distinguish
 permanent denial from the "not yet denied" case.
 
-```java
-@Override
-public void onPermissionsDenied(int requestCode, List<String> perms) {
-    Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
+```kotlin
+override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
+    Log.d(TAG, "onPermissionsDenied: $requestCode :${perms.size()}")
 
     // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
     // This will display a dialog directing them to enable the permission in app settings.
-    if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-        new AppSettingsDialog.Builder(this).build().show();
+    if (EasyPermissions.somePermissionPermanentlyDenied(this, perms.toString())) {
+        SettingsDialog.Builder(this).build().show()
     }
 }
 
-@Override
-public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+    if (requestCode == DEFAULT_SETTINGS_REQ_CODE) {
+        val yes = getString(R.string.yes)
+        val no = getString(R.string.no)
 
-    if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
         // Do something after user returned from app settings screen, like showing a Toast.
-        Toast.makeText(this, R.string.returned_from_app_settings_to_activity, Toast.LENGTH_SHORT)
-                .show();
+        Toast.makeText(
+            this,
+            getString(
+                R.string.returned_from_app_settings_to_activity,
+                if (hasCameraPermission()) yes else no,
+                if (hasLocationAndContactsPermissions()) yes else no,
+                if (hasSmsPermission()) yes else no,
+                if (hasStoragePermission()) yes else no
+            ),
+            LENGTH_LONG
+        ).show()
     }
 }
 ```
@@ -166,15 +160,13 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 Implement the `EasyPermissions.RationaleCallbacks` if you want to interact with the rationale dialog.
 
-```java
-@Override
-public void onRationaleAccepted(int requestCode) {
+```kotlin
+override fun onRationaleAccepted(requestCode: Int) {
     // Rationale accepted to request some permissions
     // ...
 }
 
-@Override
-public void onRationaleDenied(int requestCode) {
+override fun onRationaleDenied(requestCode: Int) {
     // Rationale denied to request some permissions
     // ...
 }
@@ -201,10 +193,10 @@ Rationale callbacks don't necessarily imply permission changes. To check for tho
 
 ```
 
-[1]: https://travis-ci.org/googlesamples/easypermissions.svg?branch=master
-[2]: https://travis-ci.org/googlesamples/easypermissions
-[3]: https://codecov.io/gh/googlesamples/easypermissions/branch/master/graph/badge.svg
-[4]: https://codecov.io/gh/googlesamples/easypermissions
+[1]: https://travis-ci.com/vmadalin/easypermissions-ktx.svg?branch=master
+[2]: https://travis-ci.com/vmadalin/easypermissions-ktx
+[3]: https://codecov.io/gh/vmadalin/easypermissions-ktx/branch/master/graph/badge.svg
+[4]: https://codecov.io/gh/vmadalin/easypermissions-ktx
 [5]: https://img.shields.io/badge/API-14%2B-blue.svg?style=flat
 [6]: https://android-arsenal.com/api?level=14
 [7]: https://img.shields.io/badge/License-Apache%202.0-lightgrey.svg

@@ -15,7 +15,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.diffplug.gradle.spotless' version '3.24.1'
+    id 'com.diffplug.spotless' version '5.8.2'
     id 'io.gitlab.arturbosch.detekt' version '1.0.0'
     id 'org.jlleitschuh.gradle.ktlint' version '8.2.0'
 }
@@ -43,6 +43,6 @@ ext {
 
     bintrayOrg = 'mvalcelenu'
 
-    compileSdk = 28
-    targetSdk = 28
+    compileSdk = 29
+    targetSdk = 29
 }
