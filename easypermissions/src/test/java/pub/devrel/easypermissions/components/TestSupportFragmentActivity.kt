@@ -16,7 +16,6 @@
 package pub.devrel.easypermissions.components
 
 import androidx.fragment.app.FragmentActivity
-import pub.devrel.easypermissions.annotations.AfterPermissionGranted
 import pub.devrel.easypermissions.annotations.Mockable
 import pub.devrel.easypermissions.facade.EasyPermissions
 
@@ -37,7 +36,4 @@ class TestSupportFragmentActivity :
     override fun onRationaleAccepted(requestCode: Int) {}
 
     override fun onRationaleDenied(requestCode: Int) {}
-
-    @AfterPermissionGranted(REQUEST_CODE)
-    fun afterPermissionGranted() {}
 }

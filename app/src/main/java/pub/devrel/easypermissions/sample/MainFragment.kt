@@ -30,6 +30,7 @@ import pub.devrel.easypermissions.facade.EasyPermissions
 private const val TAG = "MainFragment"
 private const val REQUEST_CODE_SMS_PERMISSION = 126
 
+@Suppress("UNUSED")
 class MainFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     // ============================================================================================
@@ -42,7 +43,7 @@ class MainFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.fragment_main, container)
+        return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,7 +82,7 @@ class MainFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     @AfterPermissionGranted(REQUEST_CODE_SMS_PERMISSION)
     private fun onClickRequestPermissionSMSButton() {
-        if (EasyPermissions.hasPermissions(context!!, Manifest.permission.READ_SMS)) {
+        if (EasyPermissions.hasPermissions(context, Manifest.permission.READ_SMS)) {
             // Have permission, do the thing!
             Toast.makeText(activity, "TODO: SMS things", Toast.LENGTH_LONG).show()
         } else {

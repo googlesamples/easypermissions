@@ -138,19 +138,19 @@ class EasyPermissionsTest {
             spyActivity
         )
 
-        verify<TestActivity>(spyActivity)
+        verify(spyActivity)
             .onPermissionsGranted(capture(integerCaptor), capture(listCaptor))
         assertThat(integerCaptor.value).isEqualTo(TestActivity.REQUEST_CODE)
         assertThat(listCaptor.value)
             .containsAtLeastElementsIn(ArrayList(listOf(ACCESS_FINE_LOCATION)))
 
-        verify<TestActivity>(spyActivity)
+        verify(spyActivity)
             .onPermissionsDenied(capture(integerCaptor), capture(listCaptor))
         assertThat(integerCaptor.value).isEqualTo(TestActivity.REQUEST_CODE)
         assertThat(listCaptor.value)
             .containsAtLeastElementsIn(ArrayList(listOf(READ_SMS)))
 
-        verify<TestActivity>(spyActivity, never()).afterPermissionGranted()
+        verify(spyActivity, never()).afterPermissionGranted()
     }
 
     @Test
@@ -164,12 +164,12 @@ class EasyPermissionsTest {
             *ALL_PERMS
         )
 
-        verify<TestActivity>(spyActivity)
+        verify(spyActivity)
             .onPermissionsGranted(capture(integerCaptor), capture(listCaptor))
-        verify<TestActivity>(
+        verify(
             spyActivity,
             never()
-        ).requestPermissions(any<Array<String>>(Array<String>::class.java), anyInt())
+        ).requestPermissions(any(Array<String>::class.java), anyInt())
         assertThat(integerCaptor.value).isEqualTo(TestActivity.REQUEST_CODE)
         assertThat(listCaptor.value).containsAtLeastElementsIn(ALL_PERMS)
     }
@@ -186,7 +186,7 @@ class EasyPermissionsTest {
         )
 
         // Called 2 times because this is a spy and library implementation invokes super classes annotated methods as well
-        verify<TestActivity>(spyActivity, times(2)).afterPermissionGranted()
+        verify(spyActivity, times(2)).afterPermissionGranted()
     }
 
     @Test
@@ -200,7 +200,7 @@ class EasyPermissionsTest {
             *ALL_PERMS
         )
 
-        verify<TestActivity>(spyActivity, never()).afterPermissionGranted()
+        verify(spyActivity, never()).afterPermissionGranted()
     }
 
     @Test
@@ -215,7 +215,7 @@ class EasyPermissionsTest {
             *ALL_PERMS
         )
 
-        verify<TestActivity>(spyActivity).requestPermissions(ALL_PERMS, TestActivity.REQUEST_CODE)
+        verify(spyActivity).requestPermissions(ALL_PERMS, TestActivity.REQUEST_CODE)
     }
 
     @Test
@@ -329,19 +329,19 @@ class EasyPermissionsTest {
             spyAppCompatActivity
         )
 
-        verify<TestAppCompatActivity>(spyAppCompatActivity)
+        verify(spyAppCompatActivity)
             .onPermissionsGranted(capture(integerCaptor), capture(listCaptor))
         assertThat(integerCaptor.value).isEqualTo(TestAppCompatActivity.REQUEST_CODE)
         assertThat(listCaptor.value)
             .containsAtLeastElementsIn(ArrayList(listOf(ACCESS_FINE_LOCATION)))
 
-        verify<TestAppCompatActivity>(spyAppCompatActivity)
+        verify(spyAppCompatActivity)
             .onPermissionsDenied(capture(integerCaptor), capture(listCaptor))
         assertThat(integerCaptor.value).isEqualTo(TestAppCompatActivity.REQUEST_CODE)
         assertThat(listCaptor.value)
             .containsAtLeastElementsIn(ArrayList(listOf(READ_SMS)))
 
-        verify<TestAppCompatActivity>(spyAppCompatActivity, never()).afterPermissionGranted()
+        verify(spyAppCompatActivity, never()).afterPermissionGranted()
     }
 
     @Test
@@ -355,10 +355,10 @@ class EasyPermissionsTest {
             *ALL_PERMS
         )
 
-        verify<TestAppCompatActivity>(spyAppCompatActivity)
+        verify(spyAppCompatActivity)
             .onPermissionsGranted(capture(integerCaptor), capture(listCaptor))
-        verify<TestAppCompatActivity>(spyAppCompatActivity, never()).requestPermissions(
-            any<Array<String>>(
+        verify(spyAppCompatActivity, never()).requestPermissions(
+            any(
                 Array<String>::class.java
             ), anyInt()
         )
@@ -378,7 +378,7 @@ class EasyPermissionsTest {
         )
 
         // Called 2 times because this is a spy and library implementation invokes super classes annotated methods as well
-        verify<TestAppCompatActivity>(spyAppCompatActivity, times(2)).afterPermissionGranted()
+        verify(spyAppCompatActivity, times(2)).afterPermissionGranted()
     }
 
     @Test
@@ -392,7 +392,7 @@ class EasyPermissionsTest {
             *ALL_PERMS
         )
 
-        verify<TestAppCompatActivity>(spyAppCompatActivity, never()).afterPermissionGranted()
+        verify(spyAppCompatActivity, never()).afterPermissionGranted()
     }
 
     @Test
@@ -407,7 +407,7 @@ class EasyPermissionsTest {
             *ALL_PERMS
         )
 
-        verify<TestAppCompatActivity>(spyAppCompatActivity)
+        verify(spyAppCompatActivity)
             .requestPermissions(ALL_PERMS, TestAppCompatActivity.REQUEST_CODE)
     }
 
@@ -548,19 +548,19 @@ class EasyPermissionsTest {
             spyFragment
         )
 
-        verify<TestFragment>(spyFragment)
+        verify(spyFragment)
             .onPermissionsGranted(capture(integerCaptor), capture(listCaptor))
         assertThat(integerCaptor.value).isEqualTo(TestFragment.REQUEST_CODE)
         assertThat(listCaptor.value)
             .containsAtLeastElementsIn(ArrayList(listOf(ACCESS_FINE_LOCATION)))
 
-        verify<TestFragment>(spyFragment)
+        verify(spyFragment)
             .onPermissionsDenied(capture(integerCaptor), capture(listCaptor))
         assertThat(integerCaptor.value).isEqualTo(TestFragment.REQUEST_CODE)
         assertThat(listCaptor.value)
             .containsAtLeastElementsIn(ArrayList(listOf(READ_SMS)))
 
-        verify<TestFragment>(spyFragment, never()).afterPermissionGranted()
+        verify(spyFragment, never()).afterPermissionGranted()
     }
 
     @Test
@@ -574,12 +574,12 @@ class EasyPermissionsTest {
             *ALL_PERMS
         )
 
-        verify<TestFragment>(spyFragment)
+        verify(spyFragment)
             .onPermissionsGranted(capture(integerCaptor), capture(listCaptor))
-        verify<TestFragment>(
+        verify(
             spyFragment,
             never()
-        ).requestPermissions(any<Array<String>>(Array<String>::class.java), anyInt())
+        ).requestPermissions(any(Array<String>::class.java), anyInt())
         assertThat(integerCaptor.value).isEqualTo(TestFragment.REQUEST_CODE)
         assertThat(listCaptor.value).containsAtLeastElementsIn(ALL_PERMS)
     }
@@ -596,7 +596,7 @@ class EasyPermissionsTest {
         )
 
         // Called 2 times because this is a spy and library implementation invokes super classes annotated methods as well
-        verify<TestFragment>(spyFragment, times(2)).afterPermissionGranted()
+        verify(spyFragment, times(2)).afterPermissionGranted()
     }
 
     @Test
@@ -610,7 +610,7 @@ class EasyPermissionsTest {
             *ALL_PERMS
         )
 
-        verify<TestFragment>(spyFragment, never()).afterPermissionGranted()
+        verify(spyFragment, never()).afterPermissionGranted()
     }
 
     @Test
@@ -625,7 +625,7 @@ class EasyPermissionsTest {
             *ALL_PERMS
         )
 
-        verify<TestFragment>(spyFragment).requestPermissions(ALL_PERMS, TestFragment.REQUEST_CODE)
+        verify(spyFragment).requestPermissions(ALL_PERMS, TestFragment.REQUEST_CODE)
     }
 
     @Test
@@ -744,6 +744,7 @@ class EasyPermissionsTest {
     //  Private Methods
     // ============================================================================================
 
+    @Suppress("SameParameterValue")
     private fun assertThatHasExpectedButtonsAndRationale(
         dialog: Dialog,
         rationale: Int,
@@ -758,6 +759,7 @@ class EasyPermissionsTest {
         assertThat(negativeMessage.text.toString()).isEqualTo(app?.getString(negative))
     }
 
+    @Suppress("SameParameterValue")
     private fun assertThatHasExpectedButtonsAndRationale(
         dialog: Dialog,
         rationale: String,
@@ -772,6 +774,7 @@ class EasyPermissionsTest {
         assertThat(negativeMessage.text.toString()).isEqualTo(negative)
     }
 
+    @Suppress("SameParameterValue")
     private fun assertThatHasExpectedRationale(dialog: Dialog, rationale: String) {
         val dialogMessage = dialog.findViewById<TextView>(android.R.id.message)
         assertThat(dialogMessage.text.toString()).isEqualTo(rationale)

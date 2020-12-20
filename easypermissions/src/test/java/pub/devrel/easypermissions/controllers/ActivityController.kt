@@ -21,7 +21,7 @@ import pub.devrel.easypermissions.annotations.Mockable
 import java.util.concurrent.CompletableFuture
 
 /**
- * Controller class to allow starting Activity, similar to the Robolectric ActivityConroller.
+ * Controller class to allow starting Activity, similar to the Robolectric ActivityController.
  */
 @Mockable
 class ActivityController<T : Activity>(clazz: Class<T>) {
@@ -33,9 +33,5 @@ class ActivityController<T : Activity>(clazz: Class<T>) {
         val activityFuture = CompletableFuture<T>()
         scenario.onActivity { activityFuture.complete(it) }
         return activityFuture.get()
-    }
-
-    fun reset() {
-        scenario.recreate()
     }
 }

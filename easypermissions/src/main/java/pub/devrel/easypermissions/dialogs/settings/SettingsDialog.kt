@@ -22,7 +22,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import androidx.annotation.RestrictTo
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
@@ -36,7 +35,6 @@ const val DEFAULT_SETTINGS_REQ_CODE = 16061
  * clicks 'OK' on the dialog, they are sent to the settings screen. The result is returned to the
  * Activity via [Activity.onActivityResult].
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SettingsDialog(
     private val context: Context,
     @StyleRes

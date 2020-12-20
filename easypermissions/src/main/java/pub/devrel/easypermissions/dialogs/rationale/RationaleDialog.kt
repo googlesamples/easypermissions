@@ -19,7 +19,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import androidx.annotation.RestrictTo
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -32,7 +31,6 @@ import pub.devrel.easypermissions.models.PermissionRequest
  * clicks 'OK' on the dialog, they are sent to the settings screen. The result is returned to the
  * Activity via [Activity.onActivityResult].
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class RationaleDialog(
     private val context: Context,
     private val model: PermissionRequest

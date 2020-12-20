@@ -34,8 +34,4 @@ class FragmentController<T : Fragment>(clazz: Class<T>) {
         scenario.onFragment { fragmentFuture.complete(it) }
         return fragmentFuture.get()
     }
-
-    fun reset() {
-        scenario.recreate()
-    }
 }

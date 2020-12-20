@@ -1,14 +1,14 @@
 buildscript {
-    ext.kotlin_version = '1.3.50'
+    ext.kotlin_version = '1.4.10'
     repositories {
         google()
         jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:4.1.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.15.0'
+        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.16.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
     }
@@ -32,16 +32,16 @@ allprojects {
 }
 
 ext {
-    projectName = 'EasyPermissions'
-    projectDesc = 'A wrapper library for basic Android M system permissions logic'
+    projectName = 'EasyPermissions-ktx'
+    projectDesc = 'A Kotlin wrapper library for basic Android M system permissions logic'
 
-    githubUrl = 'https://github.com/googlesamples/easypermissions'
+    githubUrl = 'https://github.com/VMadalin/easypermissions-ktx'
 
-    mavenGroup = 'pub.devrel'
-    mavenArtifactId = 'easypermissions'
-    mavenVersion = '3.1.0'
+    mavenGroup = 'mvalceleanu'
+    mavenArtifactId = 'easypermissions-ktx'
+    mavenVersion = '0.1.0'
 
-    bintrayOrg = 'easygoogle'
+    bintrayOrg = 'mvalcelenu'
 
     compileSdk = 28
     targetSdk = 28

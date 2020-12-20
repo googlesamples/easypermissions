@@ -6,7 +6,7 @@ version = mavenVersion
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+    archiveClassifier.set("sources")
 }
 
 task javadoc(type: Javadoc) {
@@ -18,7 +18,7 @@ task javadoc(type: Javadoc) {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier.set("sources")
     from javadoc.destinationDir
 }
 
@@ -41,13 +41,13 @@ publishing {
 
             pom.withXml {
                 // Name
-                asNode().appendNode('name', "EasyPermissions")
+                asNode().appendNode('name', "EasyPermissions-ktx")
 
                 // Description
-                asNode().appendNode('description', 'A wrapper library for basic Android M system permissions logic')
+                asNode().appendNode('description', 'A Kotlin wrapper library for basic Android M system permissions logic')
 
                 // URL
-                asNode().appendNode('url', 'https://github.com/googlesamples/easypermissions')
+                asNode().appendNode('url', 'https://github.com/VMadalin/easypermissions-ktx')
 
                 // Inception Year
                 asNode().appendNode('inceptionYear', '2015')
@@ -60,15 +60,15 @@ publishing {
 
                 // Developers
                 def developer = asNode().appendNode('developers').appendNode('developer')
-                developer.appendNode('name', 'Google')
+                developer.appendNode('name', 'Madalin Valceleanu')
 
                 // SCM
                 def scm = asNode().appendNode('scm')
-                scm.appendNode('connection', 'https://github.com/googlesamples/easypermissions.git')
-                scm.appendNode('url', 'https://github.com/googlesamples/easypermissions')
+                scm.appendNode('connection', 'https://github.com/VMadalin/easypermissions-ktx.git')
+                scm.appendNode('url', 'https://github.com/VMadalin/easypermissions-ktx')
 
                 // Dependencies
-                def dependenciesNode = asNode().getAt('dependencies')[0]
+                def dependenciesNode = asNode()['dependencies'][0]
                 if (dependenciesNode == null) {
                     dependenciesNode = asNode().appendNode('dependencies')
                 }

@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:text="@string/permission_location_and_contacts_text"/>
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment"
         android:name="pub.devrel.easypermissions.sample.MainFragment"
         android:layout_width="wrap_content"
