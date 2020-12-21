@@ -1,1 +1,1 @@
-include ':app', ':easypermissions'
+include ':app', ':easypermissions-ktx'

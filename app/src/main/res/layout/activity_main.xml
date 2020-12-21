@@ -30,7 +30,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment"
-        android:name="pub.devrel.easypermissions.sample.MainFragment"
+        android:name="mvalceleanu.easypermissions.sample.MainFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_main" />
