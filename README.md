@@ -3,6 +3,9 @@
 EasyPermissions is a wrapper library to simplify basic system permissions logic when targeting
 Android M or higher.
 
+**Note:** If your app is written in Kotlin consider the [easypermissions-ktx](https://github.com/VMadalin/easypermissions-ktx)
+library which adds Kotlin extensions to the core EasyPermissions library.
+
 ## Installation
 
 EasyPermissions is installed by adding the following dependency to your `build.gradle` file:
