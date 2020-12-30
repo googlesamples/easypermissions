@@ -1,0 +1,20 @@
+#!/bin/bash
+
+node {
+	stage ('Build')
+	{
+	echo "Building the project......"
+	}
+	satge ('test')
+	{
+	echo "Testing the Project....."
+	}
+	stage ('Depoly')
+	{
+	echo "Depolying the project....."
+	}
+	stage ('Release')
+	{
+	echo "Releasing the project......"
+	}
+}
