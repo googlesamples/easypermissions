@@ -55,7 +55,7 @@ To publish, run:
 
 Follow [the instructions here](https://central.sonatype.org/pages/releasing-the-deployment.html):
 
-  1. Navigate to https://oss.sonatype.org/ and **Log In**
+  1. Navigate to https://s01.oss.sonatype.org/ and **Log In**
   1. On the left side click **Build Promotion** and look for the `com.firebase` repo
   1. Click **Close** ... wait a few minutes (you can check status with **Refresh**)
   1. Click **Release**
