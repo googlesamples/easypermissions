@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion compileSdk
+    compileSdkVersion 30
     testOptions.unitTests.includeAndroidResources = true
 
     defaultConfig {
         applicationId "pub.devrel.easypermissions.sample"
         minSdkVersion 14
-        targetSdkVersion targetSdk
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
     }

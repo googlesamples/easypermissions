@@ -1,15 +1,23 @@
 apply plugin: 'com.android.library'
 apply plugin: "com.vanniktech.android.junit.jacoco"
 
+// See: https://github.com/vanniktech/gradle-maven-publish-plugin/issues/206
+ext {
+  RELEASE_REPOSITORY_URL = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+  SNAPSHOT_REPOSITORY_URL = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+}
+
+apply plugin: 'com.vanniktech.maven.publish'
+
 android {
-    compileSdkVersion compileSdk
+    compileSdkVersion 30
     testOptions.unitTests.includeAndroidResources = true
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion targetSdk
+        targetSdkVersion 30
         versionCode 1
-        versionName mavenVersion
+        versionName "3.0.0"
     }
 
     buildTypes {
@@ -47,5 +55,3 @@ dependencies {
     testImplementation 'androidx.fragment:fragment-testing:1.2.5'
     testImplementation 'org.mockito:mockito-core:2.23.4'
 }
-
-apply from: 'bintray.gradle'
