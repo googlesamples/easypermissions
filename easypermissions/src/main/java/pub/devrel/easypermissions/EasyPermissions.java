@@ -20,6 +20,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Size;
 import androidx.core.app.ActivityCompat;
@@ -108,7 +110,7 @@ public class EasyPermissions {
      */
     public static void requestPermissions(
             @NonNull Activity host, @NonNull String rationale,
-            int requestCode, @Size(min = 1) @NonNull String... perms) {
+            @IntRange(from = 0, to = 255) int requestCode, @Size(min = 1) @NonNull String... perms) {
         requestPermissions(
                 new PermissionRequest.Builder(host, requestCode, perms)
                         .setRationale(rationale)
@@ -122,7 +124,7 @@ public class EasyPermissions {
      */
     public static void requestPermissions(
             @NonNull Fragment host, @NonNull String rationale,
-            int requestCode, @Size(min = 1) @NonNull String... perms) {
+            @IntRange(from = 0, to = 255) int requestCode, @Size(min = 1) @NonNull String... perms) {
         requestPermissions(
                 new PermissionRequest.Builder(host, requestCode, perms)
                         .setRationale(rationale)
@@ -169,7 +171,7 @@ public class EasyPermissions {
      * @param receivers    an array of objects that have a method annotated with {@link
      *                     AfterPermissionGranted} or implement {@link PermissionCallbacks}.
      */
-    public static void onRequestPermissionsResult(int requestCode,
+    public static void onRequestPermissionsResult(@IntRange(from = 0, to = 255) int requestCode,
                                                   @NonNull String[] permissions,
                                                   @NonNull int[] grantResults,
                                                   @NonNull Object... receivers) {
