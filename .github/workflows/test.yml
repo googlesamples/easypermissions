@@ -15,5 +15,4 @@ jobs:
           java-version: 1.8
       - name: Build with Gradle
         run: |
-          ./gradlew build jacocoTestReportRelease :easypermissions:test
-          bash <(curl -s https://codecov.io/bash)
+          ./gradlew build :easypermissions:test

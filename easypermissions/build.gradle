@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: "com.vanniktech.android.junit.jacoco"
 
 // See: https://github.com/vanniktech/gradle-maven-publish-plugin/issues/206
 ext {
@@ -36,10 +35,6 @@ android {
         }
     }
 
-}
-
-junitJacoco {
-    includeNoLocationClasses = true
 }
 
 dependencies {
