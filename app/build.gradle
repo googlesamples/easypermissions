@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "pub.devrel.easypermissions.sample"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -32,4 +32,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "androidx.annotation:annotation:1.1.0"
     implementation project(':easypermissions')
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
