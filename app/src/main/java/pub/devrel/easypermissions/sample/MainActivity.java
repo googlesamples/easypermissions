@@ -19,6 +19,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,6 +34,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks,
                                                                EasyPermissions.RationaleCallbacks{
+
+    Button boton;
 
     private static final String TAG = "MainActivity";
     private static final String[] LOCATION_AND_CONTACTS =
@@ -50,6 +54,15 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
         // Button click listener that will request two permissions.
         findViewById(R.id.button_location_and_contacts).setOnClickListener(v -> locationAndContactsTask());
+        boton= (Button) findViewById(R.id.contacts_id);
+        boton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(new Intent(MainActivity.this, ContactsActivity.class));
+
+            }
+        });
     }
 
     private boolean hasCameraPermission() {
@@ -66,6 +79,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     private boolean hasStoragePermission() {
         return EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
+    private boolean hasContactsPermission() {
+        return EasyPermissions.hasPermissions(this, Manifest.permission.READ_CONTACTS);
     }
 
     @AfterPermissionGranted(RC_CAMERA_PERM)

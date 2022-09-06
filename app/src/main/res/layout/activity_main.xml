@@ -29,4 +29,10 @@
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_main" />
 
+    <Button
+        android:id="@+id/contacts_id"
+        android:layout_width="198dp"
+        android:layout_height="wrap_content"
+        android:text="@string/contacts" />
+
 </LinearLayout>
