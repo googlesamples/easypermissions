@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 // See: https://github.com/vanniktech/gradle-maven-publish-plugin/issues/206
-ext {
-  RELEASE_REPOSITORY_URL = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-  SNAPSHOT_REPOSITORY_URL = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-}
-
-apply plugin: 'com.vanniktech.maven.publish'
+//ext {
+//  RELEASE_REPOSITORY_URL = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+//  SNAPSHOT_REPOSITORY_URL = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+//}
+//
+//apply plugin: 'com.vanniktech.maven.publish'
 
 android {
     compileSdkVersion 33
