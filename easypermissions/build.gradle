@@ -9,12 +9,12 @@ ext {
 apply plugin: 'com.vanniktech.maven.publish'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
     testOptions.unitTests.includeAndroidResources = true
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 1
         versionName "3.0.0"
     }
