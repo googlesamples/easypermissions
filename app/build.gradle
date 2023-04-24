@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
     testOptions.unitTests.includeAndroidResources = true
 
     defaultConfig {
         applicationId "pub.devrel.easypermissions.sample"
         minSdkVersion 14
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
     }
@@ -31,5 +31,6 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation "androidx.annotation:annotation:1.6.0"
+    implementation 'com.google.android.material:material:1.8.0'
     implementation project(':easypermissions')
 }
