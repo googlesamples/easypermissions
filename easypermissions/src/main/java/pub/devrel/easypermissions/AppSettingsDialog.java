@@ -17,6 +17,8 @@ import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 /**
  * Dialog to prompt the user to go to the app's settings screen and enable permissions. If the user
  * clicks 'OK' on the dialog, they are sent to the settings screen. The result is returned to the
@@ -136,11 +138,11 @@ public class AppSettingsDialog implements Parcelable {
      */
     AlertDialog showDialog(DialogInterface.OnClickListener positiveListener,
                            DialogInterface.OnClickListener negativeListener) {
-        AlertDialog.Builder builder;
+        MaterialAlertDialogBuilder builder;
         if (mThemeResId != -1) {
-            builder = new AlertDialog.Builder(mContext, mThemeResId);
+            builder = new MaterialAlertDialogBuilder(mContext, mThemeResId);
         } else {
-            builder = new AlertDialog.Builder(mContext);
+            builder = new MaterialAlertDialogBuilder(mContext);
         }
         return builder
                 .setCancelable(false)
