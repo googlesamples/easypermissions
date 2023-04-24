@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 /**
  * Configuration for either {@link RationaleDialogFragment} or {@link RationaleDialogFragmentCompat}.
  */
@@ -63,11 +65,11 @@ class RationaleDialogConfig {
     }
 
     AlertDialog createSupportDialog(Context context, Dialog.OnClickListener listener) {
-        AlertDialog.Builder builder;
+        MaterialAlertDialogBuilder builder;
         if (theme > 0) {
-            builder = new AlertDialog.Builder(context, theme);
+            builder = new MaterialAlertDialogBuilder(context, theme);
         } else {
-            builder = new AlertDialog.Builder(context);
+            builder = new MaterialAlertDialogBuilder(context);
         }
         return builder
                 .setCancelable(false)
