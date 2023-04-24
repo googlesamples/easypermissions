@@ -1,4 +1,6 @@
 buildscript {
+    ext.kotlin_version = '1.8.0'
+
     repositories {
         google()
         mavenCentral()
@@ -7,8 +9,14 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.4.2'
         classpath 'com.vanniktech:gradle-maven-publish-plugin:0.14.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
+
+plugins {
+    id 'org.jetbrains.dokka' version '1.4.20'
+}
+
 
 allprojects {
     repositories {
